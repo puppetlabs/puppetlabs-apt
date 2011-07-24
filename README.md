@@ -5,6 +5,12 @@ Provides helpful definitions for dealing with Apt.
 
 ## Usage
 
+### apt:builddep
+Install the build depends of a specified package.
+<pre>
+apt::builddep { "glusterfs-server": }
+</pre>
+
 ### apt::force
 Force a package to be installed from a specific release.  Useful when using repositoires like Debian unstable in Ubuntu.
 <pre>
