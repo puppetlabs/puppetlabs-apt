@@ -12,7 +12,7 @@ apt::builddep { "glusterfs-server": }
 </pre>
 
 ### apt::force
-Force a package to be installed from a specific release.  Useful when using repositoires like Debian unstable in Ubuntu.
+Force a package to be installed from a specific release.  Useful when using repositories like Debian unstable in Ubuntu.
 <pre>
 apt::force { "glusterfs-server":
 	release => "unstable",
@@ -36,7 +36,7 @@ apt::ppa { "ppa:drizzle-developers/ppa": }
 </pre>
 
 ### apt::release
-Set the default apt release.  Useful when using repositoires like Debian unstable in Ubuntu.
+Set the default apt release.  Useful when using repositories like Debian unstable in Ubuntu.
 <pre>
 apt::release { "karmic": }
 </pre>
