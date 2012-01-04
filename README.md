@@ -45,12 +45,13 @@ apt::release { "karmic": }
 Add an apt source to `/etc/apt/sources.list.d/`.
 <pre>
 apt::source { "debian_unstable":
-	location => "http://debian.mirror.iweb.ca/debian/",
-	release => "unstable",
-	repos => "main contrib non-free",
-	required_packages => "debian-keyring debian-archive-keyring",
-	key => "55BE302B",
-	key_server => "subkeys.pgp.net",
-	pin => "-10"
+  location          => "http://debian.mirror.iweb.ca/debian/",
+  release           => "unstable",
+  repos             => "main contrib non-free",
+  required_packages => "debian-keyring debian-archive-keyring",
+  key               => "55BE302B",
+  key_server        => "subkeys.pgp.net",
+  pin               => "-10",
+  include_src       => true
 }
 </pre>
