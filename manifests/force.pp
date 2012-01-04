@@ -8,8 +8,8 @@ define apt::force(
 
   exec { "/usr/bin/aptitude -y -t ${release} install ${name}":
     unless => $version ? {
-      false => "/usr/bin/dpkg -l | grep ${name}",
-      default => "/usr/bin/dpkg -l | grep ${name} | grep ${version}"
+      false => "/usr/bin/dpkg -s ${name} | grep -q 'Status: install'",
+      default => "/usr/bin/dpkg -s ${name} | grep -q 'Version: ${version}'"
     }
   }
 
