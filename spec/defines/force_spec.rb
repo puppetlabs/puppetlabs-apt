@@ -15,7 +15,8 @@ describe 'apt::force', :type => :define do
         base_command + (version ? "'Version: #{params[:version]}'" : "'Status: install'")
       end
       let :exec_title do
-        "/usr/bin/aptitude -y -t #{params[:release]} install #{title}"
+        base_exec = "/usr/bin/aptitude -y -t #{params[:release]} install #{title}"
+        base_exec + (version ? "=#{version}" : "")
       end
       it { should contain_exec(exec_title).with_unless(unless_query) }
     end
