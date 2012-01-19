@@ -21,33 +21,31 @@ class apt(
 
   include apt::params
 
-  $refresh_only_apt_update = $always_apt_update? {
-    true => false,
-    false => true
+  if $always_apt_update == true {
+    include apt::update::always
+  } else {
+    include apt::update
   }
 
   package { "python-software-properties": }
 
   file { "sources.list":
-    name => "${apt::params::root}/sources.list",
+    name   => "${apt::params::root}/sources.list",
     ensure => present,
-    owner => root,
-    group => root,
-    mode => 644,
+    owner  => root,
+    group  => root,
+    mode   => 644,
+    notify => Exec['apt update'],
   }
 
   file { "sources.list.d":
-    name => "${apt::params::root}/sources.list.d",
+    name   => "${apt::params::root}/sources.list.d",
     ensure => directory,
-    owner => root,
-    group => root,
+    owner  => root,
+    group  => root,
+    notify => Exec['apt update'],
   }
 
-  exec { "apt_update":
-    command => "${apt::params::provider} update",
-    subscribe => [ File["sources.list"], File["sources.list.d"] ],
-    refreshonly => $refresh_only_apt_update,
-  }
   if($disable_keys) {
     exec { 'make-apt-insecure':
       command => '/bin/echo "APT::Get::AllowUnauthenticated 1;" >> /etc/apt/apt.conf.d/99unauth',

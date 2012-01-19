@@ -14,25 +14,20 @@ define apt::source(
 ) {
 
   include apt::params
-
+  include apt::update
 
   file { "${name}.list":
-    name => "${apt::params::root}/sources.list.d/${name}.list",
-    ensure => file,
-    owner => root,
-    group => root,
-    mode => 644,
+    name    => "${apt::params::root}/sources.list.d/${name}.list",
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    mode    => 644,
     content => template("apt/source.list.erb"),
+    notify  => Exec['apt update'],
   }
 
   if $pin != false {
     apt::pin { "${release}": priority => "${pin}" } -> File["${name}.list"]
-  }
-
-  exec { "${name} apt update":
-    command => "${apt::params::provider} update",
-    subscribe => File["${name}.list"],
-    refreshonly => true,
   }
 
   if $required_packages != false {
