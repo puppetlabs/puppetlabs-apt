@@ -7,7 +7,7 @@ class apt::debian::unstable {
  # Key: 55BE302B  Server: subkeys.pgp.net
  # debian-keyring
  # debian-archive-keyring
- 
+
  apt::source { "debian_unstable":
    location => "http://debian.mirror.iweb.ca/debian/",
    release => "unstable",

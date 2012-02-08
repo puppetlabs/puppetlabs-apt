@@ -29,7 +29,7 @@ class apt(
   package { "python-software-properties": }
 
   file { "sources.list":
-    name => "${apt::params::root}/sources.list",
+    path => "${apt::params::root}/sources.list",
     ensure => present,
     owner => root,
     group => root,
@@ -37,7 +37,7 @@ class apt(
   }
 
   file { "sources.list.d":
-    name => "${apt::params::root}/sources.list.d",
+    path => "${apt::params::root}/sources.list.d",
     ensure => directory,
     owner => root,
     group => root,

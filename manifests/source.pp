@@ -17,7 +17,7 @@ define apt::source(
 
 
   file { "${name}.list":
-    name => "${apt::params::root}/sources.list.d/${name}.list",
+    path => "${apt::params::root}/sources.list.d/${name}.list",
     ensure => file,
     owner => root,
     group => root,
@@ -48,7 +48,7 @@ define apt::source(
         command => "/bin/echo '${key_content}' | /usr/bin/apt-key add -",
         unless => "/usr/bin/apt-key list | /bin/grep '${key}'",
         before => File["${name}.list"],
-      } 
+      }
     } else {
       exec { "/usr/bin/apt-key adv --keyserver ${key_server} --recv-keys ${key}":
         unless => "/usr/bin/apt-key list | /bin/grep ${key}",

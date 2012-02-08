@@ -9,7 +9,7 @@ define apt::pin(
   include apt::params
 
   file { "${name}.pref":
-    name => "${apt::params::root}/preferences.d/${name}",
+    path => "${apt::params::root}/preferences.d/${name}",
     ensure => file,
     owner => root,
     group => root,
