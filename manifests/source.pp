@@ -15,7 +15,6 @@ define apt::source(
 
   include apt::params
 
-
   file { "${name}.list":
     path => "${apt::params::root}/sources.list.d/${name}.list",
     ensure => file,
@@ -23,6 +22,7 @@ define apt::source(
     group => root,
     mode => 644,
     content => template("apt/source.list.erb"),
+
   }
 
   if $pin != false {

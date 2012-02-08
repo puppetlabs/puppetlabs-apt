@@ -16,7 +16,9 @@
 #  class { 'apt': }
 class apt(
   $disable_keys = false,
-  $always_apt_update = false
+  $always_apt_update = false,
+  $proxy_host = false,
+  $proxy_port = '8080'
 ) {
 
   include apt::params
@@ -52,6 +54,13 @@ class apt(
     exec { 'make-apt-insecure':
       command => '/bin/echo "APT::Get::AllowUnauthenticated 1;" >> /etc/apt/apt.conf.d/99unauth',
       creates => '/etc/apt/apt.conf.d/99unauth'
+    }
+  }
+
+  if($proxy_host) {
+    file { 'configure-apt-proxy':
+      path    => '/etc/apt/apt.conf.d/proxy',
+      content => "Acquire::http::Proxy \"http://${proxy_host}:${proxy_port}\";",
     }
   }
 }
