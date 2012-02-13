@@ -10,7 +10,9 @@ describe 'apt', :type => :class do
   [{},
    {
       :disable_keys => true,
-      :always_apt_update => true
+      :always_apt_update => true,
+      :proxy_host => true,
+      :proxy_port => '3128'
     }
   ].each do |param_set|
     describe "when #{param_set == {} ? "using default" : "specifying"} class parameters" do
@@ -74,6 +76,18 @@ describe 'apt', :type => :class do
           })
         end
       }
+      describe 'when setting a proxy' do
+        it {
+          if param_hash[:proxy_host]
+            should contain_file('configure-apt-proxy').with(
+              'path'    => '/etc/apt/apt.conf.d/proxy',
+              'content' => "Acquire::http::Proxy \"http://#{param_hash[:proxy_host]}:#{param_hash[:proxy_port]}\";"
+            )
+          else
+            should_not contain_file('configure_apt_proxy')
+          end
+        }
+      end
     end
   end
 end
