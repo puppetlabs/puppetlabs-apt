@@ -44,13 +44,14 @@ define apt::source(
 
   if $key != false {
     if $key_content {
-      exec { "Add key: ${key} from content":
+      exec { "Add key: ${key} from content for ${name}":
         command => "/bin/echo '${key_content}' | /usr/bin/apt-key add -",
         unless => "/usr/bin/apt-key list | /bin/grep '${key}'",
         before => File["${name}.list"],
       }
     } else {
-      exec { "/usr/bin/apt-key adv --keyserver ${key_server} --recv-keys ${key}":
+      exec { "Add key: ${key} from ${key_server} for ${name}":
+        command => "/usr/bin/apt-key adv --keyserver ${key_server} --recv-keys ${key}",
         unless => "/usr/bin/apt-key list | /bin/grep ${key}",
         before => File["${name}.list"],
       }
