@@ -15,13 +15,16 @@
 # Sample Usage:
 #  class { 'apt': }
 class apt(
-  $disable_keys = false,
   $always_apt_update = false,
+  $disable_keys = false,
   $proxy_host = false,
-  $proxy_port = '8080'
+  $proxy_port = '8080',
+  $purge = false
 ) {
 
   include apt::params
+
+  validate_bool($purge)
 
   $refresh_only_apt_update = $always_apt_update? {
     true => false,
@@ -36,6 +39,10 @@ class apt(
     owner => root,
     group => root,
     mode => 644,
+    content => $purge ? {
+      false =>  undef,
+      true  => "# Repos managed by puppet.\n",
+    },
   }
 
   file { "sources.list.d":
@@ -43,6 +50,8 @@ class apt(
     ensure => directory,
     owner => root,
     group => root,
+    purge => $purge,
+    recurse => $purge,
   }
 
   exec { "apt_update":

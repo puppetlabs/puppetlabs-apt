@@ -3,7 +3,8 @@ describe 'apt', :type => :class do
   let :default_params do
     {
       :disable_keys => false,
-      :always_apt_update => false
+      :always_apt_update => false,
+      :purge => false
     }
   end
 
@@ -12,7 +13,8 @@ describe 'apt', :type => :class do
       :disable_keys => true,
       :always_apt_update => true,
       :proxy_host => true,
-      :proxy_port => '3128'
+      :proxy_port => '3128',
+      :purge => true
     }
   ].each do |param_set|
     describe "when #{param_set == {} ? "using default" : "specifying"} class parameters" do
@@ -37,22 +39,46 @@ describe 'apt', :type => :class do
       it { should contain_package("python-software-properties") }
 
       it {
+        if param_hash[:purge]
         should contain_file("sources.list").with({
-          'path'    => "/etc/apt/sources.list",
-          'ensure'  => "present",
-          'owner'   => "root",
-          'group'   => "root",
-          'mode'    => 644
-        })
+            'path'    => "/etc/apt/sources.list",
+            'ensure'  => "present",
+            'owner'   => "root",
+            'group'   => "root",
+            'mode'    => 644,
+            "content" => "# Repos managed by puppet.\n"
+          })
+        else
+        should contain_file("sources.list").with({
+            'path'    => "/etc/apt/sources.list",
+            'ensure'  => "present",
+            'owner'   => "root",
+            'group'   => "root",
+            'mode'    => 644,
+            'content' => nil
+          })
+        end
       }
-
       it {
-        should create_file("sources.list.d").with({
-          "path"    => "/etc/apt/sources.list.d",
-          "ensure"  => "directory",
-          "owner"   => "root",
-          "group"   => "root"
-        })
+        if param_hash[:purge]
+          should create_file("sources.list.d").with({
+            'path'    => "/etc/apt/sources.list.d",
+            'ensure'  => "directory",
+            'owner'   => "root",
+            'group'   => "root",
+            'purge'   => true,
+            'recurse' => true
+          })
+        else
+          should create_file("sources.list.d").with({
+            'path'    => "/etc/apt/sources.list.d",
+            'ensure'  => "directory",
+            'owner'   => "root",
+            'group'   => "root",
+            'purge'   => false,
+            'recurse' => false
+          })
+        end
       }
 
       it {
