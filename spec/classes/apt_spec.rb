@@ -2,19 +2,22 @@ require 'spec_helper'
 describe 'apt', :type => :class do
   let :default_params do
     {
-      :disable_keys => false,
+      :disable_keys => :undef,
       :always_apt_update => false,
       :purge => false
     }
   end
 
   [{},
-   {
+    {
       :disable_keys => true,
       :always_apt_update => true,
       :proxy_host => true,
       :proxy_port => '3128',
       :purge => true
+    },
+    {
+      :disable_keys => false
     }
   ].each do |param_set|
     describe "when #{param_set == {} ? "using default" : "specifying"} class parameters" do
@@ -90,15 +93,20 @@ describe 'apt', :type => :class do
       }
 
       it {
-        if param_hash[:disable_keys]
-          should contain_exec("make-apt-insecure").with({
-            'command'   => '/bin/echo "APT::Get::AllowUnauthenticated 1;" >> /etc/apt/apt.conf.d/99unauth',
-            'creates'   => '/etc/apt/apt.conf.d/99unauth'
+        if param_hash[:disable_keys] == true
+          should create_file("99unauth").with({
+            'content' => "APT::Get::AllowUnauthenticated 1;\n",
+            'ensure'  => "present",
+            'path'    => "/etc/apt/apt.conf.d/99unauth"
           })
-        else
-          should_not contain_exec("make-apt-insecure").with({
-            'command'   => '/bin/echo "APT::Get::AllowUnauthenticated 1;" >> /etc/apt/apt.conf.d/99unauth',
-            'creates'   => '/etc/apt/apt.conf.d/99unauth'
+        elsif param_hash[:disable_keys] == false
+          should create_file("99unauth").with({
+            'ensure' => "absent",
+            'path'   => "/etc/apt/apt.conf.d/99unauth"
+          })
+        elsif param_hash[:disable_keys] != :undef
+          should_not create_file("99unauth").with({
+            'path'   => "/etc/apt/apt.conf.d/99unauth"
           })
         end
       }

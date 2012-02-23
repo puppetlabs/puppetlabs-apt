@@ -16,7 +16,7 @@
 #  class { 'apt': }
 class apt(
   $always_apt_update = false,
-  $disable_keys = false,
+  $disable_keys = undef,
   $proxy_host = false,
   $proxy_port = '8080',
   $purge = false
@@ -59,11 +59,23 @@ class apt(
     subscribe => [ File["sources.list"], File["sources.list.d"] ],
     refreshonly => $refresh_only_apt_update,
   }
-  if($disable_keys) {
-    exec { 'make-apt-insecure':
-      command => '/bin/echo "APT::Get::AllowUnauthenticated 1;" >> /etc/apt/apt.conf.d/99unauth',
-      creates => '/etc/apt/apt.conf.d/99unauth'
+
+  case $disable_keys {
+    true: {
+      file { "99unauth":
+        content => "APT::Get::AllowUnauthenticated 1;\n",
+        ensure  => present,
+        path    => "/etc/apt/apt.conf.d/99unauth",
+      }
     }
+    false: {
+      file { "99unauth":
+        ensure => absent,
+        path   => "/etc/apt/apt.conf.d/99unauth",
+      }
+    }
+    undef: { } # do nothing
+    default: { fail("Valid values for disable_keys are true or false") }
   }
 
   if($proxy_host) {
