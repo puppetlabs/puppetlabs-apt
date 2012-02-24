@@ -36,8 +36,9 @@ define apt::source(
   }
 
   if $required_packages != false {
-    exec { "${apt::params::provider} -y install ${required_packages}":
-      subscribe => File["${name}.list"],
+    exec { "Required packages: '${required_packages}' for ${name}":
+      command     => "${apt::params::provider} -y install ${required_packages}",
+      subscribe   => File["${name}.list"],
       refreshonly => true,
     }
   }

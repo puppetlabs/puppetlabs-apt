@@ -94,12 +94,14 @@ describe 'apt::source', :type => :define do
 
       it {
         if param_hash[:required_packages]
-          should contain_exec("/usr/bin/apt-get -y install #{param_hash[:required_packages]}").with({
+          should contain_exec("Required packages: '#{param_hash[:required_packages]}' for #{title}").with({
+            "command" => "/usr/bin/apt-get -y install #{param_hash[:required_packages]}",
             "subscribe"   => "File[#{title}.list]",
             "refreshonly" => true
           })
         else
-          should_not contain_exec("/usr/bin/apt-get -y install #{param_hash[:required_packages]}").with({
+          should_not contain_exec("Required packages: '#{param_hash[:required_packages]}' for #{title}").with({
+            "command"     => "/usr/bin/apt-get -y install #{param_hash[:required_packages]}",
             "subscribe"   => "File[#{title}.list]",
             "refreshonly" => true
           })
