@@ -37,7 +37,9 @@ class apt(
     false => true
   }
 
-  package { "python-software-properties": }
+  if ! defined(Package["python-software-properties"]) {
+    package { "python-software-properties": }
+  }
 
   file { "sources.list":
     path => "${apt::params::root}/sources.list",
