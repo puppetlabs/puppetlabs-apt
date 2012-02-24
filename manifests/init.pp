@@ -3,11 +3,16 @@
 # This module manages the initial configuration of apt.
 #
 # Parameters:
-#   Both of the parameters listed here are not required in general and were
+#   The parameters listed here are not required in general and were
 #     added for use cases related to development environments.
 #   disable_keys - disables the requirement for all packages to be signed
 #   always_apt_update - rather apt should be updated on every run (intended
 #     for development environments where package updates are frequent
+#   purge_sources_list - Accepts true or false. Defaults to false If set to
+#     true, Puppet will purge all unmanaged entries from sources.list"
+#   purge_sources_list_d - Accepts true or false. Defaults to false. If set
+#     to false, Puppet will purge all unmanaged entries from sources.list.d
+#
 # Actions:
 #
 # Requires:
@@ -19,12 +24,13 @@ class apt(
   $disable_keys = undef,
   $proxy_host = false,
   $proxy_port = '8080',
-  $purge = false
+  $purge_sources_list = false,
+  $purge_sources_list_d = false
 ) {
 
   include apt::params
 
-  validate_bool($purge)
+  validate_bool($purge_sources_list, $purge_sources_list_d)
 
   $refresh_only_apt_update = $always_apt_update? {
     true => false,
@@ -39,7 +45,7 @@ class apt(
     owner => root,
     group => root,
     mode => 644,
-    content => $purge ? {
+    content => $purge_sources_list ? {
       false =>  undef,
       true  => "# Repos managed by puppet.\n",
     },
@@ -50,8 +56,8 @@ class apt(
     ensure => directory,
     owner => root,
     group => root,
-    purge => $purge,
-    recurse => $purge,
+    purge => $purge_sources_list_d,
+    recurse => $purge_sources_list_d,
   }
 
   exec { "apt_update":

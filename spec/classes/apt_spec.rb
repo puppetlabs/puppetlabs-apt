@@ -4,7 +4,8 @@ describe 'apt', :type => :class do
     {
       :disable_keys => :undef,
       :always_apt_update => false,
-      :purge => false
+      :purge_sources_list => false,
+      :purge_sources_list_d => false,
     }
   end
 
@@ -14,7 +15,8 @@ describe 'apt', :type => :class do
       :always_apt_update => true,
       :proxy_host => true,
       :proxy_port => '3128',
-      :purge => true
+      :purge_sources_list => true,
+      :purge_sources_list_d => true,
     },
     {
       :disable_keys => false
@@ -42,7 +44,7 @@ describe 'apt', :type => :class do
       it { should contain_package("python-software-properties") }
 
       it {
-        if param_hash[:purge]
+        if param_hash[:purge_sources_list]
         should contain_file("sources.list").with({
             'path'    => "/etc/apt/sources.list",
             'ensure'  => "present",
@@ -63,7 +65,7 @@ describe 'apt', :type => :class do
         end
       }
       it {
-        if param_hash[:purge]
+        if param_hash[:purge_sources_list_d]
           should create_file("sources.list.d").with({
             'path'    => "/etc/apt/sources.list.d",
             'ensure'  => "directory",
