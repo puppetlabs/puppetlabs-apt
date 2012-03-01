@@ -53,5 +53,24 @@ apt::source { "debian_unstable":
   key_server        => "subkeys.pgp.net",
   pin               => "-10",
   include_src       => true
+
+### apt::key
+Add a key to the list of keys used by apt to authenticate packages.
+<pre>
+apt::key { "puppetlabs":
+  key        => "4BD6EC30",
+  key_server => "pgp.mit.edu",
+}
+</pre>
+
+<pre>
+apt::key { "jenkins":
+  key        => "D50582E6",
+  key_source => "http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key",
+}
+</pre>
+
+Note that use of the "key_source" parameter requires wget to be installed and working.
+
 }
 </pre>
