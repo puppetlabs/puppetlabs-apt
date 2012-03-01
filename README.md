@@ -53,7 +53,8 @@ apt::source { "debian_unstable":
   key_server        => "subkeys.pgp.net",
   pin               => "-10",
   include_src       => true
-
+}
+</pre>
 ### apt::key
 Add a key to the list of keys used by apt to authenticate packages.
 <pre>
@@ -72,5 +73,22 @@ apt::key { "jenkins":
 
 Note that use of the "key_source" parameter requires wget to be installed and working.
 
-}
-</pre>
+
+## Contributors
+A lot of great people have contributed to this module. A somewhat current list follows.  
+Ben Godfrey <ben.godfrey@wonga.com>  
+Christian G. Warden <cwarden@xerus.org>  
+Dan Bode <bodepd@gmail.com> <dan@puppetlabs.com>  
+Garrett Honeycutt <github@garretthoneycutt.com>  
+Jeff Wallace <jeff@evolvingweb.ca> <jeff@tjwallace.ca>  
+Ken Barber <ken@bob.sh>  
+Matthaus Litteken <matthaus@puppetlabs.com> <mlitteken@gmail.com>  
+Matthias Pigulla <mp@webfactory.de>  
+Monty Taylor <mordred@inaugust.com>  
+Peter Drake <pdrake@allplayers.com>  
+Reid Vandewiele <marut@cat.pdx.edu>  
+Robert Navarro <rnavarro@phiivo.com>  
+Ryan Coleman <ryan@puppetlabs.com>  
+Scott McLeod <scott.mcleod@theice.com>  
+Spencer Krum <spencer@puppetlabs.com>  
+William Van Hevelingen <blkperl@cat.pdx.edu> <wvan13@gmail.com>  
