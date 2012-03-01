@@ -41,6 +41,10 @@ describe 'apt::source', :type => :define do
         default_params.merge(param_set)
       end
 
+      let :facts do
+        {:lsbdistcodename => 'karmic'}
+      end
+
       let :params do
         param_set
       end
@@ -157,5 +161,8 @@ describe 'apt::source', :type => :define do
       }
     end
   end
+    describe "without release should raise a Puppet::Error" do
+      it { expect { should contain_apt__source(:release) }.to raise_error(Puppet::Error) }
+    end
 end
 

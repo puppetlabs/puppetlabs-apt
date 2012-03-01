@@ -3,7 +3,7 @@
 
 define apt::source(
   $location = '',
-  $release = 'karmic',
+  $release = $lsbdistcodename,
   $repos = 'main',
   $include_src = true,
   $required_packages = false,
@@ -14,6 +14,10 @@ define apt::source(
 ) {
 
   include apt::params
+
+  if ! $release {
+    fail("lsbdistcodename fact not available: release parameter required")
+  }
 
   file { "${name}.list":
     path => "${apt::params::root}/sources.list.d/${name}.list",
