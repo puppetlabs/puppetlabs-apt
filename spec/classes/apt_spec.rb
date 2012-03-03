@@ -45,8 +45,8 @@ describe 'apt', :type => :class do
 
       it {
         if param_hash[:purge_sources_list]
-        should contain_file("sources.list").with({
-            'path'    => "/etc/apt/sources.list",
+        should contain_file("/etc/apt/sources.list").with({
+            'alias'   => "sources.list",
             'ensure'  => "present",
             'owner'   => "root",
             'group'   => "root",
@@ -54,8 +54,8 @@ describe 'apt', :type => :class do
             "content" => "# Repos managed by puppet.\n"
           })
         else
-        should contain_file("sources.list").with({
-            'path'    => "/etc/apt/sources.list",
+        should contain_file("/etc/apt/sources.list").with({
+            'alias'   => "sources.list",
             'ensure'  => "present",
             'owner'   => "root",
             'group'   => "root",
@@ -66,8 +66,8 @@ describe 'apt', :type => :class do
       }
       it {
         if param_hash[:purge_sources_list_d]
-          should create_file("sources.list.d").with({
-            'path'    => "/etc/apt/sources.list.d",
+          should create_file("/etc/apt/sources.list.d").with({
+            'alias'   => "sources.list.d",
             'ensure'  => "directory",
             'owner'   => "root",
             'group'   => "root",
@@ -75,8 +75,8 @@ describe 'apt', :type => :class do
             'recurse' => true
           })
         else
-          should create_file("sources.list.d").with({
-            'path'    => "/etc/apt/sources.list.d",
+          should create_file("/etc/apt/sources.list.d").with({
+            'alias'   => "sources.list.d",
             'ensure'  => "directory",
             'owner'   => "root",
             'group'   => "root",
@@ -130,5 +130,10 @@ describe 'apt', :type => :class do
   describe "it should not error if package['python-software-properties'] is already defined" do
     let(:pre_condition) { 'package { "python-software-properties": }->Class["Apt"]' }
     it { should contain_package("python-software-properties") }
+  end
+
+  describe "it should make other modules fail when checking file['/etc/apt/sources.list.d']" do
+    let (:post_condition) { 'if ! defined(File["/etc/apt/sources.list.d"]) { file { "/etc/apt/sources.list.d": ensure => directory } }' }
+    it { should contain_file("/etc/apt/sources.list.d") }
   end
 end
