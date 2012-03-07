@@ -136,8 +136,11 @@ describe 'apt::source', :type => :define do
       }
     end
   end
-    describe "without release should raise a Puppet::Error" do
-      it { expect { should contain_apt__source(:release) }.to raise_error(Puppet::Error) }
-    end
+  describe "without release should raise a Puppet::Error" do
+    let(:default_params) { Hash.new }
+    let(:facts) { Hash.new }
+    it { expect { should raise_error(Puppet::Error) } }
+    let(:facts) { { :lsbdistcodename => 'lucid' } }
+    it { should contain_apt__source(title) }
+  end
 end
-

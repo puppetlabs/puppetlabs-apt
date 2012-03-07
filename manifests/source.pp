@@ -16,7 +16,7 @@ define apt::source(
 
   include apt::params
 
-  if ! $release {
+  if $release == undef {
     fail("lsbdistcodename fact not available: release parameter required")
   }
 
@@ -27,7 +27,6 @@ define apt::source(
     group => root,
     mode => 644,
     content => template("apt/source.list.erb"),
-
   }
 
   if $pin != false {
