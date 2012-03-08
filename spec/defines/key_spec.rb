@@ -57,13 +57,13 @@ describe 'apt::key', :type => :define do
       it {
         if [:present, 'present'].include? param_hash[:ensure]
           should_not contain_exec("apt::key #{param_hash[:key]} absent")
-          should contain_exec("apt::key #{param_hash[:key]} present")
+          should contain_anchor("apt::key #{param_hash[:key]} present")
           should contain_exec(digest).with({
             "path"    => "/bin:/usr/bin",
             "unless"  => "/usr/bin/apt-key list | /bin/grep '#{param_hash[:key]}'"
           })
         elsif [:absent, 'absent'].include? param_hash[:ensure]
-          should_not contain_exec("apt::key #{param_hash[:key]} present")
+          should_not contain_anchor("apt::key #{param_hash[:key]} present")
           should contain_exec("apt::key #{param_hash[:key]} absent").with({
             "path"    => "/bin:/usr/bin",
             "onlyif"  => "apt-key list | grep '#{param_hash[:key]}'",
@@ -93,22 +93,29 @@ describe 'apt::key', :type => :define do
       }
 
     end
+  end
 
+  [{ :ensure => 'present' }, { :ensure => 'absent' }].each do |param_set|
     describe "should correctly handle duplicate definitions" do
+
       let :pre_condition do
-        "apt::key { 'duplicate': key => '#{params[:key]}'; }"
+        "apt::key { 'duplicate': key => '#{title}'; }"
       end
 
+      let(:params) { param_set }
+
       it {
-        if [:present, 'present'].include? param_hash[:ensure]
-          should contain_exec("apt::key #{param_hash[:key]} present")
-          should contain_apt__key("duplicate")
+        if param_set[:ensure] == 'present'
+          should contain_anchor("apt::key #{title} present")
           should contain_apt__key(title)
-        elsif [:absent, 'absent'].include? params[:ensure]
+          should contain_apt__key("duplicate")
+        elsif param_set[:ensure] == 'absent'
           expect { should raise_error(Puppet::Error) }
         end
       }
 
     end
   end
+
 end
+

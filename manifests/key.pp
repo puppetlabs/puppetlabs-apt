@@ -26,21 +26,22 @@ define apt::key (
   # apt::source resources that all reference the same key.
   case $ensure {
     present: {
+
+      anchor { "apt::key/$title":; }
+
       if defined(Exec["apt::key $key absent"]) {
         fail ("Cannot ensure Apt::Key[$key] present; $key already ensured absent")
-      } elsif !defined(Exec["apt::key $key present"]) {
-        # this is a marker to ensure we don't simultaneously define a key
-        # ensure => absent AND ensure => present
-        exec { "apt::key $key present":
-          path   => "/",
-          onlyif => "/bin/false",
-          noop   => true;
-        }
       }
+
+      if !defined(Anchor["apt::key $key present"]) {
+        anchor { "apt::key $key present":; }
+      }
+
       if !defined(Exec[$digest]) {
         exec { $digest:
           path    => "/bin:/usr/bin",
           unless  => "/usr/bin/apt-key list | /bin/grep '${key}'",
+          before  => Anchor["apt::key $key present"],
           command => $method ? {
             "content" => "echo '${key_content}' | /usr/bin/apt-key add -",
             "source"  => "wget -q '${key_source}' -O- | apt-key add -",
@@ -48,11 +49,16 @@ define apt::key (
           };
         }
       }
+
+      Anchor["apt::key $key present"] -> Anchor["apt::key/$title"]
+
     }
     absent: {
-      if defined(Exec["apt::key $key present"]) {
+
+      if defined(Anchor["apt::key $key present"]) {
         fail ("Cannot ensure Apt::Key[$key] absent; $key already ensured present")
       }
+
       exec { "apt::key $key absent":
         path    => "/bin:/usr/bin",
         onlyif  => "apt-key list | grep '$key'",
@@ -61,6 +67,7 @@ define apt::key (
         group   => "root",
       }
     }
+
     default: {
       fail "Invalid 'ensure' value '$ensure' for aptkey"
     }
