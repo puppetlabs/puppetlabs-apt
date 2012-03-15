@@ -30,7 +30,9 @@ describe 'apt::key', :type => :define do
   ].each do |param_set|
 
     let :param_hash do
-      default_params.merge(param_set)
+      param_hash = default_params.merge(param_set)
+      param_hash[:key].upcase! if param_hash[:key]
+      param_hash
     end
 
     let :params do

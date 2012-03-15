@@ -8,6 +8,8 @@ define apt::key (
 
   include apt::params
 
+  $upkey = upcase($key)
+
   if $key_content {
     $method = "content"
   } elsif $key_source {
@@ -20,7 +22,7 @@ define apt::key (
   # It is used as a unique identifier for this instance of apt::key. It gets
   # hashed to ensure that the resource name doesn't end up being pages and
   # pages (e.g. in the situation where key_content is specified).
-  $digest = sha1("${key}/${key_content}/${key_source}/${key_server}/")
+  $digest = sha1("${upkey}/${key_content}/${key_source}/${key_server}/")
 
   # Allow multiple ensure => present for the same key to account for many
   # apt::source resources that all reference the same key.
@@ -29,40 +31,40 @@ define apt::key (
 
       anchor { "apt::key/$title":; }
 
-      if defined(Exec["apt::key $key absent"]) {
-        fail ("Cannot ensure Apt::Key[$key] present; $key already ensured absent")
+      if defined(Exec["apt::key $upkey absent"]) {
+        fail ("Cannot ensure Apt::Key[$upkey] present; $upkey already ensured absent")
       }
 
-      if !defined(Anchor["apt::key $key present"]) {
-        anchor { "apt::key $key present":; }
+      if !defined(Anchor["apt::key $upkey present"]) {
+        anchor { "apt::key $upkey present":; }
       }
 
       if !defined(Exec[$digest]) {
         exec { $digest:
           path    => "/bin:/usr/bin",
-          unless  => "/usr/bin/apt-key list | /bin/grep '${key}'",
-          before  => Anchor["apt::key $key present"],
+          unless  => "/usr/bin/apt-key list | /bin/grep '${upkey}'",
+          before  => Anchor["apt::key $upkey present"],
           command => $method ? {
             "content" => "echo '${key_content}' | /usr/bin/apt-key add -",
             "source"  => "wget -q '${key_source}' -O- | apt-key add -",
-            "server"  => "apt-key adv --keyserver '${key_server}' --recv-keys '${key}'",
+            "server"  => "apt-key adv --keyserver '${key_server}' --recv-keys '${upkey}'",
           };
         }
       }
 
-      Anchor["apt::key $key present"] -> Anchor["apt::key/$title"]
+      Anchor["apt::key $upkey present"] -> Anchor["apt::key/$title"]
 
     }
     absent: {
 
-      if defined(Anchor["apt::key $key present"]) {
-        fail ("Cannot ensure Apt::Key[$key] absent; $key already ensured present")
+      if defined(Anchor["apt::key $upkey present"]) {
+        fail ("Cannot ensure Apt::Key[$upkey] absent; $upkey already ensured present")
       }
 
-      exec { "apt::key $key absent":
+      exec { "apt::key $upkey absent":
         path    => "/bin:/usr/bin",
-        onlyif  => "apt-key list | grep '$key'",
-        command => "apt-key del '$key'",
+        onlyif  => "apt-key list | grep '$upkey'",
+        command => "apt-key del '$upkey'",
         user    => "root",
         group   => "root",
       }
