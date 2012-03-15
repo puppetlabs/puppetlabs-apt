@@ -41,8 +41,8 @@ class apt(
     package { "python-software-properties": }
   }
 
-  file { "sources.list":
-    path => "${apt::params::root}/sources.list",
+  file { "${apt::params::root}/sources.list":
+    alias => "sources.list",
     ensure => present,
     owner => root,
     group => root,
@@ -53,9 +53,9 @@ class apt(
     },
   }
 
-  file { "sources.list.d":
-    path => "${apt::params::root}/sources.list.d",
+  file { "${apt::params::root}/sources.list.d":
     ensure => directory,
+    alias => "sources.list.d",
     owner => root,
     group => root,
     purge => $purge_sources_list_d,
