@@ -17,25 +17,25 @@ define apt::source(
   include apt::params
 
   if $release == undef {
-    fail("lsbdistcodename fact not available: release parameter required")
+    fail('lsbdistcodename fact not available: release parameter required')
   }
 
   file { "${name}.list":
-    path => "${apt::params::root}/sources.list.d/${name}.list",
-    ensure => file,
-    owner => root,
-    group => root,
-    mode => 644,
-    content => template("apt/source.list.erb"),
+    ensure  => file,
+    path    => "${apt::params::root}/sources.list.d/${name}.list",
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    content => template("${module_name}/source.list.erb"),
   }
 
   if $pin != false {
-    apt::pin { "${release}": priority => "${pin}" } -> File["${name}.list"]
+    apt::pin { $release: priority => $pin } -> File["${name}.list"]
   }
 
   exec { "${name} apt update":
-    command => "${apt::params::provider} update",
-    subscribe => File["${name}.list"],
+    command     => "${apt::params::provider} update",
+    subscribe   => File["${name}.list"],
     refreshonly => true,
   }
 
@@ -49,8 +49,8 @@ define apt::source(
 
   if $key != false {
     apt::key { "Add key: ${key} from Apt::Source ${title}":
-      key         => $key,
       ensure      => present,
+      key         => $key,
       key_server  => $key_server,
       key_content => $key_content,
       key_source  => $key_source,

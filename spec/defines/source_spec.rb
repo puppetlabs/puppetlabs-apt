@@ -66,12 +66,12 @@ describe 'apt::source', :type => :define do
       it { should contain_apt__params }
 
       it { should contain_file("#{title}.list").with({
+          'ensure'    => 'file',
           'path'      => filename,
-          'ensure'    => "file",
-          'owner'     => "root",
-          'group'     => "root",
-          'mode'      => 644,
-          'content'   => content
+          'owner'     => 'root',
+          'group'     => 'root',
+          'mode'      => '0644',
+          'content'   => content,
         })
       }
 

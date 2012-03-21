@@ -12,9 +12,9 @@ describe 'apt::release', :type => :class do
 
   it {
     should contain_file("/etc/apt/apt.conf.d/01release").with({
+      "mode"    => "0644",
       "owner"   => "root",
       "group"   => "root",
-      "mode"    => 644,
       "content" => "APT::Default-Release \"#{param_set[:release_id]}\";"
     })
   }

@@ -9,11 +9,11 @@ define apt::pin(
   include apt::params
 
   file { "${name}.pref":
-    path => "${apt::params::root}/preferences.d/${name}",
-    ensure => file,
-    owner => root,
-    group => root,
-    mode => 644,
+    ensure  => file,
+    path    => "${apt::params::root}/preferences.d/${name}",
+    owner   => root,
+    group   => root,
+    mode    => '0644',
     content => "# ${name}\nPackage: ${packages}\nPin: release a=${name}\nPin-Priority: ${priority}",
   }
 }

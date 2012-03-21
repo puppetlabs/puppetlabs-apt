@@ -27,12 +27,12 @@ describe 'apt::pin', :type => :define do
       it { should include_class("apt::params") }
 
       it { should contain_file("#{title}.pref").with({
+          'ensure'  => 'file',
           'path'    => "/etc/apt/preferences.d/#{title}",
-          'ensure'  => "file",
-          'owner'   => "root",
-          'group'   => "root",
-          'mode'    => "644",
-          'content' => "# #{title}\nPackage: #{param_hash[:packages]}\nPin: release a=#{title}\nPin-Priority: #{param_hash[:priority]}"
+          'owner'   => 'root',
+          'group'   => 'root',
+          'mode'    => '0644',
+          'content' => "# #{title}\nPackage: #{param_hash[:packages]}\nPin: release a=#{title}\nPin-Priority: #{param_hash[:priority]}",
         })
       }
     end

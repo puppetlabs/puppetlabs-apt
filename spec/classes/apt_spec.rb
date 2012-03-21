@@ -50,7 +50,7 @@ describe 'apt', :type => :class do
             'ensure'  => "present",
             'owner'   => "root",
             'group'   => "root",
-            'mode'    => 644,
+            'mode'    => "0644",
             "content" => "# Repos managed by puppet.\n"
           })
         else
@@ -59,7 +59,7 @@ describe 'apt', :type => :class do
             'ensure'  => "present",
             'owner'   => "root",
             'group'   => "root",
-            'mode'    => 644,
+            'mode'    => "0644",
             'content' => nil
           })
         end
