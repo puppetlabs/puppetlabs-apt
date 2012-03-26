@@ -1,2 +1,2 @@
 class { 'apt': }
-apt::builddep{ 'foo': }
+apt::builddep{ 'glusterfs-server': }

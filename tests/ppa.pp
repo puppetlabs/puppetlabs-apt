@@ -1,2 +1,4 @@
 class { 'apt': }
-apt::ppa{ 'foo': }
+
+# Example declaration of an Apt PPA
+apt::ppa{ 'ppa:openstack-ppa/bleeding-edge': }

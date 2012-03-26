@@ -1,4 +1,4 @@
 class { 'apt': }
 class { 'apt::release':
-  release_id => 'foo'
+  release_id => 'karmic'
 }
