@@ -17,16 +17,23 @@ describe 'apt::ppa', :type => :define do
       let :filename do
         t.sub(/^ppa:/,'').gsub('/','-') << "-" << "#{release}.list"
       end
+      let :update_options do
+        [
+          "-o Dir::Etc::SourceList=/etc/apt/sources.list.d/#{filename}",
+          '-o Dir::Etc::SourceParts=/dev/null',
+          '--no-list-cleanup',
+        ].join(' ')
+      end
 
-      it { should contain_exec("apt-update-#{t}").with(
-        'command'     => '/usr/bin/aptitude update',
+      it { should contain_exec("apt::ppa #{t} apt_update").with(
+        'command'     => "/usr/bin/apt-get update #{update_options}",
         'refreshonly' => true
         )
       }
 
       it { should contain_exec("add-apt-repository-#{t}").with(
         'command' => "/usr/bin/add-apt-repository #{t}",
-        'notify'  => "Exec[apt-update-#{t}]",
+        'notify'  => "Exec[apt::ppa #{t} apt_update]",
         'creates' => "/etc/apt/sources.list.d/#{filename}"
         )
       }

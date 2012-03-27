@@ -20,23 +20,30 @@ define apt::source(
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
+  $sourcelist_path = "${apt::params::sources_list_d}/${name}.list"
+  $update_options  = join([
+    "-o Dir::Etc::SourceList=${sourcelist_path}",
+    '-o Dir::Etc::SourceParts=/dev/null',
+    '--no-list-cleanup',
+    ], ' ')
+
   file { "${name}.list":
     ensure  => file,
-    path    => "${apt::params::root}/sources.list.d/${name}.list",
-    owner   => root,
-    group   => root,
+    path    => $sourcelist_path,
+    owner   => 'root',
+    group   => 'root',
     mode    => '0644',
-    content => template("${module_name}/source.list.erb"),
-  }
-
-  if $pin != false {
-    apt::pin { $release: priority => $pin } -> File["${name}.list"]
+    content => template("apt/source.list.erb"),
   }
 
   exec { "${name} apt update":
-    command     => "${apt::params::provider} update",
+    command     => "${apt::params::provider} update ${update_options}",
     subscribe   => File["${name}.list"],
     refreshonly => true,
+  }
+
+  if $pin != false {
+    apt::pin { "${release}": priority => "${pin}" } -> File["${name}.list"]
   }
 
   if $required_packages != false {

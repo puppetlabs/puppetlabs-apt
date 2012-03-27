@@ -54,6 +54,14 @@ describe 'apt::source', :type => :define do
         "/etc/apt/sources.list.d/#{title}.list"
       end
 
+      let :update_options do
+        [
+          "-o Dir::Etc::SourceList=#{filename}",
+          '-o Dir::Etc::SourceParts=/dev/null',
+          '--no-list-cleanup',
+        ].join(' ')
+      end
+
       let :content do
         content = "# #{title}"
         content << "\ndeb #{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
@@ -66,12 +74,12 @@ describe 'apt::source', :type => :define do
       it { should contain_apt__params }
 
       it { should contain_file("#{title}.list").with({
-          'ensure'    => 'file',
-          'path'      => filename,
-          'owner'     => 'root',
-          'group'     => 'root',
-          'mode'      => '0644',
-          'content'   => content,
+          'ensure'  => 'file',
+          'path'    => filename,
+          'owner'   => 'root',
+          'group'   => 'root',
+          'mode'    => '0644',
+          'content' => content,
         })
       }
 
@@ -91,7 +99,7 @@ describe 'apt::source', :type => :define do
 
       it {
         should contain_exec("#{title} apt update").with({
-          "command"     => "/usr/bin/apt-get update",
+          "command"     => "/usr/bin/apt-get update #{update_options}",
           "subscribe"   => "File[#{title}.list]",
           "refreshonly" => true
         })
