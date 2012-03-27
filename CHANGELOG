@@ -1,3 +1,15 @@
+2012-03-26 Puppet Labs <info@puppetlabs.com> - 0.0.2
+41cedbb (#13261) Add real examples to smoke tests.
+d159a78 (#13261) Add key.pp smoke test
+7116c7a (#13261) Replace foo source with puppetlabs source
+1ead0bf Ignore pkg directory.
+9c13872 (#13289) Fix some more style violations
+0ea4ffa (#13289) Change test scaffolding to use a module & manifest dir fixture path
+a758247 (#13289) Clean up style violations and fix corresponding tests
+99c3fd3 (#13289) Add puppet lint tests to Rakefile
+5148cbf (#13125) Apt keys should be case insensitive
+b9607a4 Convert apt::key to use anchors
+
 2012-03-07 Puppet Labs <info@puppetlabs.com> - 0.0.1
 d4fec56 Modify apt::source release parameter test
 1132a07 (#12917) Add contributors to README
