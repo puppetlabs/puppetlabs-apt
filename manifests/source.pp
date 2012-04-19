@@ -36,10 +36,6 @@ define apt::source(
       file { "${name}.list":
         ensure  => absent,
         path    => "${apt::params::root}/sources.list.d/${name}.list",
-        owner   => root,
-        group   => root,
-        mode    => '0644',
-        content => template("${module_name}/source.list.erb"),
       }
     }
     default: { fail "Invalid 'ensure' value '${ensure}' for apt::source" }
