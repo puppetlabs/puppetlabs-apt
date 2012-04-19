@@ -2,6 +2,7 @@
 # add an apt source
 
 define apt::source(
+  $ensure = present,
   $location = '',
   $release = $lsbdistcodename,
   $repos = 'main',
@@ -19,14 +20,29 @@ define apt::source(
   if $release == undef {
     fail('lsbdistcodename fact not available: release parameter required')
   }
-
-  file { "${name}.list":
-    ensure  => file,
-    path    => "${apt::params::root}/sources.list.d/${name}.list",
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    content => template("${module_name}/source.list.erb"),
+  
+  case $ensure {
+    present: { 
+      file { "${name}.list":
+        ensure  => file,
+        path    => "${apt::params::root}/sources.list.d/${name}.list",
+        owner   => root,
+        group   => root,
+        mode    => '0644',
+        content => template("${module_name}/source.list.erb"),
+      }
+    }
+    absent: {
+      file { "${name}.list":
+        ensure  => absent,
+        path    => "${apt::params::root}/sources.list.d/${name}.list",
+        owner   => root,
+        group   => root,
+        mode    => '0644',
+        content => template("${module_name}/source.list.erb"),
+      }
+    }
+    default: { fail "Invalid 'ensure' value '${ensure}' for apt::source" }
   }
 
   if $pin != false {
