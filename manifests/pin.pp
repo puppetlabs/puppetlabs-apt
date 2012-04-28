@@ -3,7 +3,8 @@
 
 define apt::pin(
   $packages = '*',
-  $priority = 0
+  $priority = 0,
+  $release = "${name}"
 ) {
 
   include apt::params
@@ -14,6 +15,6 @@ define apt::pin(
     owner   => root,
     group   => root,
     mode    => '0644',
-    content => "# ${name}\nPackage: ${packages}\nPin: release a=${name}\nPin-Priority: ${priority}",
+    content => "# ${name}\nPackage: ${packages}\nPin: release a=${release}\nPin-Priority: ${priority}",
   }
 }
