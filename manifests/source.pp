@@ -30,7 +30,10 @@ define apt::source(
   }
 
   if $pin != false {
-    apt::pin { $release: priority => $pin } -> File["${name}.list"]
+    apt::pin { $release:
+      priority => $pin,
+      before   => File["${name}.list"]
+    }
   }
 
   exec { "${name} apt update":
