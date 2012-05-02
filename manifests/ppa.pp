@@ -13,7 +13,7 @@ define apt::ppa(
   }
 
   exec { "apt-update-${name}":
-    command     => '/usr/bin/aptitude update',
+    command     => "${::apt::params::provider} update",
     refreshonly => true,
   }
 
@@ -21,16 +21,20 @@ define apt::ppa(
   $filename_without_ppa = regsubst($filename_without_slashes, '^ppa:','','G')
   $sources_list_d_filename = "${filename_without_ppa}-${release}.list"
 
-  exec { "add-apt-repository-${name}":
-    command => "/usr/bin/add-apt-repository ${name}",
-    notify  => Exec["apt-update-${name}"],
-    creates => "${apt::params::sources_list_d}/${sources_list_d_filename}",
+  if ! defined(Package['python-software-properties']) {
+    package { 'python-software-properties': }
   }
 
-  file { "${apt::params::sources_list_d}/${sources_list_d_filename}":
+  exec { "add-apt-repository-${name}":
+    command => "/usr/bin/add-apt-repository ${name}",
+    creates => "${::apt::params::sources_list_d}/${sources_list_d_filename}",
+    require => Package['python-software-properties'],
+    notify  => Exec["apt-update-${name}"],
+  }
+
+  file { "${::apt::params::sources_list_d}/${sources_list_d_filename}":
     ensure  => file,
     require => Exec["add-apt-repository-${name}"];
   }
-
 }
 

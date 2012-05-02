@@ -41,8 +41,6 @@ describe 'apt', :type => :class do
 
       it { should include_class("apt::params") }
 
-      it { should contain_package("python-software-properties") }
-
       it {
         if param_hash[:purge_sources_list]
         should contain_file("sources.list").with({
@@ -125,10 +123,5 @@ describe 'apt', :type => :class do
         }
       end
     end
-  end
-
-  describe "it should not error if package['python-software-properties'] is already defined" do
-    let(:pre_condition) { 'package { "python-software-properties": }->Class["Apt"]' }
-    it { should contain_package("python-software-properties") }
   end
 end
