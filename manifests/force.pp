@@ -18,5 +18,4 @@ define apt::force(
   exec { "/usr/bin/aptitude -y -t ${release} install ${name}${version_string}":
     unless => $install_check,
   }
-
 }

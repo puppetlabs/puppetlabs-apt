@@ -8,9 +8,11 @@ define apt::pin(
 
   include apt::params
 
+  $preferences_d = $apt::params::preferences_d
+
   file { "${name}.pref":
     ensure  => file,
-    path    => "${apt::params::root}/preferences.d/${name}",
+    path    => "${preferences_d}/${name}",
     owner   => root,
     group   => root,
     mode    => '0644',

@@ -6,7 +6,9 @@ class apt::release (
 
   include apt::params
 
-  file { "${apt::params::root}/apt.conf.d/01release":
+  $root = $apt::params::root
+
+  file { "${root}/apt.conf.d/01release":
     owner   => root,
     group   => root,
     mode    => '0644',

@@ -45,9 +45,15 @@ class apt(
     false =>  undef,
     true  => "# Repos managed by puppet.\n",
   }
+
+  $root           = $apt::params::root
+  $apt_conf_d     = $apt::params::apt_conf_d
+  $sources_list_d = $apt::params::sources_list_d
+  $provider       = $apt::params::provider
+
   file { 'sources.list':
     ensure  => present,
-    path    => "${apt::params::root}/sources.list",
+    path    => "${root}/sources.list",
     owner   => root,
     group   => root,
     mode    => '0644',
@@ -56,7 +62,7 @@ class apt(
 
   file { 'sources.list.d':
     ensure  => directory,
-    path    => "${apt::params::root}/sources.list.d",
+    path    => $sources_list_d,
     owner   => root,
     group   => root,
     purge   => $purge_sources_list_d,
@@ -64,7 +70,7 @@ class apt(
   }
 
   exec { 'apt_update':
-    command     => "${apt::params::provider} update",
+    command     => "${provider} update",
     subscribe   => [ File['sources.list'], File['sources.list.d'] ],
     refreshonly => $refresh_only_apt_update,
   }
@@ -74,13 +80,13 @@ class apt(
       file { '99unauth':
         ensure  => present,
         content => "APT::Get::AllowUnauthenticated 1;\n",
-        path    => '/etc/apt/apt.conf.d/99unauth',
+        path    => "${apt_conf_d}/99unauth",
       }
     }
     false: {
       file { '99unauth':
         ensure => absent,
-        path   => '/etc/apt/apt.conf.d/99unauth',
+        path   => "${apt_conf_d}/99unauth",
       }
     }
     undef: { } # do nothing
@@ -89,7 +95,7 @@ class apt(
 
   if($proxy_host) {
     file { 'configure-apt-proxy':
-      path    => '/etc/apt/apt.conf.d/proxy',
+      path    => "${apt_conf_d}/proxy",
       content => "Acquire::http::Proxy \"http://${proxy_host}:${proxy_port}\";",
     }
   }

@@ -1,6 +1,7 @@
 # testing.pp
 
 class apt::debian::testing {
+  include apt
 
   # deb http://debian.mirror.iweb.ca/debian/ testing main contrib non-free
   # deb-src http://debian.mirror.iweb.ca/debian/ testing main contrib non-free
@@ -17,5 +18,4 @@ class apt::debian::testing {
     key_server        => 'subkeys.pgp.net',
     pin               => '-10',
   }
-
 }

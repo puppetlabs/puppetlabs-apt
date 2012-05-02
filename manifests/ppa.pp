@@ -8,6 +8,8 @@ define apt::ppa(
 
   include apt::params
 
+  $sources_list_d = $apt::params::sources_list_d
+
   if ! $release {
     fail('lsbdistcodename fact not available: release parameter required')
   }
@@ -24,13 +26,12 @@ define apt::ppa(
   exec { "add-apt-repository-${name}":
     command => "/usr/bin/add-apt-repository ${name}",
     notify  => Exec["apt-update-${name}"],
-    creates => "${apt::params::sources_list_d}/${sources_list_d_filename}",
+    creates => "${sources_list_d}/${sources_list_d_filename}",
   }
 
-  file { "${apt::params::sources_list_d}/${sources_list_d_filename}":
+  file { "${sources_list_d}/${sources_list_d_filename}":
     ensure  => file,
     require => Exec["add-apt-repository-${name}"];
   }
-
 }
 

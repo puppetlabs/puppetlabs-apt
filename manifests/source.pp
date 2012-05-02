@@ -16,13 +16,16 @@ define apt::source(
 
   include apt::params
 
+  $sources_list_d = $apt::params::sources_list_d
+  $provider       = $apt::params::provider
+
   if $release == undef {
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
   file { "${name}.list":
     ensure  => file,
-    path    => "${apt::params::root}/sources.list.d/${name}.list",
+    path    => "${sources_list_d}/${name}.list",
     owner   => root,
     group   => root,
     mode    => '0644',
@@ -37,14 +40,14 @@ define apt::source(
   }
 
   exec { "${name} apt update":
-    command     => "${apt::params::provider} update",
+    command     => "${provider} update",
     subscribe   => File["${name}.list"],
     refreshonly => true,
   }
 
   if $required_packages != false {
     exec { "Required packages: '${required_packages}' for ${name}":
-      command     => "${apt::params::provider} -y install ${required_packages}",
+      command     => "${provider} -y install ${required_packages}",
       subscribe   => File["${name}.list"],
       refreshonly => true,
     }
