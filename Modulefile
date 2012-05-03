@@ -1,9 +1,9 @@
-name    'puppet-apt'
+name    'puppetlabs-apt'
 version '0.0.2'
-source 'https://github.com/puppetlabs/puppet-apt'
-author 'Evolving Web / Puppet Labs'
+source  'https://github.com/puppetlabs/puppet-apt'
+author  'Evolving Web / Puppet Labs'
 license 'Apache License 2.0'
-summary 'Apt Module for Puppet'
+summary 'Puppet Labs Apt Module'
 description 'APT Module for Puppet'
 project_page 'https://github.com/puppetlabs/puppet-apt'
 
