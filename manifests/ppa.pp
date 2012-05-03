@@ -1,7 +1,7 @@
 # ppa.pp
 
 define apt::ppa(
-  $release = $lsbdistcodename
+  $release = $::lsbdistcodename
 ) {
 
   Class['apt'] -> Apt::Ppa[$title]

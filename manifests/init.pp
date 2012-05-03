@@ -42,7 +42,7 @@ class apt(
   }
 
   $sources_list_content = $purge_sources_list ? {
-    false =>  undef,
+    false => undef,
     true  => "# Repos managed by puppet.\n",
   }
 

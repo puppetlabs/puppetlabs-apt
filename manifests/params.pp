@@ -5,12 +5,12 @@ class apt::params {
   $apt_conf_d     = "${root}/apt.conf.d"
   $preferences_d  = "${root}/preferences.d"
 
-  case $lsbdistid {
+  case $::lsbdistid {
     'debian': {
       $backports_location = 'http://backports.debian.org/debian-backports'
     }
     'ubuntu': {
-      case $lsbdistcodename {
+      case $::lsbdistcodename {
         'hardy','lucid','maverick','natty','oneiric','precise': {
           $backports_location = 'http://us.archive.ubuntu.com/ubuntu'
         }
