@@ -15,7 +15,7 @@ define apt::ppa(
   }
 
   exec { "apt-update-${name}":
-    command     => '/usr/bin/aptitude update',
+    command     => "${apt::params::provider} update",
     refreshonly => true,
   }
 
