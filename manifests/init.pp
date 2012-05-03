@@ -93,10 +93,11 @@ class apt(
     default: { fail('Valid values for disable_keys are true or false') }
   }
 
-  if($proxy_host) {
+  if ($proxy_host) {
     file { 'configure-apt-proxy':
       path    => "${apt_conf_d}/proxy",
       content => "Acquire::http::Proxy \"http://${proxy_host}:${proxy_port}\";",
+      notify  => Exec['apt_update'],
     }
   }
 }
