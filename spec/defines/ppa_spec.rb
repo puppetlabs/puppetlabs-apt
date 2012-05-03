@@ -19,7 +19,7 @@ describe 'apt::ppa', :type => :define do
       end
 
       it { should contain_exec("apt-update-#{t}").with(
-        'command'     => '/usr/bin/aptitude update',
+        'command'     => '/usr/bin/apt-get update',
         'refreshonly' => true
         )
       }
