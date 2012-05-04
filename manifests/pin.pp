@@ -2,6 +2,7 @@
 # pin a release in apt, useful for unstable repositories
 
 define apt::pin(
+  $ensure   = present,
   $packages = '*',
   $priority = 0
 ) {
@@ -11,7 +12,7 @@ define apt::pin(
   $preferences_d = $apt::params::preferences_d
 
   file { "${name}.pref":
-    ensure  => file,
+    ensure  => $ensure,
     path    => "${preferences_d}/${name}",
     owner   => root,
     group   => root,

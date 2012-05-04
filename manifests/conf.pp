@@ -1,4 +1,5 @@
 define apt::conf (
+  $ensure   = present,
   $priority = '50',
   $content
 ) {
@@ -8,7 +9,7 @@ define apt::conf (
   $apt_conf_d = $apt::params::apt_conf_d
 
   file { "${apt_conf_d}/${priority}${name}":
-    ensure  => file,
+    ensure  => $ensure,
     content => $content,
     owner   => root,
     group   => root,

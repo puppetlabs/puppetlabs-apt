@@ -2,6 +2,7 @@
 # add an apt source
 
 define apt::source(
+  $ensure = present,
   $location = '',
   $release = $lsbdistcodename,
   $repos = 'main',
@@ -24,7 +25,7 @@ define apt::source(
   }
 
   file { "${name}.list":
-    ensure  => file,
+    ensure  => $ensure,
     path    => "${sources_list_d}/${name}.list",
     owner   => root,
     group   => root,
@@ -32,7 +33,7 @@ define apt::source(
     content => template("${module_name}/source.list.erb"),
   }
 
-  if $pin != false {
+  if ($pin != false) and ($ensure == 'present') {
     apt::pin { $release:
       priority => $pin,
       before   => File["${name}.list"]
@@ -45,7 +46,7 @@ define apt::source(
     refreshonly => true,
   }
 
-  if $required_packages != false {
+  if ($required_packages != false) and ($ensure == 'present') {
     exec { "Required packages: '${required_packages}' for ${name}":
       command     => "${provider} -y install ${required_packages}",
       subscribe   => File["${name}.list"],
@@ -53,7 +54,8 @@ define apt::source(
     }
   }
 
-  if $key != false {
+  # We do not want to remove keys when the source is absent.
+  if ($key != false) and ($ensure == 'present') {
     apt::key { "Add key: ${key} from Apt::Source ${title}":
       ensure      => present,
       key         => $key,

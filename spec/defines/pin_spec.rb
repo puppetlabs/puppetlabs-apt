@@ -4,13 +4,19 @@ describe 'apt::pin', :type => :define do
 
   let :default_params do
     {
+      :ensure   => 'present',
       :packages => '*',
       :priority => '0'
     }
   end
 
-  [{},
-   {
+  [ {},
+    {
+      :packages  => 'apache',
+      :priority  => '1'
+    },
+    {
+      :ensure    => 'absent',
       :packages  => 'apache',
       :priority  => '1'
     }
@@ -27,7 +33,7 @@ describe 'apt::pin', :type => :define do
       it { should include_class("apt::params") }
 
       it { should contain_file("#{title}.pref").with({
-          'ensure'  => 'file',
+          'ensure'  => param_hash[:ensure],
           'path'    => "/etc/apt/preferences.d/#{title}",
           'owner'   => 'root',
           'group'   => 'root',
