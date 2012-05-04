@@ -7,6 +7,7 @@ define apt::ppa(
   Class['apt'] -> Apt::Ppa[$title]
 
   include apt::params
+  include apt::update
 
   $sources_list_d = $apt::params::sources_list_d
 
@@ -14,10 +15,6 @@ define apt::ppa(
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
-  exec { "apt-update-${name}":
-    command     => "${apt::params::provider} update",
-    refreshonly => true,
-  }
 
   $filename_without_slashes = regsubst($name,'/','-','G')
   $filename_without_ppa = regsubst($filename_without_slashes, '^ppa:','','G')
@@ -25,8 +22,8 @@ define apt::ppa(
 
   exec { "add-apt-repository-${name}":
     command => "/usr/bin/add-apt-repository ${name}",
-    notify  => Exec["apt-update-${name}"],
     creates => "${sources_list_d}/${sources_list_d_filename}",
+    notify  => Exec['apt_update'],
   }
 
   file { "${sources_list_d}/${sources_list_d_filename}":

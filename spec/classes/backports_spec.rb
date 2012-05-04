@@ -17,7 +17,6 @@ describe 'apt::backports', :type => :class do
         'key'        => '437D05B5',
         'key_server' => 'pgp.mit.edu',
         'pin'        => '200',
-        'notify'     => 'Exec[apt_update]'
       })
     }
   end
@@ -38,7 +37,6 @@ describe 'apt::backports', :type => :class do
         'key'        => '55BE302B',
         'key_server' => 'pgp.mit.edu',
         'pin'        => '200',
-        'notify'     => 'Exec[apt_update]'
       })
     }
   end
@@ -67,7 +65,6 @@ describe 'apt::backports', :type => :class do
         'key'        => '55BE302B',
         'key_server' => 'pgp.mit.edu',
         'pin'        => '200',
-        'notify'     => 'Exec[apt_update]'
       })
     }
   end

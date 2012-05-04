@@ -41,6 +41,5 @@ class apt::backports(
     },
     key_server => 'pgp.mit.edu',
     pin        => '200',
-    notify     => Exec['apt_update'],
   }
 }

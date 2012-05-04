@@ -18,7 +18,7 @@ describe 'apt::ppa', :type => :define do
         t.sub(/^ppa:/,'').gsub('/','-') << "-" << "#{release}.list"
       end
 
-      it { should contain_exec("apt-update-#{t}").with(
+      it { should contain_exec("apt_update").with(
         'command'     => '/usr/bin/apt-get update',
         'refreshonly' => true
         )
@@ -26,7 +26,7 @@ describe 'apt::ppa', :type => :define do
 
       it { should contain_exec("add-apt-repository-#{t}").with(
         'command' => "/usr/bin/add-apt-repository #{t}",
-        'notify'  => "Exec[apt-update-#{t}]",
+        'notify'  => "Exec[apt_update]",
         'creates' => "/etc/apt/sources.list.d/#{filename}"
         )
       }

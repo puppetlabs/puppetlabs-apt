@@ -16,6 +16,7 @@ define apt::source(
 ) {
 
   include apt::params
+  include apt::update
 
   $sources_list_d = $apt::params::sources_list_d
   $provider       = $apt::params::provider
@@ -31,6 +32,7 @@ define apt::source(
     group   => root,
     mode    => '0644',
     content => template("${module_name}/source.list.erb"),
+    notify  => Exec['apt_update'],
   }
 
   if ($pin != false) and ($ensure == 'present') {
@@ -38,12 +40,6 @@ define apt::source(
       priority => $pin,
       before   => File["${name}.list"]
     }
-  }
-
-  exec { "${name} apt update":
-    command     => "${provider} update",
-    subscribe   => File["${name}.list"],
-    refreshonly => true,
   }
 
   if ($required_packages != false) and ($ensure == 'present') {

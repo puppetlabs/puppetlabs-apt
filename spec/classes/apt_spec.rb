@@ -72,7 +72,8 @@ describe 'apt', :type => :class do
             'owner'   => "root",
             'group'   => "root",
             'purge'   => true,
-            'recurse' => true
+            'recurse' => true,
+            'notify'  => 'Exec[apt_update]'
           })
         else
           should create_file("sources.list.d").with({
@@ -81,7 +82,8 @@ describe 'apt', :type => :class do
             'owner'   => "root",
             'group'   => "root",
             'purge'   => false,
-            'recurse' => false
+            'recurse' => false,
+            'notify'  => 'Exec[apt_update]'
           })
         end
       }
@@ -89,7 +91,6 @@ describe 'apt', :type => :class do
       it {
         should contain_exec("apt_update").with({
           'command'     => "/usr/bin/apt-get update",
-          'subscribe'   => ["File[sources.list]", "File[sources.list.d]"],
           'refreshonly' => refresh_only_apt_update
         })
       }

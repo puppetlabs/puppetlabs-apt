@@ -6,7 +6,7 @@ describe 'apt::builddep', :type => :define do
   describe "should succeed with a Class['apt']" do
     let(:pre_condition) { 'class {"apt": } ' }
 
-    it { should contain_exec("apt-update-#{title}").with({
+    it { should contain_exec("apt_update").with({
         'command' => "/usr/bin/apt-get update",
         'refreshonly' => true
       })
