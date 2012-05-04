@@ -20,9 +20,14 @@ define apt::ppa(
   $filename_without_ppa = regsubst($filename_without_slashes, '^ppa:','','G')
   $sources_list_d_filename = "${filename_without_ppa}-${release}.list"
 
+  if ! defined(Package['python-software-properties']) {
+    package { 'python-software-properties': }
+  }
+
   exec { "add-apt-repository-${name}":
     command => "/usr/bin/add-apt-repository ${name}",
     creates => "${sources_list_d}/${sources_list_d_filename}",
+    require => Package['python-software-properties'],
     notify  => Exec['apt_update'],
   }
 

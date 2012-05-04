@@ -33,10 +33,6 @@ class apt(
 
   validate_bool($purge_sources_list, $purge_sources_list_d)
 
-  if ! defined(Package['python-software-properties']) {
-    package { 'python-software-properties': }
-  }
-
   $sources_list_content = $purge_sources_list ? {
     false => undef,
     true  => "# Repos managed by puppet.\n",
