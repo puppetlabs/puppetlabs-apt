@@ -1,3 +1,15 @@
+2012-05-04 Puppet Labs <info@puppetlabs.com> - 0.0.3
+ * only invoke apt-get update once
+ * only install python-software-properties if a ppa is added
+ * support 'ensure => absent' for all defined types
+ * add apt::conf
+ * add apt::backports
+ * fixed Modulefile for module tool dependency resolution
+ * configure proxy before doing apt-get update
+ * use apt-get update instead of aptitude for apt::ppa
+ * add support to pin release
+
+
 2012-03-26 Puppet Labs <info@puppetlabs.com> - 0.0.2
 41cedbb (#13261) Add real examples to smoke tests.
 d159a78 (#13261) Add key.pp smoke test
