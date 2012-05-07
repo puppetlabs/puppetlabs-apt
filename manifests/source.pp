@@ -61,4 +61,9 @@ define apt::source(
       before      => File["${name}.list"],
     }
   }
+
+  # Need anchor to provide containment for dependencies.
+  anchor { "apt::source::${name}":
+    require => Class['apt::update'],
+  }
 }

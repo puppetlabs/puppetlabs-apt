@@ -94,4 +94,9 @@ class apt(
       notify  => Exec['apt_update'],
     }
   }
+
+  # Need anchor to provide containment for dependencies.
+  anchor { "apt::update":
+    require => Class['apt::update'],
+  }
 }

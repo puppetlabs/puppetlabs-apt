@@ -35,5 +35,10 @@ define apt::ppa(
     ensure  => file,
     require => Exec["add-apt-repository-${name}"];
   }
+
+  # Need anchor to provide containment for dependencies.
+  anchor { "apt::ppa::${name}":
+    require => Class['apt::update'],
+  }
 }
 
