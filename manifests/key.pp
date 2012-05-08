@@ -29,14 +29,14 @@ define apt::key (
   case $ensure {
     present: {
 
-      anchor { "apt::key/${title}":; }
+      anchor { "apt::key/${title}": }
 
       if defined(Exec["apt::key ${upkey} absent"]) {
         fail("Cannot ensure Apt::Key[${upkey}] present; ${upkey} already ensured absent")
       }
 
       if !defined(Anchor["apt::key ${upkey} present"]) {
-        anchor { "apt::key ${upkey} present":; }
+        anchor { "apt::key ${upkey} present": }
       }
 
       if !defined(Exec[$digest]) {
