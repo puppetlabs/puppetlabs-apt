@@ -3,9 +3,6 @@
 define apt::ppa(
   $release = $::lsbdistcodename
 ) {
-
-  Class['apt'] -> Apt::Ppa[$title]
-
   include apt::params
   include apt::update
 
@@ -26,7 +23,8 @@ define apt::ppa(
   exec { "add-apt-repository-${name}":
     command => "/usr/bin/add-apt-repository ${name}",
     creates => "${sources_list_d}/${sources_list_d_filename}",
-    require => Package['python-software-properties'],
+    require => [ File[$sources_list_d],
+                 Package['python-software-properties'] ],
     notify  => Exec['apt_update'],
   }
 

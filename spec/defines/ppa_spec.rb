@@ -29,7 +29,7 @@ describe 'apt::ppa', :type => :define do
       it { should contain_exec("add-apt-repository-#{t}").with(
         'command' => "/usr/bin/add-apt-repository #{t}",
         'creates' => "/etc/apt/sources.list.d/#{filename}",
-        'require' => "Package[python-software-properties]",
+        'require' => ["File[/etc/apt/sources.list.d]", "Package[python-software-properties]"],
         'notify'  => "Exec[apt_update]"
         )
       }
