@@ -1,3 +1,0 @@
-[submodule "spec/fixtures/modules/stdlib"]
-	path = spec/fixtures/modules/stdlib
-	url = https://github.com/puppetlabs/puppetlabs-stdlib.git
