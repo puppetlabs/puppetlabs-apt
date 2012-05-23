@@ -28,7 +28,7 @@ class apt::backports(
 
   $release_real = downcase($release)
 
-  apt::source { 'backports.list':
+  apt::source { 'backports':
     location   => $location,
     release    => "${release_real}-backports",
     repos      => $::lsbdistid ? {

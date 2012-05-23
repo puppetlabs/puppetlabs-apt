@@ -5,19 +5,28 @@ define apt::pin(
   $ensure   = present,
   $packages = '*',
   $priority = 0,
-  $release  = $name
+  $release  = '',
+  $origin   = ''
 ) {
 
   include apt::params
 
   $preferences_d = $apt::params::preferences_d
 
+  if $release != '' {
+    $pin = "release a=${release}"
+  } elsif $origin != '' {
+    $pin = "origin \"${origin}\""
+  } else {
+    $pin = "release a=${name}"
+  }
+
   file { "${name}.pref":
     ensure  => $ensure,
-    path    => "${preferences_d}/${name}",
+    path    => "${preferences_d}/${name}.pref",
     owner   => root,
     group   => root,
     mode    => '0644',
-    content => "# ${name}\nPackage: ${packages}\nPin: release a=${release}\nPin-Priority: ${priority}",
+    content => template("apt/pin.pref.erb"),
   }
 }

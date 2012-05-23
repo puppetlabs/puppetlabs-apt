@@ -2,17 +2,17 @@
 # add an apt source
 
 define apt::source(
-  $ensure = present,
-  $location = '',
-  $release = $lsbdistcodename,
-  $repos = 'main',
-  $include_src = true,
+  $ensure            = present,
+  $location          = '',
+  $release           = $lsbdistcodename,
+  $repos             = 'main',
+  $include_src       = true,
   $required_packages = false,
-  $key = false,
-  $key_server = 'keyserver.ubuntu.com',
-  $key_content = false,
-  $key_source  = false,
-  $pin = false
+  $key               = false,
+  $key_server        = 'keyserver.ubuntu.com',
+  $key_content       = false,
+  $key_source        = false,
+  $pin               = false
 ) {
 
   include apt::params
@@ -35,10 +35,17 @@ define apt::source(
     notify  => Exec['apt_update'],
   }
 
-  if ($pin != false) and ($ensure == 'present') {
-    apt::pin { $release:
+
+  if ($pin != false) {
+    # Get the host portion out of the url so we can pin to origin
+    $url_split = split($location, '/')
+    $host      = $url_split[2]
+
+    apt::pin { $name:
+      ensure   => $ensure,
       priority => $pin,
-      before   => File["${name}.list"]
+      before   => File["${name}.list"],
+      origin   => $host,
     }
   }
 
