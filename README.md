@@ -92,3 +92,4 @@ Ryan Coleman <ryan@puppetlabs.com>
 Scott McLeod <scott.mcleod@theice.com>  
 Spencer Krum <spencer@puppetlabs.com>  
 William Van Hevelingen <blkperl@cat.pdx.edu> <wvan13@gmail.com>  
+Zach Leslie <zach@puppetlabs.com>  
