@@ -40,11 +40,11 @@ describe 'apt::pin', :type => :define do
 
       it { should contain_file("#{title}.pref").with({
           'ensure'  => param_hash[:ensure],
-          'path'    => "/etc/apt/preferences.d/#{title}",
+          'path'    => "/etc/apt/preferences.d/#{title}.pref",
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0644',
-          'content' => "# #{title}\nPackage: #{param_hash[:packages]}\nPin: release a=#{param_hash[:release] || title}\nPin-Priority: #{param_hash[:priority]}",
+          'content' => "# #{title}\nPackage: #{param_hash[:packages]}\nPin: release a=#{param_hash[:release] || title}\nPin-Priority: #{param_hash[:priority]}\n",
         })
       }
     end

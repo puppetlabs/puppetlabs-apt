@@ -10,7 +10,7 @@ describe 'apt::backports', :type => :class do
       }
     end
 
-    it { should contain_apt__source('backports.list').with({
+    it { should contain_apt__source('backports').with({
         'location'   => 'http://old-releases.ubuntu.com/ubuntu',
         'release'    => 'karmic-backports',
         'repos'      => 'universe multiverse restricted',
@@ -30,7 +30,7 @@ describe 'apt::backports', :type => :class do
       }
     end
 
-    it { should contain_apt__source('backports.list').with({
+    it { should contain_apt__source('backports').with({
         'location'   => 'http://backports.debian.org/debian-backports',
         'release'    => 'squeeze-backports',
         'repos'      => 'main contrib non-free',
@@ -58,7 +58,7 @@ describe 'apt::backports', :type => :class do
       { 'location' => location }
     end
 
-    it { should contain_apt__source('backports.list').with({
+    it { should contain_apt__source('backports').with({
         'location'   => location,
         'release'    => 'squeeze-backports',
         'repos'      => 'main contrib non-free',
