@@ -22,7 +22,7 @@ describe 'apt::source', :type => :define do
 
   [{},
    {
-      :location           => 'somewhere',
+      :location           => 'http://example.com',
       :release            => 'precise',
       :repos              => 'security',
       :include_src        => false,
@@ -39,7 +39,7 @@ describe 'apt::source', :type => :define do
     },
     {
       :ensure             => 'absent',
-      :location           => 'somewhere',
+      :location           => 'http://example.com',
       :release            => 'precise',
       :repos              => 'security',
     }
