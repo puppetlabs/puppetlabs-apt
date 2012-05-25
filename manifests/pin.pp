@@ -2,11 +2,12 @@
 # pin a release in apt, useful for unstable repositories
 
 define apt::pin(
-  $ensure   = present,
-  $packages = '*',
-  $priority = 0,
-  $release  = '',
-  $origin   = ''
+  $ensure     = present,
+  $packages   = '*',
+  $priority   = 0,
+  $release    = '',
+  $origin     = '',
+  $originator = '',
 ) {
 
   include apt::params
@@ -17,6 +18,8 @@ define apt::pin(
     $pin = "release a=${release}"
   } elsif $origin != '' {
     $pin = "origin \"${origin}\""
+  } elsif $originator != '' {
+    $pin = "release o=${originator}"
   } else {
     $pin = "release a=${name}"
   }
