@@ -1,3 +1,9 @@
+2012-05-25 Puppet Labs <info@puppetlabs.com> - 0.0.4
+ * Fix ppa list filename when there is a period in the PPA name
+ * Add .pref extension to apt preferences files
+ * Allow preferences to be purged
+ * Extend pin support
+
 2012-05-04 Puppet Labs <info@puppetlabs.com> - 0.0.3
  * only invoke apt-get update once
  * only install python-software-properties if a ppa is added
