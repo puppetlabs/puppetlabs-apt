@@ -7,7 +7,7 @@ define apt::pin(
   $priority   = 0,
   $release    = '',
   $origin     = '',
-  $originator = '',
+  $originator = ''
 ) {
 
   include apt::params
