@@ -43,6 +43,7 @@ task :spec_prep do
     File::exists?(target) || system("git clone #{repo} #{target}")
   end
 
+  FileUtils::mkdir_p("spec/fixtures/modules")
   fixtures("symlinks").each do |source, target|
     File::exists?(target) || FileUtils::ln_s(source, target)
   end
@@ -75,6 +76,11 @@ task :build do
     pmod = Puppet::Face['module', :current]
     pmod.build('./')
   end
+end
+
+desc "Clean a built module package"
+task :clean do
+  FileUtils.rm_rf("pkg/")
 end
 
 desc "Check puppet manifests with puppet-lint"
