@@ -3,7 +3,7 @@ rvm:
   - 1.8.7
 before_script:
 after_script:
-script: "rake spec_full"
+script: "rake spec"
 branches:
   only:
     - master
