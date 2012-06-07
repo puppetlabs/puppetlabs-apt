@@ -16,6 +16,7 @@ define apt::force(
     default => "/usr/bin/dpkg -s ${name} | grep -q 'Version: ${version}'",
   }
   exec { "/usr/bin/aptitude -y -t ${release} install ${name}${version_string}":
-    unless => $install_check,
+    unless    => $install_check,
+    logoutput => 'on_failure',
   }
 }

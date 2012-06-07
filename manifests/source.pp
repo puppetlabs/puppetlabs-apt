@@ -52,8 +52,9 @@ define apt::source(
   if ($required_packages != false) and ($ensure == 'present') {
     exec { "Required packages: '${required_packages}' for ${name}":
       command     => "${provider} -y install ${required_packages}",
-      subscribe   => File["${name}.list"],
+      logoutput   => 'on_failure',
       refreshonly => true,
+      subscribe   => File["${name}.list"],
     }
   }
 

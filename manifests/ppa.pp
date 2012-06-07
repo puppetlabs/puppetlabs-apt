@@ -22,11 +22,12 @@ define apt::ppa(
   }
 
   exec { "add-apt-repository-${name}":
-    command => "/usr/bin/add-apt-repository ${name}",
-    creates => "${sources_list_d}/${sources_list_d_filename}",
-    require => [ File[$sources_list_d],
-                 Package['python-software-properties'] ],
-    notify  => Exec['apt_update'],
+    command   => "/usr/bin/add-apt-repository ${name}",
+    creates   => "${sources_list_d}/${sources_list_d_filename}",
+    logoutput => 'on_failure',
+    require   => [ File[$sources_list_d],
+                   Package['python-software-properties'] ],
+    notify    => Exec['apt_update'],
   }
 
   file { "${sources_list_d}/${sources_list_d_filename}":
