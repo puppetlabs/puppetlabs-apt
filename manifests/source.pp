@@ -4,7 +4,7 @@
 define apt::source(
   $ensure            = present,
   $location          = '',
-  $release           = $lsbdistcodename,
+  $release           = $::lsbdistcodename,
   $repos             = 'main',
   $include_src       = true,
   $required_packages = false,
