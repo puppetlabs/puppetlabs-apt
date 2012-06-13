@@ -16,9 +16,10 @@
 # Actions:
 #
 # Requires:
-#
+#   puppetlabs/stdlib
 # Sample Usage:
 #  class { 'apt': }
+
 class apt(
   $always_apt_update    = false,
   $disable_keys         = undef,
