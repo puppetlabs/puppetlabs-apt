@@ -33,7 +33,7 @@ class apt::backports(
     release    => "${release_real}-backports",
     repos      => $::lsbdistid ? {
       'debian' => 'main contrib non-free',
-      'ubuntu' => 'universe multiverse restricted',
+      'ubuntu' => 'main universe multiverse restricted',
     },
     key        => $::lsbdistid ? {
       'debian' => '55BE302B',
