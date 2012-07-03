@@ -7,6 +7,13 @@ define apt::ppa(
   include apt::update
 
   $sources_list_d = $apt::params::sources_list_d
+  
+  file {"$sources_list_d":
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '755',
+  }
 
   if ! $release {
     fail('lsbdistcodename fact not available: release parameter required')
