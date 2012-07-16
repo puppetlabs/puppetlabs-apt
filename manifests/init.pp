@@ -31,7 +31,15 @@ class apt(
 ) {
 
   include apt::params
-  include apt::update
+
+  $refresh_apt_update = $always_apt_update ? {
+    false =>  true,
+    true  =>  false
+  }
+
+  class { 'apt::update':
+    refreshonly => $refresh_apt_update,
+  }
 
   validate_bool($purge_sources_list, $purge_sources_list_d, $purge_preferences_d)
 
@@ -40,11 +48,6 @@ class apt(
     true  => "# Repos managed by puppet.\n",
   }
 
-  if $always_apt_update == true {
-    Exec <| title=='apt_update' |> {
-      refreshonly => false,
-    }
-  }
 
   $root           = $apt::params::root
   $apt_conf_d     = $apt::params::apt_conf_d
