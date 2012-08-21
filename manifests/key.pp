@@ -54,7 +54,7 @@ define apt::key (
         }
       }
 
-      Anchor["apt::key $upkey present"] -> Anchor["apt::key/$title"]
+      Anchor["apt::key ${upkey} present"] -> Anchor["apt::key/${title}"]
 
     }
     absent: {

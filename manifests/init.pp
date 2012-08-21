@@ -108,7 +108,7 @@ class apt(
   }
 
   # Need anchor to provide containment for dependencies.
-  anchor { "apt::update":
+  anchor { 'apt::update':
     require => Class['apt::update'],
   }
 }
