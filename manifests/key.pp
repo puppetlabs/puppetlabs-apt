@@ -27,7 +27,7 @@ define apt::key (
   # Allow multiple ensure => present for the same key to account for many
   # apt::source resources that all reference the same key.
   case $ensure {
-    present: {
+    'present': {
 
       anchor { "apt::key/${title}": }
 
@@ -54,10 +54,10 @@ define apt::key (
         }
       }
 
-      Anchor["apt::key $upkey present"] -> Anchor["apt::key/$title"]
+      Anchor["apt::key ${upkey} present"] -> Anchor["apt::key/${title}"]
 
     }
-    absent: {
+    'absent': {
 
       if defined(Anchor["apt::key ${upkey} present"]) {
         fail("Cannot ensure Apt::Key[${upkey}] absent; ${upkey} already ensured present")
