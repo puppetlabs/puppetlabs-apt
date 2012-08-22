@@ -78,7 +78,7 @@ describe 'apt::source', :type => :define do
           'owner'     => 'root',
           'group'     => 'root',
           'mode'      => '0644',
-          'content'   => content,
+          'content'   => Regexp.new(Regexp.escape(content)),
         })
       }
 
