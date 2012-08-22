@@ -4,7 +4,7 @@
 define apt::source(
   $ensure            = present,
   $location          = '',
-  $release           = $::lsbdistcodename,
+  $release           = 'UNDEF',
   $repos             = 'main',
   $include_src       = true,
   $required_packages = false,
@@ -21,8 +21,14 @@ define apt::source(
   $sources_list_d = $apt::params::sources_list_d
   $provider       = $apt::params::provider
 
-  if $release == undef {
-    fail('lsbdistcodename fact not available: release parameter required')
+  if $release == 'UNDEF' {
+    if $::lsbdistcodename == undef {
+      fail('lsbdistcodename fact not available: release parameter required')
+    } else {
+      $release_real = $::lsbdistcodename
+    }
+  } else {
+    $release_real = $release
   }
 
   file { "${name}.list":
