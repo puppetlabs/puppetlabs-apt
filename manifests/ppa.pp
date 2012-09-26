@@ -3,6 +3,7 @@
 define apt::ppa(
   $release = $::lsbdistcodename
 ) {
+  include ::apt
   include apt::params
   include apt::update
 
