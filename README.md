@@ -55,6 +55,17 @@ apt::source { "debian_unstable":
   include_src       => true
 }
 </pre>
+
+This source will configure your system for the Puppet Labs APT repository.
+<pre>
+apt::source { 'puppetlabs':
+  location   => 'http://apt.puppetlabs.com',
+  repos      => 'main',
+  key        => '4BD6EC30',
+  key_server => 'pgp.mit.edu',
+}
+</pre>
+
 ### apt::key
 Add a key to the list of keys used by apt to authenticate packages.
 <pre>
