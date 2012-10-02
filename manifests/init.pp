@@ -16,9 +16,10 @@
 # Actions:
 #
 # Requires:
-#
+#   puppetlabs/stdlib
 # Sample Usage:
 #  class { 'apt': }
+
 class apt(
   $always_apt_update    = false,
   $disable_keys         = undef,
@@ -107,7 +108,7 @@ class apt(
   }
 
   # Need anchor to provide containment for dependencies.
-  anchor { "apt::update":
+  anchor { 'apt::update':
     require => Class['apt::update'],
   }
 }

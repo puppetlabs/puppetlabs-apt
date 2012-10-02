@@ -46,14 +46,15 @@ define apt::key (
           'server'  => "apt-key adv --keyserver '${key_server}' --recv-keys '${upkey}'",
         }
         exec { $digest:
-          path    => '/bin:/usr/bin',
-          unless  => "/usr/bin/apt-key list | /bin/grep '${upkey}'",
-          before  => Anchor["apt::key ${upkey} present"],
-          command => $digest_command,
+          command   => $digest_command,
+          path      => '/bin:/usr/bin',
+          unless    => "/usr/bin/apt-key list | /bin/grep '${upkey}'",
+          logoutput => 'on_failure',
+          before    => Anchor["apt::key ${upkey} present"],
         }
       }
 
-      Anchor["apt::key $upkey present"] -> Anchor["apt::key/$title"]
+      Anchor["apt::key ${upkey} present"] -> Anchor["apt::key/${title}"]
 
     }
     absent: {
@@ -63,11 +64,12 @@ define apt::key (
       }
 
       exec { "apt::key ${upkey} absent":
-        path    => '/bin:/usr/bin',
-        onlyif  => "apt-key list | grep '${upkey}'",
-        command => "apt-key del '${upkey}'",
-        user    => 'root',
-        group   => 'root',
+        command   => "apt-key del '${upkey}'",
+        path      => '/bin:/usr/bin',
+        onlyif    => "apt-key list | grep '${upkey}'",
+        user      => 'root',
+        group     => 'root',
+        logoutput => 'on_failure',
       }
     }
 

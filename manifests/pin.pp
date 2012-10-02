@@ -8,6 +8,7 @@ define apt::pin(
   $release     = '',
   $origin      = '',
   $originator  = '',
+  $version     = '',
   $codename    = '',
   $explanation = '',
 ) {
@@ -22,6 +23,8 @@ define apt::pin(
     $pin = "origin ${origin}"
   } elsif $originator != '' {
     $pin = "release o=${originator}"
+  } elsif $version != '' {
+    $pin = "version ${version}"
   } elsif $codename != '' {
     $pin = "release n=${codename}"
   } else {
@@ -34,6 +37,6 @@ define apt::pin(
     owner   => root,
     group   => root,
     mode    => '0644',
-    content => template("apt/pin.pref.erb"),
+    content => template('apt/pin.pref.erb'),
   }
 }

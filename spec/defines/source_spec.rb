@@ -42,6 +42,12 @@ describe 'apt::source', :type => :define do
       :location           => 'http://example.com',
       :release            => 'precise',
       :repos              => 'security',
+    },
+    {
+      :release            => '',
+    },
+    {
+      :release            => 'custom',
     }
   ].each do |param_set|
     describe "when #{param_set == {} ? "using default" : "specifying"} class parameters" do
