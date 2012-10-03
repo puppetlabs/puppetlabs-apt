@@ -10,7 +10,7 @@ define apt::pin(
   $originator  = '',
   $version     = '',
   $codename    = '',
-  $explanation = '',
+  $explanation = ''
 ) {
 
   include apt::params
