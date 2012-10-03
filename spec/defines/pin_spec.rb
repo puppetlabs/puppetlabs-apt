@@ -49,4 +49,64 @@ describe 'apt::pin', :type => :define do
       }
     end
   end
+  describe "when using codename" do
+
+    let :param_set do
+    {
+      :packages  => 'apache',
+      :priority  => '1',
+      :codename  => 'my_codename'
+    }
+    end
+
+    let :param_hash do
+      default_params.merge(param_set)
+    end
+
+    let :params do
+      param_set
+    end
+
+    it { should include_class("apt::params") }
+
+    it { should contain_file("#{title}.pref").with({
+        'ensure'  => param_hash[:ensure],
+        'path'    => "/etc/apt/preferences.d/#{title}.pref",
+        'owner'   => 'root',
+        'group'   => 'root',
+        'mode'    => '0644',
+        'content' => "# #{title}\nPackage: #{param_hash[:packages]}\nPin: release n=#{param_hash[:codename] || title}\nPin-Priority: #{param_hash[:priority]}\n",
+      })
+    }
+  end
+  describe "when using explanation" do
+    let :param_set do
+    {
+      :packages    => 'apache',
+      :priority    => '1',
+      :codename    => 'my_codename',
+      :explanation => 'my_explanation',
+    }
+    end
+
+    let :param_hash do
+      default_params.merge(param_set)
+    end
+
+    let :params do
+      param_set
+    end
+
+    it { should include_class("apt::params") }
+
+    it { should contain_file("#{title}.pref").with({
+        'ensure'  => param_hash[:ensure],
+        'path'    => "/etc/apt/preferences.d/#{title}.pref",
+        'owner'   => 'root',
+        'group'   => 'root',
+        'mode'    => '0644',
+        'content' => "# #{title}\nExplanation: #{param_hash[:explanation]}\nPackage: #{param_hash[:packages]}\nPin: release n=#{param_hash[:codename] || title}\nPin-Priority: #{param_hash[:priority]}\n",
+      })
+    }
+  end
 end
