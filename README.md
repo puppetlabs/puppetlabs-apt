@@ -12,13 +12,13 @@ should always be included in your manifests if you are using the `apt`
 module.
 
     class { 'apt':
-      $always_apt_update    = false,
-      $disable_keys         = undef,
-      $proxy_host           = false,
-      $proxy_port           = '8080',
-      $purge_sources_list   = false,
-      $purge_sources_list_d = false,
-      $purge_preferences_d  = false
+      always_apt_update    => false,
+      disable_keys         => undef,
+      proxy_host           => false,
+      proxy_port           => '8080',
+      purge_sources_list   => false,
+      purge_sources_list_d => false,
+      purge_preferences_d  => false
     }
 
 ### apt::builddep
