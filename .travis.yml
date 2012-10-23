@@ -8,6 +8,7 @@ branches:
   only:
     - master
 env:
+  - PUPPET_VERSION=3.0.1
   - PUPPET_VERSION=2.7.13
   - PUPPET_VERSION=2.7.6
   - PUPPET_VERSION=2.6.9

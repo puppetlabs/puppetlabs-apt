@@ -8,4 +8,4 @@ description 'APT Module for Puppet'
 project_page 'https://github.com/puppetlabs/puppetlabs-apt'
 
 ## Add dependencies, if any:
-dependency 'puppetlabs/stdlib', '>= 2.2.1'
+dependency 'puppetlabs/stdlib', '>= 3.0.1'

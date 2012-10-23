@@ -3,7 +3,8 @@ define apt::key (
   $ensure = present,
   $key_content = false,
   $key_source = false,
-  $key_server = 'keyserver.ubuntu.com'
+  $key_server = 'keyserver.ubuntu.com',
+  $key_options = false
 ) {
 
   include apt::params
@@ -39,11 +40,18 @@ define apt::key (
         anchor { "apt::key ${upkey} present": }
       }
 
+      if $key_options{
+        $options_string = "--keyserver-options ${key_options}"
+      }
+      else{
+        $options_string = ''
+      }
+
       if !defined(Exec[$digest]) {
         $digest_command = $method ? {
           'content' => "echo '${key_content}' | /usr/bin/apt-key add -",
           'source'  => "wget -q '${key_source}' -O- | apt-key add -",
-          'server'  => "apt-key adv --keyserver '${key_server}' --recv-keys '${upkey}'",
+          'server'  => "apt-key adv --keyserver '${key_server}' ${options_string} --recv-keys '${upkey}'",
         }
         exec { $digest:
           command   => $digest_command,
