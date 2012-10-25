@@ -50,7 +50,7 @@ describe 'apt::pin', :type => :define do
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0644',
-          'content' => "# #{title}\nPackage: #{param_hash[:packages]}\nPin: release a=#{param_hash[:release] || title}\nPin-Priority: #{param_hash[:priority]}\n",
+          'content' => "# #{title}\nExplanation: : #{title}\nPackage: #{param_hash[:packages]}\nPin: release a=#{param_hash[:release] || title}\nPin-Priority: #{param_hash[:priority]}\n",
         })
       }
     end
