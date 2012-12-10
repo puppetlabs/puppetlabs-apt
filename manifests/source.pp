@@ -16,10 +16,11 @@ define apt::source(
 ) {
 
   include apt::params
-  include apt::update
 
   $sources_list_d = $apt::params::sources_list_d
   $provider       = $apt::params::provider
+
+  apt::update { "apt-source-${title}": }
 
   if $release == 'UNDEF' {
     if $::lsbdistcodename == undef {
@@ -38,7 +39,7 @@ define apt::source(
     group   => root,
     mode    => '0644',
     content => template("${module_name}/source.list.erb"),
-    notify  => Exec['apt_update'],
+    notify  => Apt::Update["apt-source-${title}"],
   }
 
 
@@ -74,10 +75,5 @@ define apt::source(
       key_source  => $key_source,
       before      => File["${name}.list"],
     }
-  }
-
-  # Need anchor to provide containment for dependencies.
-  anchor { "apt::source::${name}":
-    require => Class['apt::update'],
   }
 }
