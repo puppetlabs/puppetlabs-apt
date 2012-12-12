@@ -9,6 +9,7 @@ define apt::key (
   include apt::params
 
   $upkey = upcase($key)
+  $upkeytrimmed = regsubst($upkey, '.*([A-Z0-9]{8})$', '\1')
 
   if $key_content {
     $method = 'content'
@@ -48,7 +49,7 @@ define apt::key (
         exec { $digest:
           command   => $digest_command,
           path      => '/bin:/usr/bin',
-          unless    => "/usr/bin/apt-key list | /bin/grep '${upkey}'",
+          unless    => "/usr/bin/apt-key list | /bin/grep '${upkeytrimmed}'",
           logoutput => 'on_failure',
           before    => Anchor["apt::key ${upkey} present"],
         }
