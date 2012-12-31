@@ -7,11 +7,11 @@
 #     added for use cases related to development environments.
 #   disable_keys - disables the requirement for all packages to be signed
 #   always_apt_update - rather apt should be updated on every run (intended
-#     for development environments where package updates are frequent
+#     for development environments where package updates are frequent)
 #   purge_sources_list - Accepts true or false. Defaults to false If set to
-#     true, Puppet will purge all unmanaged entries from sources.list"
+#     true, Puppet will purge all unmanaged entries from sources.list
 #   purge_sources_list_d - Accepts true or false. Defaults to false. If set
-#     to false, Puppet will purge all unmanaged entries from sources.list.d
+#     to true, Puppet will purge all unmanaged entries from sources.list.d
 #
 # Actions:
 #
