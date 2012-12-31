@@ -1,15 +1,20 @@
-# Apt module for Puppet
+apt
+====
 
-## Description
-Provides helpful definitions for dealing with Apt.
+Module Description
+-------------------
 
-## Usage
+APT is a package management system. This module gives you an interface to work with APT, 
+including the ability to add and delete sources, along with other management tasks. 
 
-### apt
-The apt class provides a number of common resources and options which
-are shared by the various defined types in this module. This class
-should always be included in your manifests if you are using the `apt`
-module.
+Usage
+------
+
+### Classes
+
+**apt**
+
+Install APT
 
     class { 'apt':
       always_apt_update    => false,
@@ -20,15 +25,45 @@ module.
       purge_sources_list_d => false,
       purge_preferences_d  => false
     }
+    
+This class should always be included in your manifests if you are using the `apt`
+module.
 
-### apt::builddep
-Install the build depends of a specified package.
+**apt::backports**
+
+To add the necessary components to get backports for Ubuntu and Debian, you can either
+
+	include apt::backports
+	
+ or
+ 
+	class { 'apt::backports':
+     release  => 'natty',
+     location => 'x'
+   	}
+
+With the above class, you may choose to include only one of the attributes. 
+
+**apt::update**
+
+Get a regularly updated APT source repository list
+
+	file { '/tmp/foo':
+     ensure  => file,
+     notify  => Class['apt::update']
+   	}
+	
+### Defined Types
+
+**apt::builddep**
+
+Install the build depends of a specified package
 
     apt::builddep { "glusterfs-server": }
 
-### apt::force
-Force a package to be installed from a specific release.  Useful when
-using repositories like Debian unstable in Ubuntu.
+**apt::force**
+
+Force a package to be installed from a specific release
 
     apt::force { "glusterfs-server":
 	  release => "unstable",
@@ -36,26 +71,53 @@ using repositories like Debian unstable in Ubuntu.
 	  require => Apt::Source["debian_unstable"],
     }
 
-### apt::pin
-Add an apt pin for a certain release.
+**apt::key**
+
+Add a key to the list of keys used by APT to authenticate packages
+
+    apt::key { "puppetlabs":
+      key        => "4BD6EC30",
+      key_server => "pgp.mit.edu",
+    }
+
+    apt::key { "jenkins":
+      key        => "D50582E6",
+      key_source => "http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key",
+    }
+
+Note that use of the `key_source` parameter requires wget to be installed and working.
+
+**apt::pin**
+
+Add an APT pin for a certain release
 
     apt::pin { "karmic": priority => 700 }
     apt::pin { "karmic-updates": priority => 700 }
     apt::pin { "karmic-security": priority => 700 }
 
-### apt::ppa
-Add a ppa repository using `add-apt-repository`.  Somewhat experimental.
+**apt::ppa**
+
+Add a PPA repository
+
+	$ add-apt-repository
+
+then
 
     apt::ppa { "ppa:drizzle-developers/ppa": }
 
-### apt::release
-Set the default apt release.  Useful when using repositories like
-Debian unstable in Ubuntu.
+This is still somewhat experimental. 
+
+**apt::release**
+
+Set the default APT release
 
     apt::release { "karmic": }
 
-### apt::source
-Add an apt source to `/etc/apt/sources.list.d/`.
+Useful when using repositories that are unstable in Ubuntu.
+
+**apt::source**
+
+Add an APT source to `/etc/apt/sources.list.d/`
 
     apt::source { "debian_unstable":
       location          => "http://debian.mirror.iweb.ca/debian/",
@@ -68,8 +130,7 @@ Add an apt source to `/etc/apt/sources.list.d/`.
       include_src       => true
     }
 
-This source will configure your system for the Puppet Labs APT
-repository.
+This source will configure your system for the Puppet Labs APT repository
 
     apt::source { 'puppetlabs':
       location   => 'http://apt.puppetlabs.com',
@@ -78,24 +139,69 @@ repository.
       key_server => 'pgp.mit.edu',
     }
 
-### apt::key
-Add a key to the list of keys used by apt to authenticate packages.
+Implementation
+---------------
 
-    apt::key { "puppetlabs":
-      key        => "4BD6EC30",
-      key_server => "pgp.mit.edu",
-    }
+### Directories
 
-    apt::key { "jenkins":
-      key        => "D50582E6",
-      key_source => "http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key",
-    }
+>File['${apt_conf_d}/${priority}${name}'
 
-Note that use of the "key_source" parameter requires wget to be
-installed and working.
+>File['/etc/apt/sources.list']
+
+>File['etc/apt/sources.list.d']
+
+>File['etc/apt/preferences.d']
+
+>File['${apt_conf_d}/99unauth']
+
+>File['${apt_conf_d}/proxy']
+
+>File['${name}.pref']
+
+>File['${sources_list_d}/${sources_list_d_filename}']
+
+>File['${root}/apt.conf.d/01release']
+
+>File['${sources_list_d}/${name}.list']
+
+### Packages
+
+**Package['$::lsbdistrelease']**
+	
+	$package = $::lsbdistrelease ? {
+	  /^[1-9]\..*|1[01]\..*|12.04$/ => 'python-software-properties',
+	  default  => 'software-properties-common',
+	}
+
+Limitations
+------------
+
+There are some known bugs and issues with this module. Please see [our issue tracker] (https://github.com/puppetlabs/puppetlabs-apt/pulls)
+to keep up to date.
+	
+Please log tickets and issues at our [Report issues page] (http://projects.puppetlabs.com/projects/modules)
+
+Development
+------------
+
+Puppet Labs modules on the Puppet Forge are open projects, and community contributions
+are essential for keeping them great. We can’t access the huge number of platforms and
+myriad of hardware, software, and deployment configurations that Puppet is intended to serve.
+
+We want to keep it as easy as possible to contribute changes so that our modules work
+in your environment. There are a few guidelines that we need contributors to follow so
+that we can have a chance of keeping on top of things.
+
+You can read the complete module contribution guide [on the Puppet Labs wiki.](http://projects.puppetlabs.com/projects/module-site/wiki/Module_contributing) 
+	
+Disclaimer
+-----------
 
 
-## Contributors
+
+Contributors
+-------------
+
 A lot of great people have contributed to this module. A somewhat
 current list follows.
 
