@@ -1,5 +1,9 @@
-# <%= name %>
+#<%= name %>
+
+<%packages.each do |package| -%>
 Explanation: <%= explanation %>
-Package: <%= packages %>
+Package: <%= package %>
 Pin: <%= pin %>
 Pin-Priority: <%= priority %>
+
+<% end -%>
