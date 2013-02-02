@@ -1,6 +1,7 @@
 language: ruby
 rvm:
   - 1.8.7
+  - 1.9.3
 before_script:
 after_script:
 script: "rake spec"
@@ -8,9 +9,21 @@ branches:
   only:
     - master
 env:
-  - PUPPET_VERSION=2.7.13
+  - PUPPET_VERSION=3.0.2
+  - PUPPET_VERSION=2.7.20
   - PUPPET_VERSION=2.7.6
   - PUPPET_VERSION=2.6.9
+matrix:
+ exclude:
+  - rvm: 1.9.3
+    gemfile: .gemfile
+    env: PUPPET_VERSION=2.6.9
+  - rvm: 1.9.3
+    gemfile: .gemfile
+    env: PUPPET_VERSION=2.7.6
+  - rvm: 1.9.3
+    gemfile: .gemfile
+    env: PUPPET_VERSION=2.7.20
 notifications:
   email: false
 gemfile: .gemfile
