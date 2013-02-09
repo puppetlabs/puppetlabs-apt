@@ -37,9 +37,16 @@ define apt::ppa(
     notify    => Exec['apt_update'],
   }
 
+  file { "${sources_list_d}":
+    ensure  => directory,
+  }
+
   file { "${sources_list_d}/${sources_list_d_filename}":
     ensure  => file,
-    require => Exec["add-apt-repository-${name}"],
+    require => [
+      File["${sources_list_d}"],
+      Exec["add-apt-repository-${name}"]
+    ],
   }
 
   # Need anchor to provide containment for dependencies.
