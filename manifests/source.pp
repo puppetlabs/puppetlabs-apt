@@ -12,7 +12,8 @@ define apt::source(
   $key_server        = 'keyserver.ubuntu.com',
   $key_content       = false,
   $key_source        = false,
-  $pin               = false
+  $pin               = false,
+  $architecture      = 'amd64'
 ) {
 
   include apt::params
