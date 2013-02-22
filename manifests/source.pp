@@ -13,7 +13,7 @@ define apt::source(
   $key_content       = false,
   $key_source        = false,
   $pin               = false,
-  $architecture      = 'amd64'
+  $architecture      = 'amd64,i386'
 ) {
 
   include apt::params
