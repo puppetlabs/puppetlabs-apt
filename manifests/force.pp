@@ -7,6 +7,8 @@ define apt::force(
   $timeout = 300
 ) {
 
+  $provider = $apt::params::provider
+
   $version_string = $version ? {
     false   => undef,
     default => "=${version}",
@@ -32,7 +34,7 @@ define apt::force(
     }
   }
 
-  exec { "/usr/bin/aptitude -y ${release_string} install ${name}${version_string}":
+  exec { "${provider} -y ${release_string} install ${name}${version_string}":
     unless    => $install_check,
     logoutput => 'on_failure',
     timeout   => $timeout,
