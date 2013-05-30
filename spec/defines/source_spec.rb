@@ -92,7 +92,8 @@ describe 'apt::source', :type => :define do
         if param_hash[:pin]
           should contain_apt__pin(title).with({
             "priority"  => param_hash[:pin],
-            "before"    => "File[#{title}.list]"
+            "before"    => "File[#{title}.list]",
+            "release"   => param_hash[:release]
           })
         else
           should_not contain_apt__pin(title).with({
