@@ -4,7 +4,7 @@ define apt::ppa(
   $release = $::lsbdistcodename
 ) {
   include apt::params
-  include apt::update
+  apt::update { "apt-ppa-${title}": }
 
   $sources_list_d = $apt::params::sources_list_d
 
@@ -34,16 +34,11 @@ define apt::ppa(
       File[$sources_list_d],
       Package["${package}"],
     ],
-    notify    => Exec['apt_update'],
+    notify    => Apt::Update["apt-ppa-${title}"],
   }
 
   file { "${sources_list_d}/${sources_list_d_filename}":
     ensure  => file,
     require => Exec["add-apt-repository-${name}"],
-  }
-
-  # Need anchor to provide containment for dependencies.
-  anchor { "apt::ppa::${name}":
-    require => Class['apt::update'],
   }
 }

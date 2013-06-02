@@ -31,7 +31,12 @@ class apt(
 ) {
 
   include apt::params
-  include apt::update
+
+  exec { 'apt_update':
+    command     => "${apt::params::provider} update",
+    logoutput   => 'on_failure',
+    refreshonly => true,
+  }
 
   validate_bool($purge_sources_list, $purge_sources_list_d, $purge_preferences_d)
 
@@ -105,10 +110,5 @@ class apt(
       content => "Acquire::http::Proxy \"http://${proxy_host}:${proxy_port}\";",
       notify  => Exec['apt_update'],
     }
-  }
-
-  # Need anchor to provide containment for dependencies.
-  anchor { 'apt::update':
-    require => Class['apt::update'],
   }
 }
