@@ -111,7 +111,9 @@ Adds a ppa repository using `add-apt-repository`.
 
 Sets the default apt release. This class is particularly useful when using repositories, like Debian, that are unstable in Ubuntu.
 
-    apt::release { 'karmic': }
+    class { 'apt::release':
+      release_id => 'precise',
+    }
 
 ###apt::source
 
