@@ -7,6 +7,6 @@ class apt::update {
     refreshonly => true,
   }
   
-  Exec['apt_update'] -> Package <| title != ["python-software-properties", "software-properties-common"] |>
+  Exec['apt_update'] -> Package <| tags != ['apt'] |>
 
 }
