@@ -7,6 +7,8 @@ class apt::update {
     refreshonly => true,
   }
   
-  Exec['apt_update'] -> Package <| tags != ['apt'] |>
+  Package <| tags != ['apt'] |> {
+    require += Exec['apt_update'],
+  }
 
 }
