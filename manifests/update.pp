@@ -6,4 +6,6 @@ class apt::update {
     logoutput   => 'on_failure',
     refreshonly => true,
   }
+
+  Exec['apt_update'] -> Package <| title != "python-software-properties" and title != "software-properties-common" |>
 }
