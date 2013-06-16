@@ -10,7 +10,14 @@ define apt::pin(
   $release    = '',
   $origin     = '',
   $originator = '',
-  $version    = ''
+  $version    = '',
+  # This parameter allows specifying a complete Apt::Pin line,
+  # allowing currently unsupported pins such as "release c=main" or
+  # "release a=stable, v=7.0".
+  #
+  # When $pin is specified, the values of $release, $origin, $originator
+  # and $version are ignored.
+  $pin        = ''
 ) {
 
   include apt::params
@@ -21,16 +28,18 @@ define apt::pin(
     fail('Only integers are allowed in the apt::pin order param')
   }
 
-  if $release != '' {
-    $pin = "release a=${release}"
-  } elsif $origin != '' {
-    $pin = "origin \"${origin}\""
-  } elsif $originator != '' {
-    $pin = "release o=${originator}"
-  } elsif $version != '' {
-    $pin = "version ${version}"
-  } else {
-    $pin = "release a=${name}"
+  if $pin == '' {
+    if $release != '' {
+      $pin = "release a=${release}"
+    } elsif $origin != '' {
+      $pin = "origin \"${origin}\""
+    } elsif $originator != '' {
+      $pin = "release o=${originator}"
+    } elsif $version != '' {
+      $pin = "version ${version}"
+    } else {
+      $pin = "release a=${name}"
+    }
   }
 
   $path = $order ? {
