@@ -48,9 +48,10 @@ define apt::key (
         exec { $digest:
           command   => $digest_command,
           path      => '/bin:/usr/bin',
-          unless    => "/usr/bin/apt-key list | /bin/grep '${upkey}'",
+          unless    => "/usr/bin/apt-key list | /bin/grep -E '${upkey}.*\[expires:'",
           logoutput => 'on_failure',
           before    => Anchor["apt::key ${upkey} present"],
+          notify    => Exec['apt_update'],
         }
       }
 
