@@ -62,7 +62,7 @@ describe 'apt::key', :type => :define do
           should contain_anchor("apt::key #{param_hash[:key]} present")
           should contain_exec(digest).with({
             "path"    => "/bin:/usr/bin",
-            "unless"  => "/usr/bin/apt-key list | /bin/grep '#{param_hash[:key]}'"
+            "unless"  => "/usr/bin/apt-key list | /bin/grep -E '#{param_hash[:key]}.*\\[expires:'"
           })
         elsif [:absent, 'absent'].include? param_hash[:ensure]
           should_not contain_anchor("apt::key #{param_hash[:key]} present")
