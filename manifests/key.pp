@@ -9,6 +9,8 @@ define apt::key (
   include apt::params
 
   $upkey = upcase($key)
+  # trim the key to the last 8 chars so we can match longer keys with apt-key list too
+  $trimmedkey = regsubst($upkey, '^.*(.{8})$', '\1')
 
   if $key_content {
     $method = 'content'
@@ -48,7 +50,7 @@ define apt::key (
         exec { $digest:
           command   => $digest_command,
           path      => '/bin:/usr/bin',
-          unless    => "/usr/bin/apt-key list | /bin/grep '${upkey}'",
+          unless    => "/usr/bin/apt-key list | /bin/grep '${trimmedkey}'",
           logoutput => 'on_failure',
           before    => Anchor["apt::key ${upkey} present"],
         }
@@ -66,7 +68,7 @@ define apt::key (
       exec { "apt::key ${upkey} absent":
         command   => "apt-key del '${upkey}'",
         path      => '/bin:/usr/bin',
-        onlyif    => "apt-key list | grep '${upkey}'",
+        onlyif    => "apt-key list | grep '${trimmedkey}'",
         user      => 'root',
         group     => 'root',
         logoutput => 'on_failure',
