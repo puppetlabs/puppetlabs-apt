@@ -1,5 +1,5 @@
 name    'puppetlabs-apt'
-version '1.1.0'
+version '1.1.1'
 source  'https://github.com/puppetlabs/puppetlabs-apt'
 author  'Evolving Web / Puppet Labs'
 license 'Apache License 2.0'

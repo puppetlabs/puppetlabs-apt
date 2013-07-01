@@ -1,3 +1,46 @@
+## puppetlabs-apt changelog
+
+Release notes for the puppetlabs-apt module.
+
+1.1.1
+=====
+
+This is a bug fix release that resolves a number of issues:
+
+* By changing template variable usage, we remove the deprecation warnings
+  for Puppet 3.2.x
+* Fixed proxy file removal, when proxy absent
+
+Some documentation, style and whitespaces changes were also merged. This
+release also introduced proper rspec-puppet unit testing on Travis-CI to help
+reduce regression.
+
+Thanks to all the community contributors below that made this patch possible.
+
+#### Detail Changes
+
+* fix minor comment type (Chris Rutter)
+* whitespace fixes (Michael Moll)
+* Update travis config file (William Van Hevelingen)
+* Build all branches on travis (William Van Hevelingen)
+* Standardize travis.yml on pattern introduced in stdlib (William Van Hevelingen)
+* Updated content to conform to README best practices template (Lauren Rother)
+* Fix apt::release example in readme (Brian Galey)
+* add @ to variables in template (Peter Hoeg)
+* Remove deprecation warnings for pin.pref.erb as well (Ken Barber)
+* Update travis.yml to latest versions of puppet (Ken Barber)
+* Fix proxy file removal (Scott Barber)
+* Add spec test for removing proxy configuration (Dean Reilly)
+
+---------------------------------------
+
+1.1.0
+=====
+
+This release includes Ubuntu 12.10 (Quantal) support for PPAs.
+
+---------------------------------------
+
 2012-05-25 Puppet Labs <info@puppetlabs.com> - 0.0.4
  * Fix ppa list filename when there is a period in the PPA name
  * Add .pref extension to apt preferences files
