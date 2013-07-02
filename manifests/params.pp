@@ -7,7 +7,14 @@ class apt::params {
 
   case $::lsbdistid {
     'debian': {
-      $backports_location = 'http://backports.debian.org/debian-backports'
+      case $::lsbdistcodename {
+        'squeeze': {
+          $backports_location = 'http://backports.debian.org/debian-backports'
+        }
+        default: {
+          $backports_location = 'http://ftp.debian.org/debian/'
+        }
+      }
     }
     'ubuntu': {
       case $::lsbdistcodename {
