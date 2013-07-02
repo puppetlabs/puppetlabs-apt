@@ -48,6 +48,9 @@ describe 'apt::source', :type => :define do
     },
     {
       :release            => 'custom',
+    },
+    {
+      :architecture       => 'amd64',
     }
   ].each do |param_set|
     describe "when #{param_set == {} ? "using default" : "specifying"} class parameters" do
@@ -69,9 +72,13 @@ describe 'apt::source', :type => :define do
 
       let :content do
         content = "# #{title}"
-        content << "\ndeb #{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
+        if param_hash[:architecture]
+          arch = "[arch=#{param_hash[:architecture]}]"
+        end
+        content << "\ndeb #{arch} #{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
+
         if param_hash[:include_src]
-          content << "deb-src #{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
+          content << "deb-src #{arch} #{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
         end
         content
       end
