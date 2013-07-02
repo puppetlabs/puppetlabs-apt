@@ -213,10 +213,3 @@ A lot of great people have contributed to this module. A somewhat current list f
 * Spencer Krum <spencer@puppetlabs.com>  
 * William Van Hevelingen <blkperl@cat.pdx.edu> <wvan13@gmail.com>  
 * Zach Leslie <zach@puppetlabs.com>  
-
-Release Notes
--------------
-
-**1.1.0**
-
-This release includes Ubuntu 12.10 (Quantal) support for PPAs.
