@@ -114,7 +114,8 @@ describe 'apt::source', :type => :define do
           should contain_exec("Required packages: '#{param_hash[:required_packages]}' for #{title}").with({
             "command" => "/usr/bin/apt-get -y install #{param_hash[:required_packages]}",
             "subscribe"   => "File[#{title}.list]",
-            "refreshonly" => true
+            "refreshonly" => true,
+            "before"      => 'Exec[apt_update]',
           })
         else
           should_not contain_exec("Required packages: '#{param_hash[:required_packages]}' for #{title}").with({
