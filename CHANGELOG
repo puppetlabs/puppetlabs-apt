@@ -2,6 +2,27 @@
 
 Release notes for the puppetlabs-apt module.
 
+1.2.0
+=====
+
+Features:
+- Add geppetto `.project` natures
+- Add GH auto-release
+- Add `apt::key::key_options` parameter
+- Add complex pin support using distribution properties for `apt::pin` via new properties:
+  - `apt::pin::codename`
+  - `apt::pin::release_version`
+  - `apt::pin::component`
+  - `apt::pin::originator`
+  - `apt::pin::label`
+- Add source architecture support to `apt::source::architecture`
+
+Bugfixes:
+- Use apt-get instead of aptitude in apt::force
+- Update default backports location
+- Add dependency for required packages before apt-get update
+
+
 1.1.1
 =====
 
