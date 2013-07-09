@@ -25,7 +25,10 @@
 class apt::backports(
   $release  = $::lsbdistcodename,
   $location = $apt::params::backports_location
-) inherits apt::params {
+) {
+
+  include apt::params
+
 
   $release_real = downcase($release)
   $key = $::lsbdistid ? {
