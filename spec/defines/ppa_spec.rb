@@ -55,6 +55,31 @@ describe 'apt::ppa', :type => :define do
           }
         end
       end
+      describe 'behind a proxy' do
+        let :title do
+          'rspec_ppa'
+        end
+        let :pre_condition do
+          'class { "apt":
+            proxy_host => "user:pass@proxy",
+          }'
+        end
+          let :filename do
+            "#{title}-#{release}.list"
+          end
+
+        it { should contain_exec("add-apt-repository-#{title}").with(
+          'environment' => [
+            "http_proxy=http://user:pass@proxy:8080",
+            "https_proxy=http://user:pass@proxy:8080",
+          ],
+          'command'     => "/usr/bin/add-apt-repository #{title}",
+          'creates'     => "/etc/apt/sources.list.d/#{filename}",
+          'require'     => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
+          'notify'      => "Exec[apt_update]"
+          )
+        }
+      end
     end
   end
 
