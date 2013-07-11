@@ -26,7 +26,20 @@ define apt::ppa(
     package { $package: }
   }
 
+  if defined(Class[apt]) {
+    $proxy_host = getparam(Class[apt], "proxy_host")
+    $proxy_port = getparam(Class[apt], "proxy_port")
+    case  $proxy_host {
+      false: {
+        $proxy_env = ""
+      }
+      default: {$proxy_env = ["http_proxy=http://${proxy_host}:${proxy_port}", "https_proxy=http://${proxy_host}:${proxy_port}"]}
+    }
+  } else {
+    $proxy_env = ""
+  }
   exec { "add-apt-repository-${name}":
+    environment  => $proxy_env,
     command   => "/usr/bin/add-apt-repository ${name}",
     creates   => "${sources_list_d}/${sources_list_d_filename}",
     logoutput => 'on_failure',
