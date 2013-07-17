@@ -20,6 +20,9 @@ describe 'apt::ppa', :type => :define do
       let :package do
         "#{platform[:package]}"
       end
+      let :options do
+        "-y"
+      end
       ['ppa:dans_ppa', 'dans_ppa','ppa:dans-daily/ubuntu'].each do |t|
         describe "with title #{t}" do
           let :pre_condition do
@@ -41,7 +44,7 @@ describe 'apt::ppa', :type => :define do
           }
 
           it { should contain_exec("add-apt-repository-#{t}").with(
-            'command' => "/usr/bin/add-apt-repository #{t}",
+            'command' => "/usr/bin/add-apt-repository #{options} #{t}",
             'creates' => "/etc/apt/sources.list.d/#{filename}",
             'require' => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
             'notify'  => "Exec[apt_update]"
@@ -73,7 +76,7 @@ describe 'apt::ppa', :type => :define do
             "http_proxy=http://user:pass@proxy:8080",
             "https_proxy=http://user:pass@proxy:8080",
           ],
-          'command'     => "/usr/bin/add-apt-repository #{title}",
+          'command'     => "/usr/bin/add-apt-repository #{options} #{title}",
           'creates'     => "/etc/apt/sources.list.d/#{filename}",
           'require'     => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
           'notify'      => "Exec[apt_update]"
