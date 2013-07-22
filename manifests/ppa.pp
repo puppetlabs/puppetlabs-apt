@@ -13,9 +13,9 @@ define apt::ppa(
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
-  $filename_without_slashes = regsubst($name, '/', '-', G)
-  $filename_without_dots    = regsubst($filename_without_slashes, '\.', '_', G)
-  $filename_without_ppa     = regsubst($filename_without_dots, '^ppa:', '', G)
+  $filename_without_slashes = regsubst($name, '/', '-', 'G')
+  $filename_without_dots    = regsubst($filename_without_slashes, '\.', '_', 'G')
+  $filename_without_ppa     = regsubst($filename_without_dots, '^ppa:', '', 'G')
   $sources_list_d_filename  = "${filename_without_ppa}-${release}.list"
 
   $package = $::lsbdistrelease ? {
