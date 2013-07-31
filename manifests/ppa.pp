@@ -31,13 +31,13 @@ define apt::ppa(
     $proxy_host = getparam(Class[apt], "proxy_host")
     $proxy_port = getparam(Class[apt], "proxy_port")
     case  $proxy_host {
-      false: {
-        $proxy_env = ""
+      false, "": {
+        $proxy_env = []
       }
       default: {$proxy_env = ["http_proxy=http://${proxy_host}:${proxy_port}", "https_proxy=http://${proxy_host}:${proxy_port}"]}
     }
   } else {
-    $proxy_env = ""
+    $proxy_env = []
   }
   exec { "add-apt-repository-${name}":
     environment  => $proxy_env,

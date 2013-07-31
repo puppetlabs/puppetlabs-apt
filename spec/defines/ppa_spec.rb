@@ -58,6 +58,29 @@ describe 'apt::ppa', :type => :define do
           }
         end
       end
+      describe 'without a proxy defined' do
+        let :title do
+          'rspec_ppa'
+        end
+        let :pre_condition do
+          'class { "apt":
+             proxy_host => false
+          }'
+        end
+          let :filename do
+            "#{title}-#{release}.list"
+          end
+
+        it { should contain_exec("add-apt-repository-#{title}").with(
+          'environment' => [],
+          'command'     => "/usr/bin/add-apt-repository #{title}",
+          'creates'     => "/etc/apt/sources.list.d/#{filename}",
+          'require'     => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
+          'notify'      => "Exec[apt_update]"
+          )
+        }
+      end
+
       describe 'behind a proxy' do
         let :title do
           'rspec_ppa'
