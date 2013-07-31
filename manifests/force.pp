@@ -13,7 +13,7 @@ define apt::force(
   }
 
   $install_check = $version ? {
-    false   => "/usr/bin/dpkg -s ${name} | grep -q 'Status: install'",
+    false   => "/usr/bin/aptitude search '?narrow(?narrow(?installed,?archive($release)),?name(^$name$))' | grep -q ^i",
     default => "/usr/bin/dpkg -s ${name} | grep -q 'Version: ${version}'",
   }
   exec { "/usr/bin/apt-get -y -t ${release} install ${name}${version_string}":
