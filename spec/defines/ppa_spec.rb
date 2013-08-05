@@ -67,13 +67,13 @@ describe 'apt::ppa', :type => :define do
              proxy_host => false
           }'
         end
-          let :filename do
-            "#{title}-#{release}.list"
-          end
+        let :filename do
+          "#{title}-#{release}.list"
+        end
 
         it { should contain_exec("add-apt-repository-#{title}").with(
           'environment' => [],
-          'command'     => "/usr/bin/add-apt-repository #{title}",
+          'command'     => "/usr/bin/add-apt-repository #{options} #{title}",
           'creates'     => "/etc/apt/sources.list.d/#{filename}",
           'require'     => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
           'notify'      => "Exec[apt_update]"
