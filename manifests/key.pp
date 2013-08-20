@@ -1,3 +1,5 @@
+# key.pp
+
 define apt::key (
   $key = $title,
   $ensure = present,

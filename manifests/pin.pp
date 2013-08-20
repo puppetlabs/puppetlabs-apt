@@ -31,7 +31,7 @@ define apt::pin(
     $release_version,
     $component,
     $originator,
-    $label] 
+    $label]
   $pin_release = join($pin_release_array, '')
 
   # Read the manpage 'apt_preferences(5)', especially the chapter

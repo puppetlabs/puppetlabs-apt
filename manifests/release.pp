@@ -1,7 +1,7 @@
 # release.pp
 
 class apt::release (
-  $release_id
+  $release_id = undef
 ) {
 
   include apt::params

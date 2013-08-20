@@ -1,3 +1,5 @@
+# conf.pp
+
 define apt::conf (
   $content,
   $ensure   = present,
