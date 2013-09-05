@@ -2,7 +2,7 @@
 
 define apt::ppa(
   $release = $::lsbdistcodename,
-  $options = "-y"
+  $options = '-y'
 ) {
   include apt::params
   include apt::update
@@ -28,10 +28,10 @@ define apt::ppa(
   }
 
   if defined(Class[apt]) {
-    $proxy_host = getparam(Class[apt], "proxy_host")
-    $proxy_port = getparam(Class[apt], "proxy_port")
+    $proxy_host = getparam(Class[apt], 'proxy_host')
+    $proxy_port = getparam(Class[apt], 'proxy_port')
     case  $proxy_host {
-      false, "": {
+      false, '': {
         $proxy_env = []
       }
       default: {$proxy_env = ["http_proxy=http://${proxy_host}:${proxy_port}", "https_proxy=http://${proxy_host}:${proxy_port}"]}
@@ -41,14 +41,14 @@ define apt::ppa(
   }
   exec { "add-apt-repository-${name}":
     environment  => $proxy_env,
-    command   => "/usr/bin/add-apt-repository ${options} ${name}",
-    creates   => "${sources_list_d}/${sources_list_d_filename}",
-    logoutput => 'on_failure',
-    require   => [
+    command      => "/usr/bin/add-apt-repository ${options} ${name}",
+    creates      => "${sources_list_d}/${sources_list_d_filename}",
+    logoutput    => 'on_failure',
+    notify       => Exec['apt_update'],
+    require      => [
       File[$sources_list_d],
-      Package["${package}"],
+      Package[$package],
     ],
-    notify    => Exec['apt_update'],
   }
 
   file { "${sources_list_d}/${sources_list_d_filename}":
