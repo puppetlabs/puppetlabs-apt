@@ -51,6 +51,10 @@ describe 'apt::source', :type => :define do
     },
     {
       :architecture       => 'amd64',
+    },
+    {
+      :location           => 'http://user:password@example.com',
+      :pin                => '600',
     }
   ].each do |param_set|
     describe "when #{param_set == {} ? "using default" : "specifying"} class parameters" do
@@ -99,12 +103,14 @@ describe 'apt::source', :type => :define do
         if param_hash[:pin]
           should contain_apt__pin(title).with({
             "priority"  => param_hash[:pin],
-            "before"    => "File[#{title}.list]"
+            "before"    => "File[#{title}.list]",
+            "origin"    => "example.com"
           })
         else
           should_not contain_apt__pin(title).with({
             "priority"  => param_hash[:pin],
-            "before"    => "File[#{title}.list]"
+            "before"    => "File[#{title}.list]",
+            "origin"    => "example.com"
           })
         end
       }
