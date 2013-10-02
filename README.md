@@ -54,7 +54,8 @@ The parameters for `apt` are not required in general and are predominantly for d
       proxy_port           => '8080',
       purge_sources_list   => false,
       purge_sources_list_d => false,
-      purge_preferences_d  => false
+      purge_preferences_d  => false,
+      update_timeout       => undef
     }
 
 Puppet will manage your system's `sources.list` file and `sources.list.d` directory but will do its best to respect existing content. 

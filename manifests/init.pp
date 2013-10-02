@@ -12,6 +12,8 @@
 #     true, Puppet will purge all unmanaged entries from sources.list
 #   purge_sources_list_d - Accepts true or false. Defaults to false. If set
 #     to true, Puppet will purge all unmanaged entries from sources.list.d
+#   update_timeout - Overrides the exec timeout in seconds for apt-get update.
+#     If not set defaults to Exec's default (300)
 #
 # Actions:
 #
@@ -27,7 +29,8 @@ class apt(
   $proxy_port           = '8080',
   $purge_sources_list   = false,
   $purge_sources_list_d = false,
-  $purge_preferences_d  = false
+  $purge_preferences_d  = false,
+  $update_timeout       = undef
 ) {
 
   include apt::params
