@@ -12,6 +12,7 @@ describe 'apt::key' do
   context 'apt::key' do
     it 'should work with no errors' do
       pp = <<-EOS
+      include '::apt'
       apt::key { 'puppetlabs':
         key        => '4BD6EC30',
         key_server => 'pgp.mit.edu',

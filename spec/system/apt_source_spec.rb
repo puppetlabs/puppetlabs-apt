@@ -12,6 +12,7 @@ describe 'apt::source' do
   context 'apt::source' do
     it 'should work with no errors' do
       pp = <<-EOS
+      include '::apt'
       apt::source { 'puppetlabs':
         location   => 'http://apt.puppetlabs.com',
         repos      => 'main',

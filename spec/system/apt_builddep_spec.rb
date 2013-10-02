@@ -12,6 +12,7 @@ describe 'apt::builddep' do
   context 'apt::builddep' do
     it 'should work with no errors' do
       pp = <<-EOS
+      include '::apt'
       apt::builddep { 'glusterfs-server': }
       EOS
 
