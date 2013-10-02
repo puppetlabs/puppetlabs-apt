@@ -4,6 +4,7 @@ class apt::params {
   $sources_list_d = "${root}/sources.list.d"
   $apt_conf_d     = "${root}/apt.conf.d"
   $preferences_d  = "${root}/preferences.d"
+  $update_timeout = 300 # 300 is the exec type default
 
   case $::lsbdistid {
     'debian': {
