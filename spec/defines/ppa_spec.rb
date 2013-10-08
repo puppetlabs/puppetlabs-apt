@@ -45,7 +45,7 @@ describe 'apt::ppa', :type => :define do
 
           it { should contain_exec("add-apt-repository-#{t}").with(
             'command' => "/usr/bin/add-apt-repository #{options} #{t}",
-            'onlyif'  => "/usr/bin/test -s /etc/apt/sources.list.d/#{filename}",
+            'unless'  => "/usr/bin/test -s /etc/apt/sources.list.d/#{filename}",
             'require' => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
             'notify'  => "Exec[apt_update]"
             )
@@ -74,7 +74,7 @@ describe 'apt::ppa', :type => :define do
         it { should contain_exec("add-apt-repository-#{title}").with(
           'environment' => [],
           'command'     => "/usr/bin/add-apt-repository #{options} #{title}",
-          'onlyif'      => "/usr/bin/test -s /etc/apt/sources.list.d/#{filename}",
+          'unless'      => "/usr/bin/test -s /etc/apt/sources.list.d/#{filename}",
           'require'     => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
           'notify'      => "Exec[apt_update]"
           )
@@ -100,7 +100,7 @@ describe 'apt::ppa', :type => :define do
             "https_proxy=http://user:pass@proxy:8080",
           ],
           'command'     => "/usr/bin/add-apt-repository #{options} #{title}",
-          'onlyif'      => "/usr/bin/test -s /etc/apt/sources.list.d/#{filename}",
+          'unless'      => "/usr/bin/test -s /etc/apt/sources.list.d/#{filename}",
           'require'     => ["File[/etc/apt/sources.list.d]", "Package[#{package}]"],
           'notify'      => "Exec[apt_update]"
           )
