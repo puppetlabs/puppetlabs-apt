@@ -75,10 +75,10 @@ describe 'apt::source', :type => :define do
         if param_hash[:architecture]
           arch = "[arch=#{param_hash[:architecture]}]"
         end
-        content << "\ndeb #{arch} #{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
+        content << "\ndeb #{arch}#{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
 
         if param_hash[:include_src]
-          content << "deb-src #{arch} #{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
+          content << "deb-src #{arch}#{param_hash[:location]} #{param_hash[:release]} #{param_hash[:repos]}\n"
         end
         content
       end
