@@ -51,6 +51,10 @@ define apt::ppa(
     ],
   }
 
+  file { $sources_list_d:
+    ensure => directory
+  }
+
   file { "${sources_list_d}/${sources_list_d_filename}":
     ensure  => file,
     require => Exec["add-apt-repository-${name}"],
