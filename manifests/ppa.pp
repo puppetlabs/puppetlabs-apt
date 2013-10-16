@@ -28,8 +28,8 @@ define apt::ppa(
   }
 
   if defined(Class[apt]) {
-    $proxy_host = getparam(Class[apt], 'proxy_host')
-    $proxy_port = getparam(Class[apt], 'proxy_port')
+    $proxy_host = $apt::proxy_host
+    $proxy_port = $apt::proxy_port
     case  $proxy_host {
       false, '': {
         $proxy_env = []
