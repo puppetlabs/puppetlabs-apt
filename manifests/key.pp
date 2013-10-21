@@ -50,17 +50,31 @@ define apt::key (
       }
 
       if !defined(Exec[$digest]) {
+        if defined(Class[apt]) {
+          $proxy_host = getparam(Class[apt], 'proxy_host')
+          $proxy_port = getparam(Class[apt], 'proxy_port')
+          case  $proxy_host {
+            false, '': {
+              $proxy_env = []
+            }
+            default: {$proxy_env = ["http_proxy=http://${proxy_host}:${proxy_port}", "https_proxy=http://${proxy_host}:${proxy_port}"]}
+          }
+        } else {
+          $proxy_env = []
+        }
+
         $digest_command = $method ? {
           'content' => "echo '${key_content}' | /usr/bin/apt-key add -",
           'source'  => "wget -q '${key_source}' -O- | apt-key add -",
           'server'  => "apt-key adv --keyserver '${key_server}' ${options_string} --recv-keys '${upkey}'",
         }
         exec { $digest:
-          command   => $digest_command,
-          path      => '/bin:/usr/bin',
-          unless    => "/usr/bin/apt-key list | /bin/grep '${trimmedkey}'",
-          logoutput => 'on_failure',
-          before    => Anchor["apt::key ${upkey} present"],
+          command     => $digest_command,
+          path        => '/bin:/usr/bin',
+          environment => $proxy_env,
+          unless      => "/usr/bin/apt-key list | /bin/grep '${trimmedkey}'",
+          logoutput   => 'on_failure',
+          before      => Anchor["apt::key ${upkey} present"],
         }
       }
 
