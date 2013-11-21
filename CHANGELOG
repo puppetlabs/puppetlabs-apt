@@ -8,7 +8,7 @@ Features:
 - Add an `updates_timeout` to apt::params
 
 Fixes:
-- Ensure apt::ppa can readd a ppa removed by hand.
+- Ensure apt::ppa can read a ppa removed by hand.
 
 Summary
 
