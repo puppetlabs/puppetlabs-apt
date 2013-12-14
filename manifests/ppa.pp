@@ -44,7 +44,7 @@ define apt::ppa(
     exec { "add-apt-repository-${name}":
         environment  => $proxy_env,
         command      => "/usr/bin/add-apt-repository ${options} ${name}",
-        unless       => "/usr/bin/test -s ${sources_list_d}/${sources_list_d_filename}",
+        unless       => "/usr/bin/test -f ${sources_list_d}/${sources_list_d_filename}",
         logoutput    => 'on_failure',
         notify       => Exec['apt_update'],
         require      => [
