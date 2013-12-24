@@ -14,42 +14,31 @@
 # file and in /etc/cron.daily/apt
 #
 class apt::unattended_upgrades (
-  $origins = ['${distro_id}:${distro_codename}-security'],
-  $blacklist = [],
-  $update = "1",
-  $download = "1",
-  $upgrade = "1",
-  $autoclean = "7",
-  $auto_fix = true,
-  $minimal_steps = false,
+  $origins             = ['${distro_id}:${distro_codename}-security'],
+  $blacklist           = [],
+  $update              = '1',
+  $download            = '1',
+  $upgrade             = '1',
+  $autoclean           = '7',
+  $auto_fix            = true,
+  $minimal_steps       = false,
   $install_on_shutdown = false,
-  $mail_to = "NONE",
-  $mail_only_on_error = false,
-  $remove_unused = true,
-  $auto_reboot = false,
-  $dl_limit = "NONE",
-  $enable = "1",
-  $backup_interval = "0",
-  $backup_level = "3",
-  $max_age = "0",
-  $min_age = "0",
-  $max_size = "0",
-  $download_delta = "0",
-  $verbose = "0",
-) {
+  $mail_to             = 'NONE',
+  $mail_only_on_error  = false,
+  $remove_unused       = true,
+  $auto_reboot         = false,
+  $dl_limit            = 'NONE',
+  $enable              = '1',
+  $backup_interval     = '0',
+  $backup_level        = '3',
+  $max_age             = '0',
+  $min_age             = '0',
+  $max_size            = '0',
+  $download_delta      = '0',
+  $verbose             = '0',) {
+  validate_bool($auto_fix, $minimal_steps, $install_on_shutdown, $mail_only_on_error, $remove_unused, $auto_reboot)
 
-  validate_bool(
-    $auto_fix,
-    $minimal_steps,
-    $install_on_shutdown,
-    $mail_only_on_error,
-    $remove_unused,
-    $auto_reboot
-  )
-
-  package { 'unattended-upgrades':
-    ensure => present,
-  }
+  package { 'unattended-upgrades': ensure => present, }
 
   File {
     ensure  => file,
@@ -62,6 +51,7 @@ class apt::unattended_upgrades (
   file {
     '/etc/apt/apt.conf.d/50unattended-upgrades':
       content => template('apt/50unattended-upgrades.erb');
+
     '/etc/apt/apt.conf.d/10periodic':
       content => template('apt/10periodic.erb');
   }
