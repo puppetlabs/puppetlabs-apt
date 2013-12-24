@@ -1,1 +1,1 @@
-include apt::unattended-upgrades
+include apt::unattended_upgrades
