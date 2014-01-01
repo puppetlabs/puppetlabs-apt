@@ -76,7 +76,7 @@ define apt::key (
       exec { "apt::key ${upkey} absent":
         command   => "apt-key del '${upkey}'",
         path      => '/bin:/usr/bin',
-        onlyif    => "apt-key list | grep '${trimmedkey}'",
+        onlyif    => "apt-key list | grep -i '${trimmedkey}'",
         user      => 'root',
         group     => 'root',
         logoutput => 'on_failure',
