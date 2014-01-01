@@ -10,8 +10,8 @@ define apt::key (
   include apt::params
 
   $upkey = upcase($key)
-  # trim the key to the last 8 chars so we can match longer keys with apt-key list too
-  $trimmedkey = regsubst($upkey, '^.*(.{8})$', '\1')
+  # trim the key to the last 8 chars (or down to 3) so we can match longer keys with apt-key list too
+  $trimmedkey = regsubst($upkey, '(.{3,8})$', '\1')
 
   if $key_content {
     $method = 'content'
