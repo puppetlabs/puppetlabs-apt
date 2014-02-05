@@ -153,6 +153,27 @@ If you would like to configure your system so the source is the Puppet Labs APT 
       key_server => 'pgp.mit.edu',
     }
 
+
+#### Hiera example
+<pre>
+apt::sources:
+  'debian_unstable':
+      location: 'http://debian.mirror.iweb.ca/debian/'
+      release: 'unstable'
+      repos: 'main contrib non-free'
+      required_packages: 'debian-keyring debian-archive-keyring'
+      key: '55BE302B'
+      key_server: 'subkeys.pgp.net'
+      pin: '-10'
+      include_src: 'true'
+
+  'puppetlabs':
+      location: 'http://apt.puppetlabs.com'
+      repos: 'main'
+      key: '4BD6EC30'
+      key_server: 'pgp.mit.edu'
+</pre>
+
 ### Testing
 
 The APT module is mostly a collection of defined resource types, which provide reusable logic that can be leveraged to manage APT. It does provide smoke tests for testing functionality on a target system, as well as spec tests for checking a compiled catalog against an expected set of resources.
@@ -213,6 +234,7 @@ A lot of great people have contributed to this module. A somewhat current list f
 * Branan Purvine-Riley <branan@puppetlabs.com>
 * Christian G. Warden <cwarden@xerus.org>  
 * Dan Bode <bodepd@gmail.com> <dan@puppetlabs.com>  
+* Daniel Tremblay <github@danieltremblay.ca>  
 * Garrett Honeycutt <github@garretthoneycutt.com>  
 * Jeff Wallace <jeff@evolvingweb.ca> <jeff@tjwallace.ca>  
 * Ken Barber <ken@bob.sh>  
