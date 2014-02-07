@@ -163,4 +163,20 @@ describe 'apt::source', :type => :define do
     let(:facts) { { :lsbdistcodename => 'lucid' } }
     it { should contain_apt__source(title) }
   end
+
+  describe "internet restriction" do
+    let(:facts) {{ :lsbdistcodename => 'precise' }}
+    let(:title) { "dummy apt source" }
+
+    describe "doesn't notify when the parameter is false" do
+      it { should_not contain_notify("Internet Restricted") }
+    end
+
+    describe "notifies and passes through when parameter is true" do
+      let(:params) {{ :internet_restricted => true }}
+
+      it { should contain_notify("internet restricted").
+        with_message("Not creating Apt::Source[#{title}], due to Internet access restriction") }
+    end
+  end
 end
