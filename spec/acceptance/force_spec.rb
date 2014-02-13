@@ -7,7 +7,7 @@ describe 'apt::force define' do
     it 'should work with no errors' do
       pp = <<-EOS
       include apt
-      apt::force { 'vim': }
+      apt::force { 'vim': release => false, }
       EOS
 
       shell('apt-get remove -y vim')
@@ -41,7 +41,7 @@ describe 'apt::force define' do
     it 'should work with no errors' do
       pp = <<-EOS
       include apt
-      apt::force { 'vim': version => '1.1.1' }
+      apt::force { 'vim': version => '1.1.1', release => false, }
       EOS
 
       shell('apt-get remove -y vim')
@@ -59,7 +59,7 @@ describe 'apt::force define' do
     it 'should work with no errors' do
       pp = <<-EOS
       include apt
-      apt::force { 'vim': timeout => '1' }
+      apt::force { 'vim': release => false, timeout => '1' }
       EOS
 
       shell('apt-get clean')

@@ -1,10 +1,10 @@
 # ppa.pp
 
 define apt::ppa(
-  $ensure  = 'present',
   $release = $::lsbdistcodename,
   $options = '-y'
 ) {
+  $ensure  = 'present'
   include apt::params
   include apt::update
 

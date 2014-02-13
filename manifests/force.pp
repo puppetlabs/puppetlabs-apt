@@ -2,7 +2,7 @@
 # force a package from a specific release
 
 define apt::force(
-  $release = false,
+  $release = 'testing',
   $version = false,
   $timeout = 300
 ) {
