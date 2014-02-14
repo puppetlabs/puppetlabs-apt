@@ -1,3 +1,16 @@
+2014-02-13 1.4.1
+Summary:
+This is a bugfix release.
+
+Bugfixes:
+- Fix apt::force unable to upgrade packages from releases other than its original
+- Removed a few refeneces to aptitude instead of apt-get for portability
+- Removed call to getparam() due to stdlib dependency
+- Correct apt::source template when architecture is provided
+- Retry package installs if apt is locked
+- Use root to exec in apt::ppa
+- Updated tests and converted acceptance tests to beaker
+
 2013-10-08 1.4.0
 
 Summary:
