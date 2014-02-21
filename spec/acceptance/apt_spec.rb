@@ -66,9 +66,10 @@ describe 'apt class' do
   context 'proxy settings' do
     it 'should work with no errors' do
       pp = <<-EOS
+      package { 'tinyproxy': ensure => present } ->
       class { 'apt': 
         proxy_host => 'localhost',
-        proxy_port => '8080',
+        proxy_port => '8088',
       }
       EOS
 
@@ -77,7 +78,7 @@ describe 'apt class' do
 
     describe file('/etc/apt/apt.conf.d/proxy') do
       it { should be_file }
-      it { should contain 'Acquire::http::Proxy "http://localhost:8080\";' }
+      it { should contain 'Acquire::http::Proxy "http://localhost:8088\";' }
     end
   end
 
