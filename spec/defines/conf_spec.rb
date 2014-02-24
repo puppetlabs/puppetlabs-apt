@@ -3,6 +3,13 @@ describe 'apt::conf', :type => :define do
   let :title do
     'norecommends'
   end
+  let :facts do
+    {
+      'osfamily'        => 'Debian',
+      'lsbdistcodename' => 'precise',
+      'lsbdistid'       => 'Ubuntu'
+    }
+  end
 
   describe "when creating an apt preference" do
     let :params do

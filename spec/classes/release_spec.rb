@@ -1,6 +1,13 @@
 require 'spec_helper'
 describe 'apt::release', :type => :class do
   let (:title) { 'my_package' }
+  let :facts do
+    {
+      'osfamily'        => 'Debian',
+      'lsbdistcodename' => 'precise',
+      'lsbdistid'       => 'Ubuntu'
+    }
+  end
 
   let :param_set do
     { :release_id => 'precise' }

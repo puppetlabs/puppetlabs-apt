@@ -1,6 +1,13 @@
 require 'spec_helper'
 describe 'apt::pin', :type => :define do
   let(:title) { 'my_pin' }
+  let :facts do
+    {
+      'osfamily'        => 'Debian',
+      'lsbdistcodename' => 'precise',
+      'lsbdistid'       => 'Ubuntu'
+    }
+  end
 
   let :default_params do
     {

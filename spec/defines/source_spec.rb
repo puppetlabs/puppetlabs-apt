@@ -59,7 +59,11 @@ describe 'apt::source', :type => :define do
       end
 
       let :facts do
-        {:lsbdistcodename => 'karmic'}
+        {
+          'osfamily'        => 'Debian',
+          'lsbdistcodename' => 'karmic',
+          'lsbdistid'       => 'Ubuntu'
+        }
       end
 
       let :params do
@@ -160,7 +164,13 @@ describe 'apt::source', :type => :define do
     let(:default_params) { Hash.new }
     let(:facts) { Hash.new }
     it { expect { should raise_error(Puppet::Error) } }
-    let(:facts) { { :lsbdistcodename => 'lucid' } }
+    let :facts do
+      {
+        'osfamily'        => 'Debian',
+        'lsbdistcodename' => 'lucid',
+        'lsbdistid'       => 'Ubuntu'
+      }
+    end
     it { should contain_apt__source(title) }
   end
 end

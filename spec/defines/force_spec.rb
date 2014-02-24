@@ -7,6 +7,13 @@ describe 'apt::force', :type => :define do
   let :title do
     'my_package'
   end
+  let :facts do
+    {
+      'osfamily'        => 'Debian',
+      'lsbdistcodename' => 'precise',
+      'lsbdistid'       => 'Ubuntu'
+    }
+  end
 
   let :default_params do
     {
