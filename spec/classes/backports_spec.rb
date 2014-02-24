@@ -5,6 +5,7 @@ describe 'apt::backports', :type => :class do
 
     let :facts do
       {
+        'osfamily'        => 'Debian',
         'lsbdistcodename' => 'Karmic',
         'lsbdistid'       => 'Ubuntu'
       }
@@ -25,6 +26,7 @@ describe 'apt::backports', :type => :class do
 
     let :facts do
       {
+        'osfamily'        => 'Debian',
         'lsbdistcodename' => 'Squeeze',
         'lsbdistid'       => 'Debian',
       }
@@ -45,6 +47,7 @@ describe 'apt::backports', :type => :class do
 
     let :facts do
       {
+        'osfamily'        => 'Debian',
         'lsbdistcodename' => 'Squeeze',
         'lsbdistid'       => 'Debian'
       }

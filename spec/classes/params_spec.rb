@@ -1,6 +1,13 @@
 require 'spec_helper'
 describe 'apt::params', :type => :class do
   let (:title) { 'my_package' }
+  let :facts do
+    {
+      'osfamily'        => 'Debian',
+      'lsbdistcodename' => 'karmic',
+      'lsbdistid'       => 'Ubuntu'
+    }
+  end
 
   it { should contain_apt__params }
 

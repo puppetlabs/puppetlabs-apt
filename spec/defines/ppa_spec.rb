@@ -5,6 +5,7 @@ describe 'apt::ppa', :type => :define do
       :lsbdistrelease  => '11.04',
       :lsbdistcodename => 'natty',
       :operatingsystem => 'Ubuntu',
+      :osfamily        => 'Debian',
       :lsbdistid       => 'Ubuntu',
       :package         => 'python-software-properties'
     },
@@ -12,6 +13,7 @@ describe 'apt::ppa', :type => :define do
       :lsbdistrelease  => '12.10',
       :lsbdistcodename => 'quantal',
       :operatingsystem => 'Ubuntu',
+      :osfamily        => 'Debian',
       :lsbdistid       => 'Ubuntu',
       :package         => 'software-properties-common'
     },
@@ -22,6 +24,7 @@ describe 'apt::ppa', :type => :define do
           :lsbdistrelease  => platform[:lsbdistrelease],
           :lsbdistcodename => platform[:lsbdistcodename],
           :operatingsystem => platform[:operatingsystem],
+          :osfamily        => platform[:osfamily],
           :lsbdistid       => platform[:lsbdistid],
         }
       end
@@ -132,8 +135,12 @@ describe 'apt::ppa', :type => :define do
            'package { "#{platform[:package]}": }->Apt::Ppa["ppa"]'
         end
         let :facts do
-          {:lsbdistcodename => '#{platform[:lsbdistcodename]}',
-           :operatingsystem => 'Ubuntu'}
+          {
+            :lsbdistcodename => '#{platform[:lsbdistcodename]}',
+            :lsbdistid       => 'Ubuntu',
+            :operatingsystem => 'Ubuntu',
+            :osfamily        => 'Debian',
+          }
         end
         let(:title) { "ppa" }
         let(:release) { "#{platform[:lsbdistcodename]}" }
@@ -145,11 +152,25 @@ describe 'apt::ppa', :type => :define do
   describe "without Class[apt] should raise a Puppet::Error" do
     let(:release) { "natty" }
     let(:title) { "ppa" }
+    let :facts do
+      {
+        'osfamily'        => 'Debian',
+        'lsbdistcodename' => 'precise',
+        'lsbdistid'       => 'Ubuntu'
+      }
+    end
     it { expect { should contain_apt__ppa(title) }.to raise_error(Puppet::Error) }
   end
 
   describe "without release should raise a Puppet::Error" do
     let(:title) { "ppa:" }
+    let :facts do
+      {
+        'osfamily'        => 'Debian',
+        'lsbdistcodename' => 'precise',
+        'lsbdistid'       => 'Ubuntu'
+      }
+    end
     it { expect { should contain_apt__ppa(:release) }.to raise_error(Puppet::Error) }
   end
 end

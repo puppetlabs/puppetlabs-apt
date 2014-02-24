@@ -3,6 +3,13 @@ describe 'apt::key', :type => :define do
   let :title do
     '8347A27F'
   end
+  let :facts do
+    {
+      'osfamily'        => 'Debian',
+      'lsbdistcodename' => 'precise',
+      'lsbdistid'       => 'Ubuntu'
+    }
+  end
 
   let :default_params do
     {

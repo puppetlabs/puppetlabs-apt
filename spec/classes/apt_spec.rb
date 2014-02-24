@@ -1,5 +1,12 @@
 require 'spec_helper'
 describe 'apt', :type => :class do
+  let :facts do
+    {
+      'osfamily'        => 'Debian',
+      'lsbdistcodename' => 'karmic',
+      'lsbdistid'       => 'Ubuntu'
+    }
+  end
   let :default_params do
     {
       :disable_keys => :undef,
