@@ -53,6 +53,7 @@ define apt::source(
       priority => $pin,
       before   => File["${name}.list"],
       origin   => $host,
+      release  => $release_real
     }
   }
 
