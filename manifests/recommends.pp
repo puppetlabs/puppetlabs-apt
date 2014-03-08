@@ -16,6 +16,6 @@ class apt::recommends (
     owner   => root,
     group   => root,
     mode    => '0644',
-    content => "APT::Install-Recommends \"${install_recommends}\";"
+    content => "APT::Install-Recommends \"${install_recommends}\";\n"
   }
 }
