@@ -1,6 +1,7 @@
 # recommends.pp
 
 class apt::recommends (
+  $ensure             = present,
   $install_recommends = true,
 ) {
 
@@ -11,6 +12,7 @@ class apt::recommends (
   $root = $apt::params::root
 
   file { "${root}/apt.conf.d/10recommends":
+    ensure  => $ensure,
     owner   => root,
     group   => root,
     mode    => '0644',
