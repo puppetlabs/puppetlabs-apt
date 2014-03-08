@@ -1,7 +1,7 @@
 # recommends.pp
 
 class apt::recommends (
-  $install_recommends
+  $install_recommends = true,
 ) {
 
   include apt::params
