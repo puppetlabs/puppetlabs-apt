@@ -23,6 +23,9 @@ define apt::pin(
 
   if $order != '' and !is_integer($order) {
     fail('Only integers are allowed in the apt::pin order param')
+    if $order > 99 {
+      fail('Only integers between 0 and 99 are allowed in the apt::pin order param')
+    }
   }
 
   $pin_release_array = [
@@ -60,7 +63,7 @@ define apt::pin(
 
   $path = $order ? {
     ''      => "${preferences_d}/${name}.pref",
-    default => "${preferences_d}/${order}-${name}.pref",
+    default => sprintf("${preferences_d}/%02i-${name}.pref", $order),
   }
   file { "${name}.pref":
     ensure  => $ensure,
