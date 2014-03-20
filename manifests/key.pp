@@ -4,7 +4,9 @@ define apt::key (
   $key_content = false,
   $key_source = false,
   $key_server = 'keyserver.ubuntu.com',
-  $key_options = false
+  $key_options = false,
+  $key_independent = false,
+  $key_name = '',
 ) {
 
   include apt::params
@@ -26,6 +28,22 @@ define apt::key (
   # hashed to ensure that the resource name doesn't end up being pages and
   # pages (e.g. in the situation where key_content is specified).
   $digest = sha1("${upkey}/${key_content}/${key_source}/${key_server}/")
+
+  # If we want to store a independent keyring for each gpg key, first we must
+  # create the file because gpg does not create it and throws an error.
+  validate_bool($key_independent)
+  
+  if $key_independent and $method == 'server' {
+    if (!$key_name) { fail ('You must specify a name for the key.') }
+    validate_string($key_name)
+    file { "${key_name}_file" :
+      ensure => 'present',
+      name   => "${apt::params::trusted_d}/${key_name}.gpg",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
+  }
 
   # Allow multiple ensure => present for the same key to account for many
   # apt::source resources that all reference the same key.
@@ -49,11 +67,20 @@ define apt::key (
         $options_string = ''
       }
 
+      if $key_independent {
+        $options_string_ring = "--keyring '${apt::params::trusted_d}/${key_name}.gpg' \
+                                --primary-keyring '${apt::params::trusted_d}/${key_name}.gpg'"
+      }
+      else{
+        $options_string_ring = ''
+      }
+      
       if !defined(Exec[$digest]) {
         $digest_command = $method ? {
           'content' => "echo '${key_content}' | /usr/bin/apt-key add -",
           'source'  => "wget -q '${key_source}' -O- | apt-key add -",
-          'server'  => "apt-key adv --keyserver '${key_server}' ${options_string} --recv-keys '${upkey}'",
+          'server'  => "apt-key adv --keyserver '${key_server}' ${options_string} \
+                        ${options_string_ring} --recv-keys '${upkey}'",
         }
         exec { $digest:
           command   => $digest_command,
