@@ -69,7 +69,7 @@ define apt::ppa(
         ensure => 'absent',
         mode   => '0644',
         owner  => 'root',
-        gruop  => 'root',
+        group  => 'root',
         notify => Exec['apt_update'],
     }
   }
