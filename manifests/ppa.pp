@@ -60,6 +60,9 @@ define apt::ppa(
 
     file { "${sources_list_d}/${sources_list_d_filename}":
         ensure  => file,
+        mode   => '0644',
+        owner  => 'root',
+        gruop  => 'root',
         require => Exec["add-apt-repository-${name}"],
     }
   }
