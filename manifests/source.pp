@@ -45,8 +45,7 @@ define apt::source(
 
   if ($pin != false) {
     # Get the host portion out of the url so we can pin to origin
-    $url_split = split($location, '/')
-    $host      = $url_split[2]
+    $host      = url_host($location)
 
     apt::pin { $name:
       ensure   => $ensure,
