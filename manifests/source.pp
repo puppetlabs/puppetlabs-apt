@@ -64,7 +64,6 @@ define apt::source(
       tries       => 3,
       try_sleep   => 1,
       subscribe   => File["${name}.list"],
-      before      => Exec['apt_update'],
     }
   }
 
