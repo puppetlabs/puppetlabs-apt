@@ -13,7 +13,8 @@ define apt::source(
   $key_content       = undef,
   $key_source        = undef,
   $pin               = false,
-  $architecture      = undef
+  $architecture      = undef,
+  $proxy             = undef
 ) {
 
   include apt::params
@@ -76,6 +77,7 @@ define apt::source(
       key_server  => $key_server,
       key_content => $key_content,
       key_source  => $key_source,
+      proxy       => $proxy,
       before      => File["${name}.list"],
     }
   }
