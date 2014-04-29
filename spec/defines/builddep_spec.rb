@@ -16,4 +16,39 @@ describe 'apt::builddep', :type => :define do
     }
   end
 
+  describe "should not refreshonly by default" do
+    it { should contain_exec("apt-builddep-my_package").with({
+      'refreshonly' => false
+    })
+  }
+  end
+
+  describe "should not refreshonly when told not to" do
+    let(:params) { { :refreshonly => false } }
+
+    it { should contain_exec("apt-builddep-my_package").with({
+      'refreshonly' => false
+    })
+  }
+  end
+
+  describe "should refreshonly when told to" do
+    let(:params) { { :refreshonly => true } }
+
+    it { should contain_exec("apt-builddep-my_package").with({
+      'refreshonly' => true
+    })
+  }
+  end
+
+  describe "should fail with an invalid refreshonly param" do
+    let(:params) { { :refreshonly => 'frog blast the vent core' } }
+
+    it do
+      expect {
+        should contain_exec("apt-builddep-my_package")
+      }.to raise_error(Puppet::Error, /is not a boolean/)
+    end
+  end
+
 end

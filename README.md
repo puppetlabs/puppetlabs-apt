@@ -66,6 +66,8 @@ Installs the build depends of a specified package.
 
     apt::builddep { 'glusterfs-server': }
 
+Optionally pass `refreshonly => true` to make the builddep exec only run when triggered; you may want to do this if the builddep operation is time-consuming.
+
 ### apt::force
 
 Forces a package to be installed from a specific release.  This class is particularly useful when using repositories, like Debian, that are unstable in Ubuntu.
