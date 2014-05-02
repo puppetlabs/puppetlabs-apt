@@ -54,13 +54,6 @@ class apt(
     true  => "# Repos managed by puppet.\n",
   }
 
-  $preferences_content = $purge_preferences ? {
-    false => undef,
-    true  => "Explanation: Preferences managed by Puppet\n
-Explanation: We need a bogus package line because of Debian Bug #732746\n
-Package: bogus-package\n",
-  }
-
   if $always_apt_update == true {
     Exec <| title=='apt_update' |> {
       refreshonly => false,
@@ -93,13 +86,11 @@ Package: bogus-package\n",
     notify  => Exec['apt_update'],
   }
 
-  file { 'apt-preferences':
-    ensure  => present,
-    path    => "${root}/preferences",
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    content => $preferences_content,
+  if $purge_preferences {
+    file { 'apt-preferences':
+      ensure  => absent,
+      path    => "${root}/preferences",
+    }
   }
 
   file { 'preferences.d':
@@ -143,7 +134,7 @@ Package: bogus-package\n",
     owner   => root,
     group   => root,
   }
-  
+
   file { 'old-proxy-file':
     ensure  => absent,
     path    => "${apt_conf_d}/proxy",

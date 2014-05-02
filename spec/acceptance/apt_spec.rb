@@ -197,9 +197,6 @@ describe 'apt class', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')
 
       describe file('/etc/apt/preferences') do
         it { should be_file }
-        it 'is not managed by Puppet' do
-          shell("grep 'original' /etc/apt/preferences", {:acceptable_exit_codes => 0})
-        end
       end
     end
 
@@ -217,10 +214,7 @@ describe 'apt class', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')
       end
 
       describe file('/etc/apt/preferences') do
-        it { should be_file }
-        it 'is managed by Puppet' do
-          shell("grep 'Explanation' /etc/apt/preferences", {:acceptable_exit_codes => 0})
-        end
+        it { should_not be_file }
       end
     end
   end
