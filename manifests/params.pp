@@ -5,6 +5,15 @@ class apt::params {
   $apt_conf_d     = "${root}/apt.conf.d"
   $preferences_d  = "${root}/preferences.d"
 
+  case $::lsbdistrelease {
+    /^[1-9]\..*|1[01]\..*|12.04$/: {
+      $apt_ppa_package = 'python-software-properties'
+    }
+    default: {
+      $apt_ppa_package = 'software-properties-common'
+    }
+  }
+
   case $::lsbdistid {
     'debian': {
       case $::lsbdistcodename {
