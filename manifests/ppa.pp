@@ -8,7 +8,8 @@ define apt::ppa(
   include apt::params
   include apt::update
 
-  $sources_list_d = $apt::params::sources_list_d
+  $sources_list_d  = $apt::params::sources_list_d
+  $apt_ppa_package = $apt::params::apt_ppa_package
 
   if ! $release {
     fail('lsbdistcodename fact not available: release parameter required')
@@ -24,13 +25,8 @@ define apt::ppa(
   $sources_list_d_filename  = "${filename_without_ppa}-${release}.list"
 
   if $ensure == 'present' {
-    $package = $::lsbdistrelease ? {
-        /^[1-9]\..*|1[01]\..*|12.04$/ => 'python-software-properties',
-        default  => 'software-properties-common',
-    }
-
-    if ! defined(Package[$package]) {
-        package { $package: }
+    if ! defined(Package[$apt_ppa_package]) {
+        package { $apt_ppa_package: }
     }
 
     if defined(Class[apt]) {
@@ -54,7 +50,7 @@ define apt::ppa(
         notify       => Exec['apt_update'],
         require      => [
         File['sources.list.d'],
-        Package[$package],
+        Package[$apt_ppa_package],
         ],
     }
 
