@@ -64,11 +64,6 @@ define apt::pin(
 
   }
 
-  $path = $order ? {
-    ''      => "${preferences_d}/${name}.pref",
-    default => "${preferences_d}/${order}-${name}.pref",
-  }
-
   # According to man 5 apt_preferences:
   # The files have either no or "pref" as filename extension
   # and only contain alphanumeric, hyphen (-), underscore (_) and period
@@ -77,6 +72,11 @@ define apt::pin(
   # Dir::Ignore-Files-Silently configuration list - in which case it will
   # be silently ignored.
   $file_name = regsubst($title, '[^0-9a-z\-_\.]', '_', 'IG')
+
+  $path = $order ? {
+    ''      => "${preferences_d}/${file_name}.pref",
+    default => "${preferences_d}/${order}-${file_name}.pref",
+  }
 
   file { "${file_name}.pref":
     ensure  => $ensure,
