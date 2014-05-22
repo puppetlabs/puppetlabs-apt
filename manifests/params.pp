@@ -26,7 +26,7 @@ class apt::params {
         }
       }
     }
-    'ubuntu': {
+    'ubuntu', 'linuxmint': {
       case $::lsbdistcodename {
         'lucid': {
           $backports_location = 'http://us.archive.ubuntu.com/ubuntu'
