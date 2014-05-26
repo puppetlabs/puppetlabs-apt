@@ -93,7 +93,7 @@ You can additionally set the following attributes:
  * `source`: HTTP, HTTPS or FTP location of a GPG key or path to a file on the
              target host;
  * `content`: Instead of pointing to a file, pass the key in as a string;
- * `server`: The GPG key server to use. It defaults to *keyserver.ubuntu.com*;
+ * `server`: The GPG key server to use. It defaults to *hkp://keyserver.ubuntu.com:80*;
  * `keyserver_options`: Additional options to pass to `--keyserver`.
 
 Because it is a native type it can be used in and queried for with MCollective.

@@ -41,7 +41,7 @@
 #
 #   The keyserver from where to fetch our GPG key. It defaults to
 #   undef which results in apt_key's default keyserver being used,
-#   currently +keyserver.ubuntu.com+.
+#   currently +hkp://keyserver.ubuntu.com:80+.
 #
 # [*key_options*]
 #   _default_: +undef+
