@@ -68,7 +68,7 @@ describe 'apt_key', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) 
         EOS
 
         # Install the key first
-        shell("apt-key adv --keyserver keyserver.ubuntu.com \
+        shell("apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
               --recv-keys #{PUPPETLABS_GPG_KEY_ID}")
         shell("apt-key list | grep #{PUPPETLABS_GPG_KEY_ID}")
 

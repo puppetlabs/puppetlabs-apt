@@ -9,7 +9,7 @@ define apt::source(
   $include_src       = true,
   $required_packages = false,
   $key               = undef,
-  $key_server        = 'keyserver.ubuntu.com',
+  $key_server        = 'hkp://keyserver.ubuntu.com:80',
   $key_content       = undef,
   $key_source        = undef,
   $pin               = false,
