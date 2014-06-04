@@ -15,7 +15,7 @@ define apt::ppa(
   }
 
   if $::operatingsystem != 'Ubuntu' {
-    fail("apt::ppa is currently supported on Ubuntu only.")
+    fail('apt::ppa is currently supported on Ubuntu only.')
   }
 
   $filename_without_slashes = regsubst($name, '/', '-', 'G')

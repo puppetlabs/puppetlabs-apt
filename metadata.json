@@ -1,6 +1,6 @@
 {
     "name": "puppetlabs-apt",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "source": "https://github.com/puppetlabs/puppetlabs-apt",
     "author": "Puppet Labs",
     "license": "Apache-2.0",
@@ -18,12 +18,13 @@
         "operatingsystem": "Ubuntu",
         "operatingsystemrelease": [
           "10.04",
-          "12.04"
+          "12.04",
+          "14.04"
         ]
       }
     ],
     "requirements": [
-      { "name": "pe", "version_requirement": "3.2.x" },
+      { "name": "pe", "version_requirement": ">= 3.2.0 < 3.4.0" },
       { "name": "puppet", "version_requirement": "3.x" }
     ],
     "dependencies": []

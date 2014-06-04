@@ -153,7 +153,7 @@ class apt(
     owner   => root,
     group   => root,
   }
-  
+
   file { 'old-proxy-file':
     ensure  => absent,
     path    => "${apt_conf_d}/proxy",

@@ -1,3 +1,29 @@
+##2014-05-14 - Release 1.5.0
+###Summary
+
+This release adds support for Ubuntu 14.04.  It also includes many new features 
+and important bugfixes.  One huge change is that apt::key was replaced with
+apt_key, which allows you to use puppet resource apt_key to inventory keys on
+your system.
+
+Special thanks to daenney, our intrepid unofficial apt maintainer!
+
+####Features
+- Add support for Ubuntu Trusty!
+- Add apt::hold define
+- Generate valid *.pref files in apt::pin
+- Made pin_priority configurable for apt::backports
+- Add apt_key type and provider
+- Rename "${apt_conf_d}/proxy" to "${apt_conf_d}/01proxy"
+- apt::key rewritten to use apt_key type
+- Add support for update_tries to apt::update
+
+####Bugfixes
+- Typo fixes
+- Fix unattended upgrades
+- Removed bogus line when using purge_preferences
+- Fix apt::force to upgrade allow packages to be upgraded to the pacakge from the specified release
+
 ##2014-03-04 - Supported Release 1.4.2
 ###Summary
 
