@@ -1,4 +1,4 @@
-##2014-05-14 - Supported Release 1.5.0
+##2014-05-14 - Release 1.5.0
 ###Summary
 
 This release adds support for Ubuntu 14.04.  It also includes many new features 
