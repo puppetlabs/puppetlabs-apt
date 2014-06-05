@@ -1,6 +1,6 @@
 {
     "name": "puppetlabs-apt",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "source": "https://github.com/puppetlabs/puppetlabs-apt",
     "author": "Puppet Labs",
     "license": "Apache-2.0",
