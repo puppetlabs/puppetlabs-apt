@@ -2,6 +2,7 @@
 # add an apt source
 
 define apt::source(
+  $comment           = $name,
   $ensure            = present,
   $location          = '',
   $release           = 'UNDEF',
