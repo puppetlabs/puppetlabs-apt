@@ -269,7 +269,7 @@ describe 'apt::unattended_upgrades', :type => :class do
 
   describe "with randomsleep => 1800" do
     let :params do
-      { :min_age => "1800" }
+      { :randomsleep => "1800" }
     end
     it { should contain_file(file_periodic).with_content(/^APT::Periodic::RandomSleep "1800";$/) }
   end
