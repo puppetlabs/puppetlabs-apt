@@ -10,3 +10,4 @@ APT::Periodic::Download-Upgradeable-Packages-Debdelta "<%= @download_delta %>";
 APT::Periodic::Unattended-Upgrade "<%= @upgrade %>";
 APT::Periodic::AutocleanInterval "<%= @autoclean %>";
 APT::Periodic::Verbose "<%= @verbose %>";
+<% if @randomsleep != "NONE" %>APT::Periodic::RandomSleep "<%= @randomsleep %>";<% end %>
