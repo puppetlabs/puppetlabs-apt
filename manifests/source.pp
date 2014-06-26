@@ -12,6 +12,7 @@ define apt::source(
   $key               = undef,
   $key_server        = 'keyserver.ubuntu.com',
   $key_content       = undef,
+  $key_options       = undef,
   $key_source        = undef,
   $pin               = false,
   $architecture      = undef
@@ -76,6 +77,7 @@ define apt::source(
       key         => $key,
       key_server  => $key_server,
       key_content => $key_content,
+      key_options => $key_options,
       key_source  => $key_source,
       before      => File["${name}.list"],
     }
