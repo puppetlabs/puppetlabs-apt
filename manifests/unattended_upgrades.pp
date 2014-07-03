@@ -27,6 +27,7 @@ class apt::unattended_upgrades (
   $mail_only_on_error  = false,
   $remove_unused       = true,
   $auto_reboot         = false,
+  $randomsleep         = "NONE",
   $dl_limit            = "NONE",
   $enable              = "1",
   $backup_interval     = "0",
