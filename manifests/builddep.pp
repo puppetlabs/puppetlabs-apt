@@ -6,7 +6,7 @@ define apt::builddep() {
   exec { "apt-builddep-${name}":
     command   => "/usr/bin/apt-get -y --force-yes build-dep ${name}",
     logoutput => 'on_failure',
-    notify    => Exec['apt_update'],
+    require    => Exec['apt_update'],
   }
 
   # Need anchor to provide containment for dependencies.
