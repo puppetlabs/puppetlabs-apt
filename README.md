@@ -62,6 +62,14 @@ Puppet will manage your system's `sources.list` file and `sources.list.d` direct
 
 If you declare your apt class with `purge_sources_list`, `purge_sources_list_d`, `purge_preferences` and `purge_preferences_d` set to 'true', Puppet will unapologetically purge any existing content it finds that wasn't declared with Puppet.
 
+### apt::autoproxy
+
+Installs the 'squid-deb-proxy-client' package and ensures its apt config file is not purged.
+
+This adds auto-discovery of local apt-proxy announced with avahi.
+
+    include apt::autoproxy 
+
 ### apt::builddep
 
 Installs the build depends of a specified package.
