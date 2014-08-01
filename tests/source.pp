@@ -8,6 +8,7 @@ apt::source { 'puppetlabs':
   repos      => 'main',
   key        => '4BD6EC30',
   key_server => 'pgp.mit.edu',
+#  key_options => 'http-proxy="http://proxyuser:proxypass@example.org:3128"', # Use your proxy here if necessary
 }
 
 # test two sources with the same key
@@ -17,6 +18,7 @@ apt::source { 'debian_testing':
   repos      => 'main contrib non-free',
   key        => '46925553',
   key_server => 'subkeys.pgp.net',
+#  key_options => 'http-proxy="http://proxyuser:proxypass@example.org:3128"', # Use your proxy here if necessary
   pin        => '-10',
 }
 apt::source { 'debian_unstable':
@@ -25,5 +27,6 @@ apt::source { 'debian_unstable':
   repos      => 'main contrib non-free',
   key        => '46925553',
   key_server => 'subkeys.pgp.net',
+#  key_options => 'http-proxy="http://proxyuser:proxypass@example.org:3128"', # Use your proxy here if necessary
   pin        => '-10',
 }
