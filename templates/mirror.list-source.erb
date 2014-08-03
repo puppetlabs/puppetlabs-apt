@@ -1,0 +1,8 @@
+# <%= @name %>
+deb<% if @architecture %>-<%= @architecture %> <% end %> <%= @mirror_url %> <%= @release_real %> <%= @components %>
+<%- if @include_src then -%>
+deb-src <%= @mirror_url %> <%= @release_real %> <%= @components %>
+<%- end -%>
+<%- if @clean then -%>
+clean <%= @mirror_url %>
+<%- end -%>
