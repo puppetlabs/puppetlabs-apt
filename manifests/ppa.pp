@@ -3,10 +3,17 @@
 define apt::ppa(
   $ensure  = 'present',
   $release = $::lsbdistcodename,
-  $options = $apt::params::ppa_options,
+  $options = 'DEFAULTS',
 ) {
   include apt::params
   include apt::update
+
+  if $options == 'DEFAULTS' {
+    $_options = $apt::params::ppa_options
+  }
+  else {
+    $_options = $options
+  }
 
   $sources_list_d = $apt::params::sources_list_d
 
@@ -49,7 +56,7 @@ define apt::ppa(
     }
     exec { "add-apt-repository-${name}":
         environment  => $proxy_env,
-        command      => "/usr/bin/add-apt-repository ${options} ${name}",
+        command      => "/usr/bin/add-apt-repository ${_options} ${name}",
         unless       => "/usr/bin/test -s ${sources_list_d}/${sources_list_d_filename}",
         user         => 'root',
         logoutput    => 'on_failure',
@@ -69,9 +76,6 @@ define apt::ppa(
 
     file { "${sources_list_d}/${sources_list_d_filename}":
         ensure => 'absent',
-        mode   => '0644',
-        owner  => 'root',
-        group  => 'root',
         notify => Exec['apt_update'],
     }
   }
