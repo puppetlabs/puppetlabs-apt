@@ -34,12 +34,16 @@ describe 'apt', :type => :class do
     it { should contain_file('01proxy').that_notifies('Exec[apt_update]').only_with({
       'ensure' => 'absent',
       'path'   => '/etc/apt/apt.conf.d/01proxy',
+      'owner'  => 'root',
+      'group'  => 'root',
       'notify' => 'Exec[apt_update]',
     })}
 
     it { should contain_file('old-proxy-file').that_notifies('Exec[apt_update]').only_with({
       'ensure' => 'absent',
       'path'   => '/etc/apt/apt.conf.d/proxy',
+      'owner'  => 'root',
+      'group'  => 'root',
       'notify' => 'Exec[apt_update]',
     })}
 
@@ -77,6 +81,8 @@ describe 'apt', :type => :class do
     it { should contain_file('apt-preferences').only_with({
       'ensure' => 'absent',
       'path'   => '/etc/apt/preferences',
+      'owner'  => 'root',
+      'group'  => 'root',
     })}
 
     it { should contain_file('preferences.d').with({
@@ -88,12 +94,16 @@ describe 'apt', :type => :class do
       'ensure'  => 'present',
       'content' => 'Dpkg::Progress-Fancy "1";',
       'path'    => '/etc/apt/apt.conf.d/99progressbar',
+      'owner'  => 'root',
+      'group'  => 'root',
     })}
 
     it { should contain_file('99unauth').only_with({
       'ensure'  => 'present',
       'content' => "APT::Get::AllowUnauthenticated 1;\n",
       'path'    => '/etc/apt/apt.conf.d/99unauth',
+      'owner'  => 'root',
+      'group'  => 'root',
     })}
 
     it { should contain_file('01proxy').that_notifies('Exec[apt_update]').only_with({
@@ -125,11 +135,15 @@ describe 'apt', :type => :class do
     it { should contain_file('99progressbar').only_with({
       'ensure'  => 'absent',
       'path'    => '/etc/apt/apt.conf.d/99progressbar',
+      'owner'  => 'root',
+      'group'  => 'root',
     })}
 
     it { should contain_file('99unauth').only_with({
       'ensure'  => 'absent',
       'path'    => '/etc/apt/apt.conf.d/99unauth',
+      'owner'  => 'root',
+      'group'  => 'root',
     })}
 
   end
