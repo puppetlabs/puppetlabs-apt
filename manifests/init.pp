@@ -5,15 +5,32 @@
 # Parameters:
 #   The parameters listed here are not required in general and were
 #     added for use cases related to development environments.
+#
 #   disable_keys - disables the requirement for all packages to be signed
+#
 #   always_apt_update - rather apt should be updated on every run (intended
 #     for development environments where package updates are frequent)
+#
+#   apt_update_frequency - *string* Supported values:
+#     **always**: Will fire `apt-get update` at every puppet run. Intended to
+#       deprecate the `always_apt_update` parameter.
+#     **daily**: Trigger `apt-get update` if the value of the fact
+#       `apt_update_last_success` is less than current epoch time - 86400.
+#        *notifying the apt_update exec will trigger apt-get update regardless*
+#     **weekly**: Trigger `apt-get update` if the value of the fact
+#       `apt_update_last_success` is less than current epoch time - 604800.
+#        *notifying the apt_update exec will trigger apt-get update regardless*
+#     **reluctantly**: *Default* only run apt-get update if the exec resource `apt_update` is notified.
+#
 #   purge_sources_list - Accepts true or false. Defaults to false If set to
 #     true, Puppet will purge all unmanaged entries from sources.list
+#
 #   purge_sources_list_d - Accepts true or false. Defaults to false. If set
 #     to true, Puppet will purge all unmanaged entries from sources.list.d
+#
 #   update_timeout - Overrides the exec timeout in seconds for apt-get update.
 #     If not set defaults to Exec's default (300)
+#
 #   update_tries - Number of times that `apt-get update` will be tried. Use this
 #     to work around transient DNS and HTTP errors. By default, the command
 #     will only be run once.
@@ -27,6 +44,7 @@
 
 class apt(
   $always_apt_update    = false,
+  $apt_update_frequency = 'reluctantly',
   $disable_keys         = undef,
   $proxy_host           = undef,
   $proxy_port           = '8080',
@@ -44,6 +62,8 @@ class apt(
     fail('This module only works on Debian or derivatives like Ubuntu')
   }
 
+  $frequency_options = ['always','daily','weekly','reluctantly']
+  validate_re($apt_update_frequency, $frequency_options)
   include apt::params
   include apt::update
 
@@ -59,6 +79,14 @@ class apt(
     Exec <| title=='apt_update' |> {
       refreshonly => false,
     }
+  }
+
+  file { '/etc/apt/apt.conf.d/15update-stamp':
+    ensure  => 'file',
+    content => 'APT::Update::Post-Invoke-Success {"touch /var/lib/apt/periodic/update-success-stamp 2>/dev/null || true";};',
+    group   => 'root',
+    mode    => '0644',
+    owner   => 'root',
   }
 
   $root           = $apt::params::root

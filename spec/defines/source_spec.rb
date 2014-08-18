@@ -12,6 +12,7 @@ describe 'apt::source', :type => :define do
       {
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
+        :osfamily        => 'Debian'
       }
     end
 
@@ -36,6 +37,7 @@ describe 'apt::source', :type => :define do
       {
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
+        :osfamily        => 'Debian'
       }
     end
     let :params do
@@ -95,6 +97,7 @@ describe 'apt::source', :type => :define do
       {
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
+        :osfamily        => 'Debian'
       }
     end
     let :params do
@@ -114,6 +117,7 @@ describe 'apt::source', :type => :define do
       let :facts do
         {
           :lsbdistid       => 'Debian',
+          :osfamily        => 'Debian'
         }
       end
 

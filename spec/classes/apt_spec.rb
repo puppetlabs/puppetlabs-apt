@@ -37,6 +37,14 @@ describe 'apt', :type => :class do
       'notify' => 'Exec[apt_update]',
     })}
 
+    it 'should lay down /etc/apt/apt.conf.d/15update-stamp' do
+      should contain_file('/etc/apt/apt.conf.d/15update-stamp').with({
+        'group' => 'root',
+        'mode'  => '0644',
+        'owner' => 'root',
+      }).with_content('APT::Update::Post-Invoke-Success {"touch /var/lib/apt/periodic/update-success-stamp 2>/dev/null || true";};')
+    end
+
     it { should contain_file('old-proxy-file').that_notifies('Exec[apt_update]').only_with({
       'ensure' => 'absent',
       'path'   => '/etc/apt/apt.conf.d/proxy',

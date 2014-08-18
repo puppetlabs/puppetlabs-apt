@@ -1,7 +1,7 @@
 require 'spec_helper'
 describe 'apt::builddep', :type => :define do
 
-  let(:facts) { { :lsbdistid => 'Debian' } }
+  let(:facts) { { :lsbdistid => 'Debian', :osfamily => 'Debian' } }
   let(:title) { 'my_package' }
 
   describe "defaults" do

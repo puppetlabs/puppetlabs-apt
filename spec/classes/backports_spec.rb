@@ -5,7 +5,8 @@ describe 'apt::backports', :type => :class do
     let :facts do
       {
         'lsbdistcodename' => 'Karmic',
-        'lsbdistid'       => 'Ubuntu'
+        'lsbdistid'       => 'Ubuntu',
+        'osfamily'        => 'Debian'
       }
     end
 
@@ -36,7 +37,8 @@ describe 'apt::backports', :type => :class do
     let :facts do
       {
         'lsbdistcodename' => 'Karmic',
-        'lsbdistid'       => 'Ubuntu'
+        'lsbdistid'       => 'Ubuntu',
+        'osfamily'        => 'Debian'
       }
     end
 
@@ -57,6 +59,7 @@ describe 'apt::backports', :type => :class do
       {
         'lsbdistcodename' => 'Squeeze',
         'lsbdistid'       => 'Debian',
+        'osfamily'        => 'Debian'
       }
     end
 
@@ -77,6 +80,7 @@ describe 'apt::backports', :type => :class do
       {
         'lsbdistcodename' => 'debian',
         'lsbdistid'       => 'LinuxMint',
+        'osfamily'        => 'Debian'
       }
     end
 
@@ -97,6 +101,7 @@ describe 'apt::backports', :type => :class do
       {
         'lsbdistcodename' => 'qiana',
         'lsbdistid'       => 'LinuxMint',
+        'osfamily'        => 'Debian'
       }
     end
 
@@ -116,7 +121,8 @@ describe 'apt::backports', :type => :class do
     let :facts do
       {
         'lsbdistcodename' => 'Squeeze',
-        'lsbdistid'       => 'Debian'
+        'lsbdistid'       => 'Debian',
+        'osfamily'        => 'Debian'
       }
     end
 
