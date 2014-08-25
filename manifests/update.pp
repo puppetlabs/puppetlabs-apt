@@ -9,4 +9,5 @@ class apt::update {
     tries       => $apt::update_tries,
     try_sleep   => 1
   }
+  Exec['apt_update'] -> Package <| |>
 }
