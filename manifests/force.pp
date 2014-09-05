@@ -2,10 +2,15 @@
 # force a package from a specific release
 
 define apt::force(
-  $release = false,
-  $version = false,
-  $timeout = 300
+  $release     = false,
+  $version     = false,
+  $timeout     = 300,
+  $cfg_files   = 'none',
+  $cfg_missing = false,
 ) {
+
+  validate_re($cfg_files, ['^new', '^old', '^unchanged', '^none'])
+  validate_bool($cfg_missing)
 
   $provider = $apt::params::provider
 
@@ -17,6 +22,18 @@ define apt::force(
   $release_string = $release ? {
     false   => undef,
     default => "-t ${release}",
+  }
+
+  case $cfg_files {
+    'new':       { $config_files = '-o Dpkg::Options::="--force-confnew"' }
+    'old':       { $config_files = '-o Dpkg::Options::="--force-confold"' }
+    'unchanged': { $config_files = '-o Dpkg::Options::="--force-confdef"' }
+    'none':      { $config_files = '' }
+  }
+
+  case $cfg_missing {
+    true:    { $config_missing = '-o Dpkg::Options::="--force-confmiss"' }
+    false:   { $config_missing = '' }
   }
 
   if $version == false {
@@ -34,7 +51,7 @@ define apt::force(
     }
   }
 
-  exec { "${provider} -y ${release_string} install ${name}${version_string}":
+  exec { "${provider} -y ${config_files} ${config_missing} ${release_string} install ${name}${version_string}":
     unless    => $install_check,
     logoutput => 'on_failure',
     timeout   => $timeout,

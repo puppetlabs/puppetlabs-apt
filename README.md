@@ -10,7 +10,7 @@ The apt module provides a simple interface for managing Apt source, key, and def
 
 The apt module automates obtaining and installing software packages on \*nix systems.
 
-**Note**: While this module allows the use of short keys, **we urge you NOT to use short keys**, as they pose a serious security issue by opening you up to collision attacks.
+**What apt affects:**
 
 ## Setup
 
@@ -59,7 +59,7 @@ Using the apt module consists predominantly of declaring classes and defined typ
   ```  
 
 * `apt::unattended_updates`: This class manages the unattended-upgrades package and related configuration files for Ubuntu and Debian systems. You can configure the class to automatically upgrade all new package releases or just security releases.
-
+      
   ```
   apt::unattended_upgrades {
     origins             = $::apt::params::origins,
@@ -73,6 +73,7 @@ Using the apt module consists predominantly of declaring classes and defined typ
   
 * `apt::update`: Runs `apt-get update`, updating the list of available packages and their versions without installing or upgrading any packages. The update runs on the first Puppet run after you include the class, then whenever `notify  => Exec['apt_update']` occurs; i.e., whenever config files get updated or other relevant changes occur. If you set the `always_apt_update` parameter to 'true', the update runs on every Puppet run.
 
+ * `cfg_files`: "new", "old", "unchanged" or "none" (default). "new" will overwrite all existing configuration files with newer ones, "old" will force usage of all old files and "unchanged" only updates unchanged config files whereas setting "none" will don't do anything but providing backward-compatability with existing puppet manifests.
 ### Types
 
 #### apt_key
@@ -127,11 +128,15 @@ Because apt_key is a native type, you can use it and query for it with MCollecti
 
   ```
   apt::force { 'glusterfs-server':
-    release => 'unstable',
-    version => '3.0.3',
+    release     => 'unstable',
+    version     => '3.0.3',
+    cfg_files   => 'unchanged',
+    cfg_missing => true,
     require => Apt::Source['debian_unstable'],
   }
   ```
+
+The `cfg_files` parameter can be set to use newer configuration files, older configuration files, or to update only unchanged configuration files. The `cfg_missing` parameter, if set to 'true', forces the provider to install all missing configuration files. Both settings are optional.
 
 * `apt::key`: Adds a key to the list of keys used by Apt to authenticate packages. This type uses the aforementioned `apt_key` native type. As such, it no longer requires
 the `wget` command on which the old implementation depended.
