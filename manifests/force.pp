@@ -21,16 +21,16 @@ define apt::force(
     default => "-t ${release}",
   }
 
-  $config_files = $cfg_files ? {
-    'new'       => '-o Dpkg::Options::="--force-confnew"',
-    'old'       => '-o Dpkg::Options::="--force-confold"',
-    'unchanged' => '-o Dpkg::Options::="--force-confdef"',
-    default     => '',
+  case $cfg_files {
+    'new':       { $config_files = '-o Dpkg::Options::="--force-confnew"' }
+    'old':       { $config_files = '-o Dpkg::Options::="--force-confold"' }
+    'unchanged': { $config_files = '-o Dpkg::Options::="--force-confdef"' }
+    default:     { $config_files = '' }
   }
 
-  $config_missing = $cfg_missing ? {
-    true    => '-o Dpkg::Options::="--force-confmiss"',
-    default => '',
+  case $cfg_missing {
+    true:    { $config_missing = '-o Dpkg::Options::="--force-confmiss"' }
+    default: { $config_missing = '' }
   }
 
   if $version == false {
