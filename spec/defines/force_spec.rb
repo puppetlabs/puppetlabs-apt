@@ -13,8 +13,8 @@ describe 'apt::force', :type => :define do
     {
       :release     => false,
       :version     => false,
-      :cfg_files   => nil,
-      :cfg_missing => nil,
+      :cfg_files   => 'none',
+      :cfg_missing => false,
     }
   end
 
@@ -46,18 +46,18 @@ describe 'apt::force', :type => :define do
 
   describe "when specifying cfg_files parameter" do
     let :params do
-      default_params.merge(:cfg_files => '-o dpkgoption1')
+      default_params.merge(:cfg_files => 'unchanged')
     end
-    it { should contain_exec("/usr/bin/apt-get -y #{params[:cfg_files]}   install my_package").with(
+    it { should contain_exec('/usr/bin/apt-get -y -o Dpkg::Options::="--force-confdef"   install my_package').with(
       :unless    => "/usr/bin/dpkg -s #{title} | grep -q 'Status: install'"
     ) }
   end
 
   describe "when specifying cfg_missing parameter" do
     let :params do
-      default_params.merge(:cfg_missing => '-o dpkgoption2')
+      default_params.merge(:cfg_missing => true)
     end
-    it { should contain_exec("/usr/bin/apt-get -y  #{params[:cfg_missing]}  install #{title}").with(
+    it { should contain_exec('/usr/bin/apt-get -y  -o Dpkg::Options::="--force-confmiss"  install my_package').with(
       :unless    => "/usr/bin/dpkg -s #{title} | grep -q 'Status: install'"
     ) }
   end
@@ -65,11 +65,11 @@ describe 'apt::force', :type => :define do
   describe "when specifying cfg_files and cfg_missing parameter" do
    let :params do
      default_params.merge(
-       :cfg_files   => '-o dpkgoption1',
-       :cfg_missing => '-o dpkgoption2'
+       :cfg_files   => 'unchanged',
+       :cfg_missing => true
      )
    end
-   it { should contain_exec("/usr/bin/apt-get -y #{params[:cfg_files]} #{params[:cfg_missing]}  install #{title}").with(
+   it { should contain_exec('/usr/bin/apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confmiss"  install my_package').with(
      :unless    => "/usr/bin/dpkg -s #{title} | grep -q 'Status: install'"
    ) }
   end
@@ -91,11 +91,11 @@ describe 'apt::force', :type => :define do
      default_params.merge(
        :release     => 'testing',
        :version     => '1',
-       :cfg_files   => '-o dpkgoption1',
-       :cfg_missing => '-o dpkgoption2'
+       :cfg_files   => 'unchanged',
+       :cfg_missing => true
      )
    end
-   it { should contain_exec("/usr/bin/apt-get -y #{params[:cfg_files]} #{params[:cfg_missing]} -t #{params[:release]} install #{title}=1").with(
+   it { should contain_exec('/usr/bin/apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confmiss" -t testing install my_package=1').with(
      :unless => "/usr/bin/apt-cache policy -t #{params[:release]} #{title} | /bin/grep -q 'Installed: #{params[:version]}'"
    ) }
   end

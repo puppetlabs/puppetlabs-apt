@@ -81,6 +81,16 @@ The cfg_files parameter controls wether newer or older configuration files shoul
       require     => Apt::Source['debian_unstable'],
     }
 
+You can additionally set the following attributes:
+
+ * `cfg_files`: new, old, unchanged or 'none' (default). "new" will overwrite all existing configuration files with
+                newer ones, "old" will force usage of all old files and unchanged only updates unchanged config files
+                whereas setting 'none' will don't do anything but providing backward-compatability with
+                existing puppet manifests.
+ * `cfg_missing`: true or false. Setting cfg_missing to false will provide backward compatability whereas setting true
+                  will add an aptitude/apt-get parameter which checks and installs missing configuration files for
+                  the selected package.
+
 ### apt_key
 
 A native Puppet type and provider for managing GPG keys for APT is provided by

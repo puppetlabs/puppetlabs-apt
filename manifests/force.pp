@@ -5,9 +5,12 @@ define apt::force(
   $release     = false,
   $version     = false,
   $timeout     = 300,
-  $cfg_files   = undef,
-  $cfg_missing = undef,
+  $cfg_files   = 'none',
+  $cfg_missing = false,
 ) {
+
+  validate_re($cfg_files, ['^new', '^old', '^unchanged', '^none'], "${cfg_files} is not supported for \$cfg_files. Valid values are 'new', 'old', 'unchanged' or 'none'.")
+  validate_bool($cfg_missing)
 
   $provider = $apt::params::provider
 
@@ -25,12 +28,12 @@ define apt::force(
     'new':       { $config_files = '-o Dpkg::Options::="--force-confnew"' }
     'old':       { $config_files = '-o Dpkg::Options::="--force-confold"' }
     'unchanged': { $config_files = '-o Dpkg::Options::="--force-confdef"' }
-    default:     { $config_files = '' }
+    'none':      { $config_files = '' }
   }
 
   case $cfg_missing {
     true:    { $config_missing = '-o Dpkg::Options::="--force-confmiss"' }
-    default: { $config_missing = '' }
+    false:   { $config_missing = '' }
   }
 
   if $version == false {
