@@ -9,7 +9,7 @@ define apt::force(
   $cfg_missing = false,
 ) {
 
-  validate_re($cfg_files, ['^new', '^old', '^unchanged', '^none'], "${cfg_files} is not supported for \$cfg_files. Valid values are 'new', 'old', 'unchanged' or 'none'.")
+  validate_re($cfg_files, ['^new', '^old', '^unchanged', '^none'])
   validate_bool($cfg_missing)
 
   $provider = $apt::params::provider
