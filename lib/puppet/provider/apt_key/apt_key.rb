@@ -113,7 +113,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       value
     else
       begin
-        key = open(value, :ftp_active_mode => false).read
+        key = open(value, :ftp_active_mode => false, :proxy => resource[:proxy]).read
       rescue OpenURI::HTTPError, Net::FTPPermError => e
         fail("#{e.message} for #{resource[:source]}")
       rescue SocketError

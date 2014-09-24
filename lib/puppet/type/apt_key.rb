@@ -70,6 +70,10 @@ Puppet::Type.newtype(:apt_key) do
     desc 'Additional options to pass to apt-key\'s --keyserver-options.'
   end
 
+  newparam(:proxy) do
+    desc 'Proxy server URI to use. Currently only works in conjunction with the source parameter.'
+  end
+
   newproperty(:expired) do
     desc <<-EOS
       Indicates if the key has expired.

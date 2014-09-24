@@ -48,6 +48,11 @@
 #   _default_: +undef+
 #
 #   Additional options to pass on to `apt-key adv --keyserver-options`.
+#
+# [*proxy*]
+#   _default_: +undef+
+#
+#   Proxy URI to use with the key_source parameter
 define apt::key (
   $key         = $title,
   $ensure      = present,
@@ -55,6 +60,7 @@ define apt::key (
   $key_source  = undef,
   $key_server  = undef,
   $key_options = undef,
+  $proxy       = undef
 ) {
 
   validate_re($key, ['\A(0x)?[0-9a-fA-F]{8}\Z', '\A(0x)?[0-9a-fA-F]{16}\Z'])
@@ -90,6 +96,7 @@ define apt::key (
           content           => $key_content,
           server            => $key_server,
           keyserver_options => $key_options,
+          proxy             => $proxy,
         } ->
         anchor { "apt_key ${key} present": }
       }
@@ -108,6 +115,7 @@ define apt::key (
           content           => $key_content,
           server            => $key_server,
           keyserver_options => $key_options,
+          proxy             => $proxy,
         } ->
         anchor { "apt_key ${key} absent": }
       }
