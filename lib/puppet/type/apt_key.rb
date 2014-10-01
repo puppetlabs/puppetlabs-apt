@@ -36,11 +36,7 @@ Puppet::Type.newtype(:apt_key) do
       else
         id = value.upcase
       end
-      if id.length == 16
-        id[8..-1]
-      else
-        id
-      end
+      id
     end
   end
 

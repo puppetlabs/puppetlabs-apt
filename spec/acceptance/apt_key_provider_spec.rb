@@ -1,14 +1,19 @@
 require 'spec_helper_acceptance'
 
-PUPPETLABS_GPG_KEY_ID   = '4BD6EC30'
-PUPPETLABS_APT_URL      = 'apt.puppetlabs.com'
-PUPPETLABS_GPG_KEY_FILE = 'pubkey.gpg'
-CENTOS_GPG_KEY_ID       = 'C105B9DE'
-CENTOS_REPO_URL         = 'ftp.cvut.cz/centos'
-CENTOS_GPG_KEY_FILE     = 'RPM-GPG-KEY-CentOS-6'
+PUPPETLABS_GPG_KEY_ID        = '4BD6EC30'
+PUPPETLABS_GPG_LONG_KEY_ID   = '1054B7A24BD6EC30'
+PUPPETLABS_APT_URL           = 'apt.puppetlabs.com'
+PUPPETLABS_GPG_KEY_FILE      = 'pubkey.gpg'
+CENTOS_GPG_KEY_ID            = 'C105B9DE'
+CENTOS_REPO_URL              = 'ftp.cvut.cz/centos'
+CENTOS_GPG_KEY_FILE          = 'RPM-GPG-KEY-CentOS-6'
 
 describe 'apt_key' do
   before(:each) do
+    # Delete twice to make sure everything is cleaned
+    # up after the short key collision
+    shell("apt-key del #{PUPPETLABS_GPG_KEY_ID}",
+          :acceptable_exit_codes => [0,1,2])
     shell("apt-key del #{PUPPETLABS_GPG_KEY_ID}",
           :acceptable_exit_codes => [0,1,2])
   end
@@ -36,7 +41,7 @@ describe 'apt_key' do
           EOS
 
           apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply_manifest(pp, :catch_changes => true)
           shell("apt-key list | grep #{PUPPETLABS_GPG_KEY_ID}")
         end
       end
@@ -69,7 +74,7 @@ describe 'apt_key' do
 
         # Install the key first
         shell("apt-key adv --keyserver keyserver.ubuntu.com \
-              --recv-keys #{PUPPETLABS_GPG_KEY_ID}")
+              --recv-keys #{PUPPETLABS_GPG_LONG_KEY_ID}")
         shell("apt-key list | grep #{PUPPETLABS_GPG_KEY_ID}")
 
         # Time to remove it using Puppet
