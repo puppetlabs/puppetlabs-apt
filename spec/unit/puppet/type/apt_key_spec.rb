@@ -41,7 +41,7 @@ describe Puppet::Type::type(:apt_key) do
       :id => 'FFFFFFFF4BD6EC30'
     )}
     it 'id is set' do
-      resource[:id].should eq '4BD6EC30'
+      resource[:id].should eq 'FFFFFFFF4BD6EC30'
     end
   end
 
@@ -68,7 +68,7 @@ describe Puppet::Type::type(:apt_key) do
       :id => '0xFFFFFFFF4BD6EC30'
     )}
     it 'id is set' do
-      resource[:id].should eq '4BD6EC30'
+      resource[:id].should eq 'FFFFFFFF4BD6EC30'
     end
   end
 
