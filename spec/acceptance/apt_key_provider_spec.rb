@@ -66,6 +66,32 @@ describe 'apt_key' do
     context 'absent' do
       it 'is removed' do
         pp = <<-EOS
+        apt_key { 'centos':
+          id     => '#{CENTOS_GPG_KEY_ID}',
+          ensure => 'absent',
+        }
+        EOS
+
+        # Install the key first
+        shell("apt-key adv --keyserver keyserver.ubuntu.com \
+              --recv-keys #{CENTOS_GPG_KEY_ID}")
+        shell("apt-key list | grep #{CENTOS_GPG_KEY_ID}")
+
+        # Time to remove it using Puppet
+        apply_manifest(pp, :catch_failures => true)
+        apply_manifest(pp, :catch_failures => true)
+
+        shell("apt-key list | grep #{CENTOS_GPG_KEY_ID}",
+              :acceptable_exit_codes => [1])
+
+        shell("apt-key adv --keyserver keyserver.ubuntu.com \
+              --recv-keys #{CENTOS_GPG_KEY_ID}")
+      end
+    end
+
+    context 'absent, added with long key', :unless => (fact('operatingsystem') == 'Debian' and fact('operatingsystemmajrelease') == '6') do
+      it 'is removed' do
+        pp = <<-EOS
         apt_key { 'puppetlabs':
           id     => '#{PUPPETLABS_GPG_KEY_ID}',
           ensure => 'absent',
