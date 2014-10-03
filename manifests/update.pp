@@ -19,6 +19,8 @@ class apt::update {
         if $::apt_update_last_success {
           if $::apt_update_last_success < $daily_threshold {
             $_kick_apt = true
+          } else {
+            $_kick_apt = false
           }
         } else {
           #if apt-get update has not successfully run, we should kick apt_update
@@ -32,6 +34,8 @@ class apt::update {
         if $::apt_update_last_success {
           if ( $::apt_update_last_success < $weekly_threshold ) {
             $_kick_apt = true
+          } else {
+            $_kick_apt = false
           }
         } else {
           #if apt-get update has not successfully run, we should kick apt_update
@@ -41,6 +45,7 @@ class apt::update {
       default: {
         #catches 'recluctantly', and any other value (which should not occur).
         #do nothing.
+        $_kick_apt = false
       }
     }
   }
