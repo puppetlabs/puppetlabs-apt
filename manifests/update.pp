@@ -10,49 +10,57 @@ class apt::update {
 
     case $apt::apt_update_frequency {
       'always': {
-        $_kick_apt = true
+        $kick_apt = true
       }
       'daily': {
         #compare current date with the apt_update_last_success fact to determine
         #if we should kick apt_update.
         $daily_threshold = (strftime('%s') - 86400)
-        if $::apt_update_last_success {
-          if $::apt_update_last_success < $daily_threshold {
-            $_kick_apt = true
+        if getvar('::apt_update_last_success') {
+          if getvar('::apt_update_last_success') < $daily_threshold {
+            $kick_apt = true
+          } else {
+            $kick_apt = false
           }
         } else {
           #if apt-get update has not successfully run, we should kick apt_update
-          $_kick_apt = true
+          $kick_apt = true
         }
       }
       'weekly':{
         #compare current date with the apt_update_last_success fact to determine
         #if we should kick apt_update.
         $weekly_threshold = (strftime('%s') - 604800)
-        if $::apt_update_last_success {
-          if ( $::apt_update_last_success < $weekly_threshold ) {
-            $_kick_apt = true
+        if getvar('::apt_update_last_success') {
+          if ( getvar('::apt_update_last_success') < $weekly_threshold ) {
+            $kick_apt = true
+          } else {
+            $kick_apt = false
           }
         } else {
           #if apt-get update has not successfully run, we should kick apt_update
-          $_kick_apt = true
+          $kick_apt = true
         }
       }
       default: {
         #catches 'recluctantly', and any other value (which should not occur).
         #do nothing.
+        $kick_apt = false
       }
     }
   }
-  if $_kick_apt {
-    $_refresh = false
+  else {
+    $kick_apt = false
+  }
+  if $kick_apt {
+    $refresh = false
   } else {
-    $_refresh = true
+    $refresh = true
   }
   exec { 'apt_update':
     command     => "${apt::params::provider} update",
     logoutput   => 'on_failure',
-    refreshonly => $_refresh,
+    refreshonly => $refresh,
     timeout     => $apt::update_timeout,
     tries       => $apt::update_tries,
     try_sleep   => 1

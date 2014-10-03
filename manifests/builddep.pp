@@ -1,7 +1,7 @@
 # builddep.pp
 
 define apt::builddep() {
-  include apt::update
+  include apt
 
   exec { "apt-builddep-${name}":
     command   => "/usr/bin/apt-get -y --force-yes build-dep ${name}",

@@ -18,17 +18,16 @@ define apt::source(
   $architecture      = undef
 ) {
 
-  include apt::params
-  include apt::update
+  include apt
 
   $sources_list_d = $apt::params::sources_list_d
   $provider       = $apt::params::provider
 
   if $release == 'UNDEF' {
-    if $::lsbdistcodename == undef {
+    if pick(getvar('::lsbdistcodename'), false) == false {
       fail('lsbdistcodename fact not available: release parameter required')
     } else {
-      $release_real = $::lsbdistcodename
+      $release_real = getvar('::lsbdistcodename')
     }
   } else {
     $release_real = $release

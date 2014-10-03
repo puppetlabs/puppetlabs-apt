@@ -1,10 +1,10 @@
 require 'spec_helper'
 describe 'apt::pin', :type => :define do
-  let(:facts) { { :lsbdistid => 'Debian' } }
+  let(:facts) { { :lsbdistid => 'Debian', :caller_module_name => 'somecode' } }
   let(:title) { 'my_pin' }
 
   context 'defaults' do
-    it { is_expected.to contain_file("my_pin.pref").with_content(/Explanation: : my_pin\nPackage: \*\nPin: release a=my_pin\nPin-Priority: 0\n/)}
+    it { is_expected.to contain_file("my_pin.pref").with_content(/Explanation: somecode: my_pin\nPackage: \*\nPin: release a=my_pin\nPin-Priority: 0\n/)}
     it { is_expected.to contain_file("my_pin.pref").with({
       'ensure' => 'present',
       'path'   => '/etc/apt/preferences.d/my_pin.pref',
@@ -22,7 +22,7 @@ describe 'apt::pin', :type => :define do
         'version'  => '1',
       }
     end
-    it { is_expected.to contain_file("my_pin.pref").with_content(/Explanation: : my_pin\nPackage: vim\nPin: version 1\nPin-Priority: 0\n/)}
+    it { is_expected.to contain_file("my_pin.pref").with_content(/Explanation: somecode: my_pin\nPackage: vim\nPin: version 1\nPin-Priority: 0\n/)}
     it { is_expected.to contain_file("my_pin.pref").with({
       'ensure' => 'present',
       'path'   => '/etc/apt/preferences.d/my_pin.pref',
@@ -40,7 +40,7 @@ describe 'apt::pin', :type => :define do
         'origin'   => 'test',
       }
     end
-    it { is_expected.to contain_file("my_pin.pref").with_content(/Explanation: : my_pin\nPackage: vim\nPin: origin test\nPin-Priority: 0\n/)}
+    it { is_expected.to contain_file("my_pin.pref").with_content(/Explanation: somecode: my_pin\nPackage: vim\nPin: origin test\nPin-Priority: 0\n/)}
     it { is_expected.to contain_file("my_pin.pref").with({
       'ensure' => 'present',
       'path'   => '/etc/apt/preferences.d/my_pin.pref',

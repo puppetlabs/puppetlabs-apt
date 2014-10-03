@@ -8,7 +8,7 @@ class apt::params {
   case $::lsbdistid {
     'ubuntu', 'debian': {
       $distid = $::lsbdistid
-      $distcodename = $::lsbdistcodename
+      $distcodename = getvar('::lsbdistcodename')
     }
     'linuxmint': {
       if $::lsbdistcodename == 'debian' {
@@ -16,7 +16,7 @@ class apt::params {
         $distcodename = 'wheezy'
       } else {
         $distid = 'ubuntu'
-        $distcodename = $::lsbdistcodename ? {
+        $distcodename = getvar('::lsbdistcodename') ? {
           'qiana'  => 'trusty',
           'petra'  => 'saucy',
           'olivia' => 'raring',
