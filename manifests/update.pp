@@ -48,7 +48,10 @@ class apt::update {
         $_kick_apt = false
       }
     }
+  } else {
+    $_kick_apt = false
   }
+
   if $_kick_apt {
     $_refresh = false
   } else {
