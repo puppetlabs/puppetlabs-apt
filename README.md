@@ -48,7 +48,7 @@ Using the apt module consists predominantly of declaring classes and defined typ
 * 
   By default, this class drops a pin-file for backports, pinning it to a priority of 200. This is lower than the normal Debian archive, which gets a priority of 500 to ensure that packages with `ensure => latest` don't get magically upgraded from backports without your explicit permission.
 
-  If you raise the priority through the `pin_priority` parameter to 500---identical to the rest of the Debian mirrors---normal policy goes into effect, and apt installs or upgrades to the newest version. This means that if a package is available from backports, it and its dependencies are pulled in from Backports unless you explicitly set the `ensure` attribute of the `package` resource to `installed`/`present` or a specific version.
+  If you raise the priority through the `pin_priority` parameter to 500---identical to the rest of the Debian mirrors---normal policy goes into effect, and apt installs or upgrades to the newest version. This means that if a package is available from backports, it and its dependencies are pulled in from backports unless you explicitly set the `ensure` attribute of the `package` resource to `installed`/`present` or a specific version.
 
 * `apt::params`: Sets defaults for the apt module parameters.
 
@@ -172,7 +172,7 @@ the `wget` command on which the old implementation depended.
 
   If you want to pin a number of packages, you can specify the packages as a space-delimited string using the `packages` attribute, or you can pass in an array of package names.
 
-* `apt::ppa`: Adds a ppa repository using `add-apt-repository`. For example, `apt::ppa { 'ppa:drizzle-developers/ppa': }`.
+* `apt::ppa`: Adds a PPA repository using `add-apt-repository`. For example, `apt::ppa { 'ppa:drizzle-developers/ppa': }`.
 
 * `apt::source`: Adds an apt source to `/etc/apt/sources.list.d/`. For example:
 
