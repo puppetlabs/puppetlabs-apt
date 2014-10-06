@@ -10,7 +10,7 @@ The apt module provides a simple interface for managing Apt source, key, and def
 
 The apt module automates obtaining and installing software packages on \*nix systems.
 
-***Note:** While this module allows the use of short keys, we **urge you NOT to use short keys**, as they pose a serious security issue by opening you up to collision attacks.
+**Note**: While this module allows the use of short keys, **we urge you NOT to use short keys**, as they pose a serious security issue by opening you up to collision attacks.
 
 ## Setup
 
@@ -51,7 +51,7 @@ class { 'apt':
 
 ### Classes
 
-* `apt`: Main class, provides a  common resources and options. Allows Puppet to manage your system's sources.list file and sources.list.d directory, but it does its best to respect existing content.
+* `apt`: Main class, provides common resources and options. Allows Puppet to manage your system's sources.list file and sources.list.d directory, but it does its best to respect existing content.
 
   If you declare your apt class with `purge_sources_list`, `purge_sources_list_d`, `purge_preferences` and `purge_preferences_d` set to 'true', Puppet will unapologetically purge any existing content it finds that wasn't declared with Puppet.
   
@@ -72,7 +72,7 @@ class { 'apt':
   ```  
 
 * `apt::unattended_updates`: This class manages the unattended-upgrades package and related configuration files for Ubuntu and Debian systems. You can configure the class to automatically upgrade all new package releases or just security releases.
-      
+
   ```
   apt::unattended_upgrades {
     origins             = $::apt::params::origins,
@@ -86,7 +86,6 @@ class { 'apt':
   
 * `apt::update`: Runs `apt-get update`, updating the list of available packages and their versions without installing or upgrading any packages. The update runs on the first Puppet run after you include the class, then whenever `notify  => Exec['apt_update']` occurs; i.e., whenever config files get updated or other relevant changes occur. If you set the `always_apt_update` parameter to 'true', the update runs on every Puppet run.
 
- * `cfg_files`: "new", "old", "unchanged" or "none" (default). "new" will overwrite all existing configuration files with newer ones, "old" will force usage of all old files and "unchanged" only updates unchanged config files whereas setting "none" will don't do anything but providing backward-compatability with existing puppet manifests.
 ### Types
 
 #### apt_key
@@ -102,8 +101,7 @@ apt_key { 'puppetlabs':
 
 You can additionally set the following attributes:
 
- * `source`: HTTP, HTTPS or FTP location of a GPG key or path to a file on the
-             target host.
+ * `source`: HTTP, HTTPS or FTP location of a GPG key or path to a file on the target host.
  * `content`: Instead of pointing to a file, pass the key in as a string.
  * `server`: The GPG key server to use. It defaults to *keyserver.ubuntu.com*.
  * `keyserver_options`: Additional options to pass to `--keyserver`.
@@ -137,7 +135,7 @@ Because apt_key is a native type, you can use it and query for it with MCollecti
   }
   ```
 
-* `apt::force`: Forces a package to be installed from a specific release. This class is particularly useful when using repositories, like Debian, that are unstable in Ubuntu.
+* `apt::force`: Forces a package to be installed from a specific release. This is particularly useful when using repositories that are unstable in Ubuntu, such as Debian.
 
   ```
   apt::force { 'glusterfs-server':
@@ -149,7 +147,13 @@ Because apt_key is a native type, you can use it and query for it with MCollecti
   }
   ```
 
-The `cfg_files` parameter can be set to use newer configuration files, older configuration files, or to update only unchanged configuration files. The `cfg_missing` parameter, if set to 'true', forces the provider to install all missing configuration files. Both settings are optional.
+  Valid values for `cfg_files` are:
+    * 'new': Overwrites all existing configuration files with newer ones.
+    * 'old': Forces usage of all old files.
+    * 'unchanged: Updates only unchanged config files.
+    * 'none': Provides backward-compatibility with existing Puppet manifests.
+   
+  Valid values for `cfg_missing` are 'true', 'false'. Setting this to 'false' provides backward compatability, whereas setting this to 'true' checks and installs missing configuration files for the selected package.
 
 * `apt::key`: Adds a key to the list of keys used by Apt to authenticate packages. This type uses the aforementioned `apt_key` native type. As such, it no longer requires
 the `wget` command on which the old implementation depended.
@@ -190,7 +194,7 @@ the `wget` command on which the old implementation depended.
 
 * `apt::ppa`: Adds a PPA repository using `add-apt-repository`. For example, `apt::ppa { 'ppa:drizzle-developers/ppa': }`.
 
-* `apt::source`: Adds an apt source to `/etc/apt/sources.list.d/`. For example:
+* `apt::source`: Adds an Apt source to `/etc/apt/sources.list.d/`. For example:
 
   ```
   apt::source { 'debian_unstable':
@@ -225,7 +229,7 @@ The apt module includes a few facts to describe the state of the Apt system:
 * `apt_updates`: The number of updates available on the system
 * `apt_security_updates`: The number of updates which are security updates
 * `apt_package_updates`: The package names that are available for update. In Facter 2.0 and later, this will be a list type; in earlier versions, it is a comma-delimited string.
-* `apt_update_last_success` --- The date in epochtime that `apt-get update` last ran successfully. This is determined by reading the mtime of the file `/var/lib/apt/periodic/update-success-stamp`. That file is generated by the `/etc/apt/apt.conf.d/15update-stamp` file.
+* `apt_update_last_success`: The date in epochtime that `apt-get update` last successfully ran. This is determined by reading the mtime of  /var/lib/apt/periodic/update-success-stamp.
 
 #### Hiera example
 
