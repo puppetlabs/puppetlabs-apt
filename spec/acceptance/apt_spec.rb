@@ -38,7 +38,7 @@ describe 'apt class' do
     end
     it 'should still work' do
       shell('apt-get update')
-      shell('apt-get -y upgrade')
+      shell('apt-get -y --force-yes upgrade')
     end
   end
 
