@@ -16,7 +16,7 @@ The apt module automates obtaining and installing software packages on \*nix sys
 
 ### What apt affects:
 
-* Package/service/configuration files for APT 
+* Package/service/configuration files for APT
 * Your system's `sources.list` file and `sources.list.d` directory
 * System repositories
 * Authentication keys
