@@ -4,7 +4,7 @@
 
 ## Overview
 
-The apt module provides a simple interface for managing APT source, key, and definitions with Puppet.
+The apt module provides a simple interface for managing Apt source, key, and definitions with Puppet.
 
 ## Module Description
 
@@ -16,7 +16,7 @@ The apt module automates obtaining and installing software packages on \*nix sys
 
 ### What apt affects:
 
-* Package/service/configuration files for APT
+* Package/service/configuration files for Apt
 * Your system's `sources.list` file and `sources.list.d` directory
 * System repositories
 * Authentication keys
@@ -38,9 +38,7 @@ Using the apt module consists predominantly of declaring classes and defined typ
 
 ### Classes
 
-* `apt`: Main class, provides a  common resources and options. The parameters are generally not required and are mainly for development environment use.
-
-  Allows Puppet to manage your system's sources.list file and sources.list.d directory, but it does its best to respect existing content.
+* `apt`: Main class, provides a  common resources and options. Allows Puppet to manage your system's sources.list file and sources.list.d directory, but it does its best to respect existing content.
 
   If you declare your apt class with `purge_sources_list`, `purge_sources_list_d`, `purge_preferences` and `purge_preferences_d` set to 'true', Puppet will unapologetically purge any existing content it finds that wasn't declared with Puppet.
   
@@ -48,11 +46,11 @@ Using the apt module consists predominantly of declaring classes and defined typ
 * 
   By default, this class drops a pin-file for backports, pinning it to a priority of 200. This is lower than the normal Debian archive, which gets a priority of 500 to ensure that packages with `ensure => latest` don't get magically upgraded from backports without your explicit permission.
 
-  If you raise the priority through the `pin_priority` parameter to 500---identical to the rest of the Debian mirrors---normal policy goes into effect, and apt installs or upgrades to the newest version. This means that if a package is available from backports, it and its dependencies are pulled in from backports unless you explicitly set the `ensure` attribute of the `package` resource to `installed`/`present` or a specific version.
+  If you raise the priority through the `pin_priority` parameter to 500---identical to the rest of the Debian mirrors---normal policy goes into effect, and Apt installs or upgrades to the newest version. This means that if a package is available from backports, it and its dependencies are pulled in from backports unless you explicitly set the `ensure` attribute of the `package` resource to `installed`/`present` or a specific version.
 
 * `apt::params`: Sets defaults for the apt module parameters.
 
-* `apt::release`: Sets the default apt release. This class is particularly useful when using repositories that are unstable in Ubuntu, such as Debian.
+* `apt::release`: Sets the default Apt release. This class is particularly useful when using repositories that are unstable in Ubuntu, such as Debian.
 
   ```
   class { 'apt::release':
@@ -79,7 +77,7 @@ Using the apt module consists predominantly of declaring classes and defined typ
 
 #### apt_key
 
-A native Puppet type and provider for managing GPG keys for APT is provided by this module.
+A native Puppet type and provider for managing GPG keys for Apt is provided by this module.
 
 ```
 apt_key { 'puppetlabs':
@@ -135,7 +133,7 @@ Because apt_key is a native type, you can use it and query for it with MCollecti
   }
   ```
 
-* `apt::key`: Adds a key to the list of keys used by APT to authenticate packages. This type uses the aforementioned `apt_key` native type. As such, it no longer requires
+* `apt::key`: Adds a key to the list of keys used by Apt to authenticate packages. This type uses the aforementioned `apt_key` native type. As such, it no longer requires
 the `wget` command on which the old implementation depended.
 
   ```
@@ -150,7 +148,7 @@ the `wget` command on which the old implementation depended.
   }
   ```
 
-* `apt::pin`: Defined type that adds an apt pin for a certain release.
+* `apt::pin`: Defined type that adds an Apt pin for a certain release.
 
   ```
   apt::pin { 'karmic': priority => 700 }
@@ -191,7 +189,7 @@ the `wget` command on which the old implementation depended.
   }
   ```  
 
-  For example, to configure your system so the source is the Puppet Labs APT repository:
+  For example, to configure your system so the source is the Puppet Labs Apt repository:
 
   ```
   apt::source { 'puppetlabs':
@@ -204,7 +202,7 @@ the `wget` command on which the old implementation depended.
 
 ### Facts
 
-The apt module includes a few facts to describe the state of the APT system:
+The apt module includes a few facts to describe the state of the Apt system:
 
 * `apt_updates`: The number of updates available on the system
 * `apt_security_updates`: The number of updates which are security updates
@@ -238,8 +236,6 @@ apt::sources:
 
 #### apt
 
-These parameters are not generally required and are primarily for development environment use cases.
-
 * `always_apt_update`: Set to 'true' to update apt on every run. This setting is intended for development environments where package updates are frequent. Defaults to 'false'. 
 * `apt_update_frequency`: Sets the run frequency for `apt-get update`. Defaults to 'reluctantly'. Accepts the following values:
   * 'always': Runs update at every Puppet run.
@@ -256,7 +252,7 @@ These parameters are not generally required and are primarily for development en
 * `sources`: Passes a hash to create_resource to make new `apt::source` resources.
 * `fancy_progress`: Enables fancy progress bars for apt. Accepts 'true', 'false'. Defaults to 'false'.
 
-###apt::unattended_upgrades
+####apt::unattended_upgrades
 
   * `origins`: The repositories from which to automatically upgrade included packages.
   * `blacklist`: A list of packages to **not** automatically upgrade.
@@ -267,11 +263,11 @@ These parameters are not generally required and are primarily for development en
 
 ### Testing
 
-The apt module is mostly a collection of defined resource types, which provide reusable logic for managing APT. It provides smoke tests for testing functionality on a target system, as well as spec tests for checking a compiled catalog against an expected set of resources.
+The apt module is mostly a collection of defined resource types, which provide reusable logic for managing Apt. It provides smoke tests for testing functionality on a target system, as well as spec tests for checking a compiled catalog against an expected set of resources.
 
 #### Example Test
 
-This test sets up a Puppet Labs APT repository. Start by creating a new smoke test, called puppetlabs-apt.pp, in the apt module's test folder. In this test, declare a single resource representing the Puppet Labs APT source and GPG key:
+This test sets up a Puppet Labs Apt repository. Start by creating a new smoke test, called puppetlabs-apt.pp, in the apt module's test folder. In this test, declare a single resource representing the Puppet Labs Apt source and GPG key:
 
 ```
 apt::source { 'puppetlabs':
@@ -282,7 +278,7 @@ apt::source { 'puppetlabs':
 }
 ```    
 
-This resource creates an APT source named puppetlabs and gives Puppet information about the repository's location and the key used to sign its packages. Puppet leverages Facter to determine the appropriate release, but you can set this directly by adding the release type.
+This resource creates an Apt source named puppetlabs and gives Puppet information about the repository's location and the key used to sign its packages. Puppet leverages Facter to determine the appropriate release, but you can set this directly by adding the release type.
 
 Check your smoke test for syntax errors:
 
@@ -297,12 +293,12 @@ info: /Stage[main]//Apt::Source[puppetlabs]/File[puppetlabs.list]: Scheduling re
 notice: /Stage[main]//Apt::Source[puppetlabs]/Exec[puppetlabs apt update]: Triggered 'refresh' from 1 events>
 ```    
 
-The above example uses a smoke test to lay out a resource declaration and apply it on your system. In production, you might want to declare your APT sources inside the classes where they’re needed.
+The above example uses a smoke test to lay out a resource declaration and apply it on your system. In production, you might want to declare your Apt sources inside the classes where they’re needed.
 
 Limitations
 -----------
 
-This module should work across all versions of Debian/Ubuntu and support all major APT repository management features.
+This module should work across all versions of Debian/Ubuntu and support all major Apt repository management features.
 
 Development
 ------------
