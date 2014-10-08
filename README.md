@@ -229,7 +229,7 @@ The apt module includes a few facts to describe the state of the Apt system:
 * `apt_updates`: The number of updates available on the system
 * `apt_security_updates`: The number of updates which are security updates
 * `apt_package_updates`: The package names that are available for update. In Facter 2.0 and later, this will be a list type; in earlier versions, it is a comma-delimited string.
-* `apt_update_last_success`: The date in epochtime that `apt-get update` last successfully ran. This is determined by reading the mtime of  /var/lib/apt/periodic/update-success-stamp.
+* `apt_update_last_success`: The date in epochtime that `apt-get update` most recently ran successfully. This is determined by reading the mtime of  /var/lib/apt/periodic/update-success-stamp.
 
 #### Hiera example
 
