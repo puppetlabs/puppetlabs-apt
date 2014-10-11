@@ -14,8 +14,14 @@ define apt::ppa(
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
-  if $::operatingsystem != 'Ubuntu' {
-    fail('apt::ppa is currently supported on Ubuntu only.')
+  if $::operatingsystem == 'Ubuntu' {
+    $addaptrepository = '/usr/bin/add-apt-repository'
+  }
+  elsif $::operatingsystem == 'LinuxMint' {
+    $addaptrepository = '/usr/local/bin/add-apt-repository'
+  }
+  else {
+    fail('apt::ppa is currently supported on Ubuntu and LinuxMint only.')
   }
 
   $filename_without_slashes = regsubst($name, '/', '-', 'G')
@@ -49,7 +55,7 @@ define apt::ppa(
     }
     exec { "add-apt-repository-${name}":
         environment => $proxy_env,
-        command     => "/usr/bin/add-apt-repository ${options} ${name}",
+        command     => "${addaptrepository} ${options} ${name}",
         unless      => "/usr/bin/test -s ${sources_list_d}/${sources_list_d_filename}",
         user        => 'root',
         logoutput   => 'on_failure',

@@ -156,7 +156,7 @@ describe 'apt::ppa', :type => :define do
       it do
         expect {
           should compile
-        }.to raise_error(Puppet::Error, /apt::ppa is currently supported on Ubuntu only./)
+        }.to raise_error(Puppet::Error, /apt::ppa is currently supported on Ubuntu and LinuxMint only./)
       end
     end
   end
