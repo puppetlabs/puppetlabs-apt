@@ -29,6 +29,7 @@ RSpec.configure do |c|
     hosts.each do |host|
       shell("/bin/touch #{default['puppetpath']}/hiera.yaml")
       shell('puppet module install puppetlabs-stdlib --version 2.2.1', { :acceptable_exit_codes => [0,1] })
+      shell('puppet module install puppetlabs-inifile --version 1.1.4', { :acceptable_exit_codes => [0,1] })
     end
   end
 end
