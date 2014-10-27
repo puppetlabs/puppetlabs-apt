@@ -39,5 +39,9 @@
       "name": "puppetlabs/stdlib",
       "version_requirement": ">= 2.2.1"
     }
+    {
+      "name": "puppetlabs/inifile",
+      "version_requirement": ">= 1.1.4"
+    }
   ]
 }
