@@ -13,19 +13,19 @@ describe 'apt_has_updates fact' do
 
   describe 'on Debian based distro missing update-notifier-common' do
     before {
+      File.expects(:executable?).with('/usr/lib/update-notifier/apt-check').returns false
       Facter.fact(:osfamily).expects(:value).returns 'Debian'
       File.stubs(:executable?) # Stub all other calls
-      File.expects(:executable?).with('/usr/lib/update-notifier/apt-check').returns false
     }
     it { should be_nil }
   end
 
   describe 'on Debian based distro' do
     before {
+      File.expects(:executable?).with('/usr/lib/update-notifier/apt-check').returns true
       Facter.fact(:osfamily).expects(:value).returns 'Debian'
       File.stubs(:executable?) # Stub all other calls
       Facter::Util::Resolution.stubs(:exec) # Catch all other calls
-      File.expects(:executable?).with('/usr/lib/update-notifier/apt-check').returns true
       Facter::Util::Resolution.expects(:exec).with('/usr/lib/update-notifier/apt-check 2>/dev/null').returns "4;3"
     }
     it { should be true }
