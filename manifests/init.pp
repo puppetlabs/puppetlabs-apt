@@ -55,6 +55,7 @@ class apt(
   $update_timeout       = undef,
   $update_tries         = undef,
   $sources              = undef,
+  $holds                = undef,
   $fancy_progress       = undef
 ) {
 
@@ -203,5 +204,11 @@ class apt(
   if $sources != undef {
     validate_hash($sources)
     create_resources('apt::source', $sources)
+  }
+
+  # manage holds if present
+  if $holds != undef {
+    validate_hash($holds)
+    create_resources('apt::hold', $holds)
   }
 }
