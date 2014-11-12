@@ -2,7 +2,7 @@ apt_package_updates = nil
 Facter.add("apt_has_updates") do
   confine :osfamily => 'Debian'
   if File.executable?("/usr/lib/update-notifier/apt-check")
-    apt_package_updates = Facter::Util::Resolution.exec('/usr/lib/update-notifier/apt-check 2>/dev/null').split(';')
+    apt_package_updates = Facter::Util::Resolution.exec('/usr/lib/update-notifier/apt-check 2>&1').split(';')
   end
 
   setcode do
@@ -13,7 +13,7 @@ end
 Facter.add("apt_package_updates") do
   confine :apt_has_updates => true
   setcode do
-    packages = Facter::Util::Resolution.exec('/usr/lib/update-notifier/apt-check -p 2>/dev/null').split("\n")
+    packages = Facter::Util::Resolution.exec('/usr/lib/update-notifier/apt-check -p 2>&1').split("\n")
     if Facter.version < '2.0.0'
       packages.join(',')
     else
