@@ -119,7 +119,17 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       value
     else
       begin
-        key = parsedValue.read
+        proxy = parsedValue.find_proxy
+        if not proxy.nil?
+          if proxy.user && proxy.password
+            options = {:proxy_http_basic_authentication => [proxy, proxy.user, proxy.password]}
+          else
+            options = {:proxy => proxy}
+          end
+        else
+          options = {}
+        end
+        key = parsedValue.read(options)
       rescue OpenURI::HTTPError, Net::FTPPermError => e
         fail("#{e.message} for #{resource[:source]}")
       rescue SocketError
