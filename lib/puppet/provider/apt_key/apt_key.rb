@@ -120,7 +120,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
     else
       begin
         proxy = parsedValue.find_proxy
-        if not proxy.nil?
+        unless proxy.nil?
           if proxy.user && proxy.password
             options = {:proxy_http_basic_authentication => [proxy, proxy.user, proxy.password]}
           else
