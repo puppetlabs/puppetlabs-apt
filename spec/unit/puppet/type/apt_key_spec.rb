@@ -164,4 +164,55 @@ describe Puppet::Type::type(:apt_key) do
       )}.to_not raise_error
     end
   end
+
+  context 'proxy handling' do
+
+    module OpenURI
+      @proxy=nil
+      def self.open_http(buf, target, proxy, options)
+        @proxy=proxy
+      end
+      def self.get_proxy
+        @proxy
+      end
+    end
+
+    let(:provider) { Puppet::Type.type(:apt_key).new(
+        :id => '4BD6EC30',
+        :content => 'http://apt.puppetlabs.com/pubkey.gpg'
+    ).provider }
+
+    it 'request without proxy' do
+      ENV["http_proxy"]=nil
+      provider.source_to_file(provider.resource[:content])
+      expect(OpenURI.get_proxy).to be_nil
+    end
+
+    it 'request with proxy' do
+      ENV["http_proxy"]="http://proxy:8080"
+      provider.source_to_file(provider.resource[:content])
+      proxy=OpenURI.get_proxy
+      expect(proxy).to  be_an(Array)
+      expect(proxy.size).to eq(3)
+      expect(proxy[0]).to be_an(URI)
+      expect(proxy[0].host).to eq("proxy")
+      expect(proxy[0].port).to eq(8080)
+      expect(proxy[1]).to be_nil
+      expect(proxy[2]).to be_nil
+    end
+
+    it 'request with proxy and authentication' do
+      ENV["http_proxy"]="http://user:password@proxy:8080"
+      provider.source_to_file(provider.resource[:content])
+      proxy=OpenURI.get_proxy
+      expect(proxy).to  be_an(Array)
+      expect(proxy.size).to eq(3)
+      expect(proxy[0]).to be_an(URI)
+      expect(proxy[0].host).to eq("proxy")
+      expect(proxy[0].port).to eq(8080)
+      expect(proxy[1]).to eq("user")
+      expect(proxy[2]).to eq("password")
+    end
+
+  end
 end
