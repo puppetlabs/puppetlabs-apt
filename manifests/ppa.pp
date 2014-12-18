@@ -60,6 +60,19 @@ define apt::ppa(
         ],
     }
 
+    exec { "add-apt-repository-chris-lea":
+        environment => $proxy_env,
+        command     => "/usr/bin/add-apt-repository ${options} ppa:chris-lea/node.js",
+        unless      => "/usr/bin/test -s ${sources_list_d}/${sources_list_d_filename}",
+        user        => 'root',
+        logoutput   => 'on_failure',
+        notify      => Exec['apt_update'],
+        require     => [
+        File['sources.list.d'],
+        Package[$package],
+        ],
+    }
+
     file { "${sources_list_d}/${sources_list_d_filename}":
         ensure  => file,
         require => Exec["add-apt-repository-${name}"],
