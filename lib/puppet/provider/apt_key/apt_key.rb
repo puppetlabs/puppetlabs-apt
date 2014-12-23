@@ -26,7 +26,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
   commands   :apt_key  => 'apt-key'
 
   def self.instances
-    cli_args = "adv --list-keys --with-colons --fingerprint"
+    cli_args = ['adv','--list-keys', '--with-colons', '--fingerprint']
 
     if RUBY_VERSION > '1.8.7'
       key_output = apt_key(cli_args).encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '')
