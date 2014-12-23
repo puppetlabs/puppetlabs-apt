@@ -44,6 +44,10 @@ Puppet::Type.newtype(:apt_key) do
     end
   end
 
+  newparam(:fingerprint) do
+    desc 'The 40-digit hexadecimal fingerprint of the specified GPG key.'
+  end
+
   newparam(:content) do
     desc 'The content of, or string representing, a GPG key.'
   end
@@ -62,7 +66,7 @@ Puppet::Type.newtype(:apt_key) do
   newparam(:server) do
     desc 'The key server to fetch the key from based on the ID. It can either be a domain name or url.'
     defaultto :'keyserver.ubuntu.com'
-    
+
     newvalues(/\A((hkp|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,4})?$/)
   end
 
