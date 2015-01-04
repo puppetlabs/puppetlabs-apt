@@ -4,6 +4,7 @@ define apt::ppa(
   $ensure  = 'present',
   $release = $::lsbdistcodename,
   $options = $apt::params::ppa_options,
+  $install_software_properties = true,
 ) {
   include apt::params
   include apt::update
@@ -29,8 +30,12 @@ define apt::ppa(
         default  => 'software-properties-common',
     }
 
-    if ! defined(Package[$package]) {
-        package { $package: }
+    if $install_software_properties {
+      if ! defined(Package[$package]) {
+          package { $package:
+            before => Exec["add-apt-repository-${name}"],
+          }
+      }
     }
 
     if defined(Class[apt]) {
@@ -54,10 +59,7 @@ define apt::ppa(
         user        => 'root',
         logoutput   => 'on_failure',
         notify      => Exec['apt_update'],
-        require     => [
-        File['sources.list.d'],
-        Package[$package],
-        ],
+        require     => File['sources.list.d'],
     }
 
     file { "${sources_list_d}/${sources_list_d_filename}":
