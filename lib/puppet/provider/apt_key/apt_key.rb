@@ -90,7 +90,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       :key_size        => pub_split[2],
       :key_type        => nil,
       :key_created     => pub_split[5],
-      :key_expiry      => nil,
+      :key_expiry      => pub_split[6].empty? ? nil : pub_split[6],
       :key_fingerprint => fpr_split.last,
     }
 
@@ -100,11 +100,6 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       return_hash[:key_type] = :rsa
     when "17"
       return_hash[:key_type] = :dsa
-    end
-
-    # set key expiry
-    if not pub_split[6].empty?
-      return_hash[:key_expiry] = pub_split[6]
     end
 
     return return_hash
