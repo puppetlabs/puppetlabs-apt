@@ -26,14 +26,27 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
   commands   :apt_key  => 'apt-key'
 
   def self.instances
+    cli_args = ['adv','--list-keys', '--with-colons', '--fingerprint']
+
     if RUBY_VERSION > '1.8.7'
-      key_output = apt_key('list').encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '')
+      key_output = apt_key(cli_args).encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '')
     else
-      key_output = apt_key('list')
+      key_output = apt_key(cli_args)
     end
+
+    pub_line, fpr_line = nil
+
     key_array = key_output.split("\n").collect do |line|
-      line_hash = key_line_hash(line)
-      next unless line_hash
+      if line.start_with('pub')?
+          pub_line = line
+      elsif line.start_with('fpr')?
+          fpr_line = line
+      end
+
+      next unless not (pub_line and fpr_line)
+
+      line_hash = key_line_hash(pub_line, fpr_line)
+
       expired = false
 
       if line_hash[:key_expiry]
@@ -41,17 +54,22 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       end
 
       new(
-        :name    => line_hash[:key_id],
-        :id      => line_hash[:key_id],
-        :ensure  => :present,
-        :expired => expired,
-        :expiry  => line_hash[:key_expiry],
-        :size    => line_hash[:key_size],
-        :type    => line_hash[:key_type] == 'R' ? :rsa : :dsa,
-        :created => line_hash[:key_created]
+        :name        => line_hash[:key_id],
+        :id          => line_hash[:key_id],
+        :fingerprint => line_hash[:key_fingerprint],
+        :ensure      => :present,
+        :expired     => expired,
+        :expiry      => line_hash[:key_expiry],
+        :size        => line_hash[:key_size],
+        :type        => line_hash[:key_type],
+        :created     => line_hash[:key_created]
       )
+
+      # reset everything
+      pub_line, fpr_line = nil
     end
-    key_array.compact!
+
+    return key_array.compact!
   end
 
   def self.prefetch(resources)
@@ -68,48 +86,28 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
     end
   end
 
-  def self.key_line_hash(line)
-    line_array = line.match(key_line_regexp).to_a
-    return nil if line_array.length < 5
+  def self.key_line_hash(pub_line, fpr_line)
+    pub_split = pub_line.split(':')
+    fpr_split = fpr_line.split(':')
 
     return_hash = {
-      :key_id      => line_array[3],
-      :key_size    => line_array[1],
-      :key_type    => line_array[2],
-      :key_created => line_array[4],
-      :key_expiry  => nil,
+      :key_id          => fpr_split.last[-8..-1], # last 8 characters is id
+      :key_size        => pub_split[2],
+      :key_type        => nil,
+      :key_created     => pub_split[5],
+      :key_expiry      => pub_split[6].empty? ? nil : pub_split[6],
+      :key_fingerprint => fpr_split.last,
     }
 
-    return_hash[:key_expiry] = line_array[7] if line_array.length == 8
-    return return_hash
-  end
+    # set key type based on types defined in /usr/share/doc/gnupg/DETAILS.gz
+    case pub_split[3]
+    when "1"
+      return_hash[:key_type] = :rsa
+    when "17"
+      return_hash[:key_type] = :dsa
+    end
 
-  def self.key_line_regexp
-    # This regexp is trying to match the following output
-    # pub   4096R/4BD6EC30 2010-07-10 [expires: 2016-07-08]
-    # pub   1024D/CD2EFD2A 2009-12-15
-    regexp = /\A
-      pub  # match only the public key, not signatures
-      \s+  # bunch of spaces after that
-      (#{KEY_LINE[:key_size]})  # size of the key, usually a multiple of 1024
-      #{KEY_LINE[:key_type]}  # type of the key, usually R or D
-      \/  # separator between key_type and key_id
-      (#{KEY_LINE[:key_id]})  # hex id of the key
-      \s+  # bunch of spaces after that
-      (#{KEY_LINE[:date]})  # date the key was added to the keyring
-      # following an optional block which indicates if the key has an expiration
-      # date and if it has expired yet
-      (
-        \s+  # again with thes paces
-        \[  # we open with a square bracket
-        #{KEY_LINE[:expires]}  # expires or expired
-        \:  # a colon
-        \s+  # more spaces
-        (#{KEY_LINE[:date]})  # date indicating key expiry
-        \]  # we close with a square bracket
-      )?  # end of the optional block
-      \Z/x
-      regexp
+    return return_hash
   end
 
   def source_to_file(value)

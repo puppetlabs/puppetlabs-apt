@@ -10,9 +10,11 @@
 # [*key*]
 #   _default_: +$title+, the title/name of the resource
 #
-#   Is a GPG key ID. This key ID is validated with a regex enforcing it
-#   to only contain valid hexadecimal characters, be precisely 8 or 16
-#   characters long and optionally prefixed with 0x.
+#   Is a GPG key ID or full key fingerprint. This value is validated with
+#   a regex enforcing it to only contain valid hexadecimal characters, be
+#   precisely 8 or 16 hexadecimal characters long and optionally prefixed
+#   with 0x for key IDs, or 40 hexadecimal characters long for key
+#   fingerprints.
 #
 # [*ensure*]
 #   _default_: +present+
@@ -57,7 +59,7 @@ define apt::key (
   $key_options = undef,
 ) {
 
-  validate_re($key, ['\A(0x)?[0-9a-fA-F]{8}\Z', '\A(0x)?[0-9a-fA-F]{16}\Z'])
+  validate_re($key, ['\A(0x)?[0-9a-fA-F]{8}\Z', '\A(0x)?[0-9a-fA-F]{16}\Z', '\A[0-9a-fA-F]{40}\Z'])
   validate_re($ensure, ['\Aabsent|present\Z',])
 
   if $key_content {

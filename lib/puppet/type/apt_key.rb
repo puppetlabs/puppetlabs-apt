@@ -28,8 +28,8 @@ Puppet::Type.newtype(:apt_key) do
   newparam(:id, :namevar => true) do
     desc 'The ID of the key you want to manage.'
     # GPG key ID's should be either 32-bit (short) or 64-bit (long) key ID's
-    # and may start with the optional 0x
-    newvalues(/\A(0x)?[0-9a-fA-F]{8}\Z/, /\A(0x)?[0-9a-fA-F]{16}\Z/)
+    # and may start with the optional 0x, or they can be 40-digit key fingerprints
+    newvalues(/\A(0x)?[0-9a-fA-F]{8}\Z/, /\A(0x)?[0-9a-fA-F]{16}\Z/, /\A[0-9a-fA-F]{40}\Z/)
     munge do |value|
       if value.start_with?('0x')
         id = value.partition('0x').last.upcase
@@ -38,6 +38,10 @@ Puppet::Type.newtype(:apt_key) do
       end
       id
     end
+  end
+
+  newparam(:fingerprint) do
+    desc 'The 40-digit hexadecimal fingerprint of the specified GPG key.'
   end
 
   newparam(:content) do
@@ -58,7 +62,7 @@ Puppet::Type.newtype(:apt_key) do
   newparam(:server) do
     desc 'The key server to fetch the key from based on the ID. It can either be a domain name or url.'
     defaultto :'keyserver.ubuntu.com'
-    
+
     newvalues(/\A((hkp|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,4})?$/)
   end
 
