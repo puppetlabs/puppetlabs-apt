@@ -17,11 +17,12 @@ class apt::params {
       } else {
         $distid = 'ubuntu'
         $distcodename = $::lsbdistcodename ? {
-          'qiana'  => 'trusty',
-          'petra'  => 'saucy',
-          'olivia' => 'raring',
-          'nadia'  => 'quantal',
-          'maya'   => 'precise',
+          'rebecca' => 'trusty',
+          'qiana'   => 'trusty',
+          'petra'   => 'saucy',
+          'olivia'  => 'raring',
+          'nadia'   => 'quantal',
+          'maya'    => 'precise',
         }
       }
     }

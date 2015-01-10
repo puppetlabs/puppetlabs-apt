@@ -14,8 +14,19 @@ define apt::ppa(
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
-  if $::operatingsystem != 'Ubuntu' {
-    fail('apt::ppa is currently supported on Ubuntu only.')
+  if $::operatingsystem != 'Ubuntu' and $::operatingsystem != 'LinuxMint' {
+    fail('apt::ppa is currently supported on Ubuntu and LinuxMint only.')
+  }
+
+  $addaptrepository = '/usr/bin/add-apt-repository'
+  if $::operatingsystem == 'LinuxMint' {
+    # Prior to LinuxMint 17.1 (rebecca) the mintsources package installed a
+    # LinuxMint-specific add-apt-repository under /usr/local/bin.  As of 17.1 the
+    # software-properties-common package is no longer installed and mintsources
+    # puts add-apt-repository under /usr/bin
+    if versioncmp($::lsbdistrelease, '17') <= 0 {
+      $addaptrepository = '/usr/local/bin/add-apt-repository'
+    }
   }
 
   $filename_without_slashes = regsubst($name, '/', '-', 'G')
@@ -24,9 +35,14 @@ define apt::ppa(
   $sources_list_d_filename  = "${filename_without_ppa}-${release}.list"
 
   if $ensure == 'present' {
-    $package = $::lsbdistrelease ? {
-        /^[1-9]\..*|1[01]\..*|12.04$/ => 'python-software-properties',
-        default  => 'software-properties-common',
+    if $::operatingsystem == 'LinuxMint' {
+      $package = 'mintsources'
+    }
+    else {
+      $package = $::lsbdistrelease ? {
+          /^[1-9]\..*|1[01]\..*|12.04$/ => 'python-software-properties',
+          default  => 'software-properties-common',
+      }
     }
 
     if ! defined(Package[$package]) {
@@ -49,7 +65,7 @@ define apt::ppa(
     }
     exec { "add-apt-repository-${name}":
         environment => $proxy_env,
-        command     => "/usr/bin/add-apt-repository ${options} ${name}",
+        command     => "${addaptrepository} ${options} ${name}",
         unless      => "/usr/bin/test -s ${sources_list_d}/${sources_list_d_filename}",
         user        => 'root',
         logoutput   => 'on_failure',

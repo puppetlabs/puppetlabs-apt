@@ -141,6 +141,32 @@ describe 'apt::backports', :type => :class do
     }
   end
 
+  describe "when turning on backports for linux mint 17.1 (ubuntu-based)" do
+
+    let :facts do
+      {
+        'lsbdistcodename' => 'rebecca',
+        'lsbdistid'       => 'LinuxMint',
+        'osfamily'        => 'Debian'
+      }
+    end
+
+    it { should contain_apt__source('backports').with({
+        'location'   => 'http://us.archive.ubuntu.com/ubuntu',
+        'release'    => 'trusty-backports',
+        'repos'      => 'main universe multiverse restricted',
+        'key'        => '437D05B5',
+        'key_server' => 'pgp.mit.edu',
+      })
+    }
+
+    it { should contain_apt__pin('backports').with({
+        'release'  => 'trusty-backports',
+        'priority' => 200,
+      })
+    }
+  end
+
   describe "when turning on backports for debian squeeze but using your own mirror" do
 
     let :facts do
