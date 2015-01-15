@@ -167,8 +167,8 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
 
   def destroy
     begin
-      apt_key('del', resource.provider.short)
-      r = execute(["#{command(:apt_key)} list | grep '/#{resource.provider.short}\s'"], :failonfail => false)
+      apt_key('del', resource.provider.fingerprint)
+      r = execute(["#{command(:apt_key)} adv --fingerprint --with-colon | grep ':#{resource.provider.fingerprint}:'"], :failonfail => false)
     end while r.exitstatus == 0
     @property_hash.clear
   end
