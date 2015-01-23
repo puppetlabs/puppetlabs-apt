@@ -5,6 +5,10 @@
 # [*release*]
 #   The ubuntu/debian release name. Defaults to $lsbdistcodename. Setting this
 #   manually can cause undefined behavior. (Read: universe exploding)
+# 
+# [*include_src*]
+#   Activate or deactivate the debian package sources in your backports list
+#   (Defaults: true)
 #
 # [*pin_priority*]
 #   _default_: 200
@@ -32,6 +36,7 @@ class apt::backports(
   $release      = $::lsbdistcodename,
   $location     = $::apt::params::backports_location,
   $pin_priority = 200,
+  $include_src  = true
 ) inherits apt::params {
 
   if ! is_integer($pin_priority) {
@@ -67,11 +72,12 @@ class apt::backports(
   }
 
   apt::source { 'backports':
-    location   => $location,
-    release    => "${release_real}-backports",
-    repos      => $repos,
-    key        => $key,
-    key_server => 'pgp.mit.edu',
-    pin        => $pin_priority,
+    location    => $location,
+    release     => "${release_real}-backports",
+    repos       => $repos,
+    include_src => $include_src,
+    key         => $key,
+    key_server  => 'pgp.mit.edu',
+    pin         => $pin_priority,
   }
 }
