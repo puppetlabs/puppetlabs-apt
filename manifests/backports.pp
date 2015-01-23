@@ -13,9 +13,6 @@
 # [*pin_priority*]
 #   _default_: 200
 #
-#   The priority that should be awarded by default to all packages coming from
-#   the Debian Backports project.
-#
 # == Examples
 #
 #   include apt::backports
