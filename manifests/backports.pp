@@ -5,6 +5,9 @@
 # [*release*]
 #   The ubuntu/debian release name. Defaults to $lsbdistcodename. Setting this
 #   manually can cause undefined behavior. (Read: universe exploding)
+# [*include_src*]
+#   Activate or deactivate the debian package sources in your backports list
+#   (Defaults: true)
 #
 # == Examples
 #
@@ -23,8 +26,9 @@
 #
 # Copyright 2011 Puppet Labs Inc, unless otherwise noted.
 class apt::backports(
-  $release  = $::lsbdistcodename,
-  $location = $apt::params::backports_location
+  $release     = $::lsbdistcodename,
+  $location    = $apt::params::backports_location,
+  $include_src = true,
 ) inherits apt::params {
 
   $release_real = downcase($release)
@@ -38,11 +42,12 @@ class apt::backports(
   }
 
   apt::source { 'backports':
-    location   => $location,
-    release    => "${release_real}-backports",
-    repos      => $repos,
-    key        => $key,
-    key_server => 'pgp.mit.edu',
-    pin        => '200',
+    location    => $location,
+    release     => "${release_real}-backports",
+    repos       => $repos,
+    include_src => $include_src,
+    key         => $key,
+    key_server  => 'pgp.mit.edu',
+    pin         => '200',
   }
 }
