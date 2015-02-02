@@ -74,7 +74,13 @@ class apt(
   $frequency_options = ['always','daily','weekly','reluctantly']
   validate_re($apt_update_frequency, $frequency_options)
   include apt::params
-  include apt::update
+
+  class { 'apt::update':
+    always_apt_update    => $always_apt_update,
+    apt_update_frequency => $apt_update_frequency,
+    update_timeout       => $update_timeout,
+    update_tries         => $update_tries,
+  }
 
   validate_bool($purge_sources_list, $purge_sources_list_d,
                 $purge_preferences, $purge_preferences_d)
