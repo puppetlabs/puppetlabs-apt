@@ -19,7 +19,12 @@ describe 'apt::backports', :type => :class do
           'repos'      => 'main universe multiverse restricted',
           'key'        => '437D05B5',
           'key_server' => 'pgp.mit.edu',
-          'pin'        => 500,
+        })
+      }
+
+      it { should contain_apt__pin('backports').with({
+          'release'  => 'karmic-backports',
+          'priority' => 500,
         })
       }
     end
@@ -48,7 +53,12 @@ describe 'apt::backports', :type => :class do
         'repos'      => 'main universe multiverse restricted',
         'key'        => '437D05B5',
         'key_server' => 'pgp.mit.edu',
-        'pin'        => 200,
+      })
+    }
+
+    it { should contain_apt__pin('backports').with({
+        'release'  => 'karmic-backports',
+        'priority' => 200,
       })
     }
   end
@@ -69,7 +79,12 @@ describe 'apt::backports', :type => :class do
         'repos'      => 'main contrib non-free',
         'key'        => '46925553',
         'key_server' => 'pgp.mit.edu',
-        'pin'        => 200,
+      })
+    }
+
+    it { should contain_apt__pin('backports').with({
+        'release'  => 'squeeze-backports',
+        'priority' => 200,
       })
     }
   end
@@ -90,7 +105,12 @@ describe 'apt::backports', :type => :class do
         'repos'      => 'main contrib non-free',
         'key'        => '46925553',
         'key_server' => 'pgp.mit.edu',
-        'pin'        => 200,
+      })
+    }
+
+    it { should contain_apt__pin('backports').with({
+        'release'  => 'wheezy-backports',
+        'priority' => 200,
       })
     }
   end
@@ -111,7 +131,12 @@ describe 'apt::backports', :type => :class do
         'repos'      => 'main universe multiverse restricted',
         'key'        => '437D05B5',
         'key_server' => 'pgp.mit.edu',
-        'pin'        => 200,
+      })
+    }
+
+    it { should contain_apt__pin('backports').with({
+        'release'  => 'trusty-backports',
+        'priority' => 200,
       })
     }
   end
@@ -140,7 +165,12 @@ describe 'apt::backports', :type => :class do
         'repos'      => 'main contrib non-free',
         'key'        => '46925553',
         'key_server' => 'pgp.mit.edu',
-        'pin'        => 200,
+      })
+    }
+
+    it { should contain_apt__pin('backports').with({
+        'release'  => 'squeeze-backports',
+        'priority' => 200,
       })
     }
   end

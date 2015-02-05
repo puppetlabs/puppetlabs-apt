@@ -72,16 +72,16 @@ class { 'apt':
   }
   ```  
 
-* `apt::unattended_updates`: This class manages the unattended-upgrades package and related configuration files for Ubuntu and Debian systems. You can configure the class to automatically upgrade all new package releases or just security releases.
+* `apt::unattended_upgrades`: This class manages the unattended-upgrades package and related configuration files for Ubuntu and Debian systems. You can configure the class to automatically upgrade all new package releases or just security releases.
 
   ```
-  apt::unattended_upgrades {
-    origins             = $::apt::params::origins,
-    blacklist           = [],
-    update              = '1',
-    download            = '1',
-    upgrade             = '1',
-    autoclean           = '7',
+  class { 'apt::unattended_upgrades':
+    origins     => $::apt::params::origins,
+    blacklist   => [],
+    update      => '1',
+    download    => '1',
+    upgrade     => '1',
+    autoclean   => '7',
   }
   ```
   
@@ -154,7 +154,7 @@ class { 'apt':
     * 'unchanged: Updates only unchanged config files.
     * 'none': Provides backward-compatibility with existing Puppet manifests.
    
-  Valid values for `cfg_missing` are 'true', 'false'. Setting this to 'false' provides backward compatability; setting it to 'true' checks for and installs missing configuration files for the selected package.
+  Valid values for `cfg_missing` are 'true', 'false'. Setting this to 'false' provides backward compatibility; setting it to 'true' checks for and installs missing configuration files for the selected package.
 
 * `apt::key`: Adds a key to the list of keys used by Apt to authenticate packages. This type uses the aforementioned `apt_key` native type. As such, it no longer requires the `wget` command on which the old implementation depended.
 
@@ -286,6 +286,53 @@ apt::sources:
 * `upgrade`: How often, in days, to upgrade packages included in the origins list.
 * `autoclean`: How often, in days, to run `apt-get autoclean`.
 * `randomsleep`: How long, in seconds, to randomly wait before applying upgrades.
+
+####apt::source
+
+* `comment`: Add a comment to the apt source file.
+* `ensure`: Allows you to remove the apt source file. Can be 'present' or 'absent'.
+* `location`: The URL of the apt repository.
+* `release`: The distribution of the apt repository. Defaults to fact 'lsbdistcodename'.
+* `repos`: The component of the apt repository. This defaults to 'main'.
+* `include_deb`: References a Debian distribution's binary package.
+* `include_src`: Enable the deb-src type, references a Debian distribution's source code in the same form as the include_deb type. A deb-src line is required to fetch source indexes.
+* `required_packages`: install required packages via an exec. defaults to 'false'.
+* `key`: See apt::key
+* `key_server`: See apt::key
+* `key_content`: See apt::key
+* `key_source`: See apt::key
+* `pin`: See apt::pin
+* `architecture`: can be used to specify for which architectures information should be downloaded. If this option is not set all architectures defined by the APT::Architectures option will be downloaded. Defaults to 'undef' which means all. Example values can be 'i386' or 'i386,alpha,powerpc'.
+* `trusted_source` can be set to indicate that packages from this source are always authenticated even if the Release file is not signed or the signature can't be checked. Defaults to false. Can be 'true' or 'false'.
+
+####apt::key
+
+* `ensure`: The state we want this key in. Can be 'present' or 'absent'.
+* `key`: Is a GPG key ID or full key fingerprint. This value is validated with a regex enforcing it to only contain valid hexadecimal characters, be precisely 8 or 16 hexadecimal characters long and optionally prefixed with 0x for key IDs, or 40 hexadecimal characters long for key fingerprints.
+* `key_content`: This parameter can be used to pass in a GPG key as a string in case it cannot be fetched from a remote location and using a file resource is for other reasons inconvenient.
+* `key_source`: This parameter can be used to pass in the location of a GPG key. This URI can take the form of a `URL` (ftp, http or https) and a `path` (absolute path to a file on the target system).
+* `key_server`: The keyserver from where to fetch our GPG key. It can either be a domain name or URL. It defaults to undef which results in apt_key's default keyserver being used, currently `keyserver.ubuntu.com`.
+* `key_options`: Additional options to pass on to `apt-key adv --keyserver-options`.
+
+####apt::pin
+
+* `ensure`: The state we want this pin in. Can be 'present' or 'absent'.
+* `explanation`: Add a comment. Defaults to `${caller_module_name}: ${name}`.
+* `order`: The order of the file name. Defaults to '', otherwise must be an integer.
+* `packages`: The list of packages to pin. Defaults to '\*'. Can be an array or string. 
+* `priority`: Several versions of a package may be available for installation when the sources.list(5) file contains references to more than one distribution (for example, stable and testing). APT assigns a priority to each version that is available. Subject to dependency constraints, apt-get selects the version with the highest priority for installation.
+* `release`: The Debian release. Defaults to ''. Typical values can be 'stable', 'testing' and 'unstable'.
+* `origin`: Can be used to match a hostname. The following record will assign a high priority to all versions available from the server identified by the hostname. Defaults to ''.
+* `version`: The specific form assigns a priority (a "Pin-Priority") to one or more specified packages with a specified version or version range.
+* `codename`: The distribution (lsbdistcodename) of the apt repository. Defaults to ''.
+* `release_version`: Names the release version. For example, the packages in the tree might belong to Debian release version 7. Defaults to ''.
+* `component`: Names the licensing component associated with the packages in the directory tree of the Release file. defaults to ''. Typical values can be 'main', 'dependencies' and 'restricted'
+* `originator`: Names the originator of the packages in the directory tree of the Release file. Defaults to ''. Most commonly, this is Debian.
+* `label`: Names the label of the packages in the directory tree of the Release file. Defaults to ''. Most commonly, this is Debian.
+
+**Note**: Parameters release, origin, and version are mutually exclusive.
+
+It is recommended to read the manpage 'apt_preferences(5)'
 
 ### Testing
 

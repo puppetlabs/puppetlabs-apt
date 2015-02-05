@@ -66,12 +66,17 @@ class apt::backports(
     'ubuntu' => 'main universe multiverse restricted',
   }
 
+  apt::pin { 'backports':
+    before   => Apt::Source['backports'],
+    release  => "${release_real}-backports",
+    priority => $pin_priority,
+  }
+
   apt::source { 'backports':
     location   => $location,
     release    => "${release_real}-backports",
     repos      => $repos,
     key        => $key,
     key_server => 'pgp.mit.edu',
-    pin        => $pin_priority,
   }
 }
