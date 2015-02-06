@@ -1,14 +1,19 @@
-class apt::update {
+class apt::update(
+  $always_apt_update    = false,
+  $apt_update_frequency = 'reluctantly',
+  $update_timeout       = '300',
+  $update_tries         = '1',
+) {
   include apt::params
   #TODO: to catch if $::apt_update_last_success has the value of -1 here. If we
   #opt to do this, a info/warn would likely be all you'd need likely to happen
   #on the first run, but if it's not run in awhile something is likely borked
   #with apt and we'd want to know about it.
 
-  if $::apt::always_apt_update == false {
+  if $always_apt_update == false {
     #if always_apt_update is true there's no point in parsing this logic.
 
-    case $apt::apt_update_frequency {
+    case $apt_update_frequency {
       'always': {
         $_kick_apt = true
       }
@@ -61,8 +66,8 @@ class apt::update {
     command     => "${apt::params::provider} update",
     logoutput   => 'on_failure',
     refreshonly => $_refresh,
-    timeout     => $apt::update_timeout,
-    tries       => $apt::update_tries,
+    timeout     => $update_timeout,
+    tries       => $update_tries,
     try_sleep   => 1
   }
 }
