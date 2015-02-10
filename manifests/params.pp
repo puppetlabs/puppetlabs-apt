@@ -17,6 +17,7 @@ class apt::params {
       } else {
         $distid = 'ubuntu'
         $distcodename = $::lsbdistcodename ? {
+          'rebecca'  => 'trusty',
           'qiana'  => 'trusty',
           'petra'  => 'saucy',
           'olivia' => 'raring',
