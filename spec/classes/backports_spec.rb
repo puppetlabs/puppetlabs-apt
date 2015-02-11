@@ -32,7 +32,7 @@ describe 'apt::backports', :type => :class do
     context 'invalid priority' do
       let :params do { :pin_priority => 'banana' } end
       it 'should fail' do
-        expect { subject }.to raise_error(/must be an integer/)
+        expect { is_expected.to compile }.to raise_error(/must be an integer/)
       end
     end
   end

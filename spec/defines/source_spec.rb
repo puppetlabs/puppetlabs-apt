@@ -175,8 +175,8 @@ describe 'apt::source', :type => :define do
 
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error, /lsbdistcodename fact not available: release parameter required/)
+          is_expected.to compile
+        }.to raise_error(/lsbdistcodename fact not available: release parameter required/)
       end
     end
   end
