@@ -20,7 +20,11 @@ define apt::pin(
 
   $preferences_d = $apt::params::preferences_d
 
-  if $order != '' and !is_integer($order) {
+  if $order != '' and ! is_integer($order)
+      # Old stdlib depends on this value being an integer-like string
+      # instead of an actual integer. This inline_template tricks
+      # stdlib 2.x into interpreting it correctly when future parser is on.
+      and ! is_integer(inline_template('<%= @order.to_s %>')) {
     fail('Only integers are allowed in the apt::pin order param')
   }
 

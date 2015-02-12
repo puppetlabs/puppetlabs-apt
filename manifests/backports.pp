@@ -34,7 +34,11 @@ class apt::backports(
   $pin_priority = 200,
 ) inherits apt::params {
 
-  if ! is_integer($pin_priority) {
+  if ! is_integer($pin_priority)
+      # Old stdlib depends on this value being an integer-like string
+      # instead of an actual integer. This inline_template tricks
+      # stdlib 2.x into interpreting it correctly when future parser is on.
+      and ! is_integer(inline_template('<%= @pin_priority.to_s %>')) {
     fail('$pin_priority must be an integer')
   }
 
