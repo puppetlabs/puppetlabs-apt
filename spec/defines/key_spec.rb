@@ -138,7 +138,7 @@ describe 'apt::key', :type => :define do
         :key_server => '-pgp.mit.edu',
       } end
       it 'fails' do
-        expect { subject } .to raise_error(/does not match/)
+        expect { is_expected.to compile } .to raise_error(/does not match/)
       end
     end
 
@@ -147,7 +147,7 @@ describe 'apt::key', :type => :define do
         :key_server => '.pgp.mit.edu',
       } end
       it 'fails' do
-        expect { subject } .to raise_error(/does not match/)
+        expect { is_expected.to compile } .to raise_error(/does not match/)
       end
     end
 
@@ -156,7 +156,7 @@ describe 'apt::key', :type => :define do
         :key_server => "pgp.mit.edu.",
       } end
       it 'fails' do
-        expect { subject } .to raise_error(/does not match/)
+        expect { is_expected.to compile } .to raise_error(/does not match/)
       end
     end
     context "exceed character url" do
@@ -166,7 +166,7 @@ describe 'apt::key', :type => :define do
         }
       end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
     context "incorrect port number url" do
@@ -176,7 +176,7 @@ describe 'apt::key', :type => :define do
         }
       end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
     context "incorrect protocol for  url" do
@@ -186,7 +186,7 @@ describe 'apt::key', :type => :define do
         }
       end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
     context "missing port number url" do
@@ -196,7 +196,7 @@ describe 'apt::key', :type => :define do
         }
       end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
     context "url ending with a dot" do
@@ -206,7 +206,7 @@ describe 'apt::key', :type => :define do
         }
       end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
     context "url begin with a dash" do
@@ -214,7 +214,7 @@ describe 'apt::key', :type => :define do
         :key_server => "hkp://-pgp.mit.edu",
       } end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
     context 'invalid key' do
@@ -222,7 +222,7 @@ describe 'apt::key', :type => :define do
         'Out of rum. Why? Why are we out of rum?'
       end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
 
@@ -231,7 +231,7 @@ describe 'apt::key', :type => :define do
         :key_source => 'afp://puppetlabs.com/key.gpg',
       } end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
 
@@ -240,7 +240,7 @@ describe 'apt::key', :type => :define do
         :key_content => [],
       } end
       it 'fails' do
-        expect { subject }.to raise_error(/is not a string/)
+        expect { is_expected.to compile }.to raise_error(/is not a string/)
       end
     end
 
@@ -249,7 +249,7 @@ describe 'apt::key', :type => :define do
         :key_server => 'two bottles of rum',
       } end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
 
@@ -258,7 +258,7 @@ describe 'apt::key', :type => :define do
         :key_options => {},
       } end
       it 'fails' do
-        expect { subject }.to raise_error(/is not a string/)
+        expect { is_expected.to compile }.to raise_error(/is not a string/)
       end
     end
 
@@ -269,14 +269,14 @@ describe 'apt::key', :type => :define do
         }
       end
       it 'fails' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
 
     describe 'duplication' do
       context 'two apt::key resources for same key, different titles' do
         let :pre_condition do
-          "apt::key { 'duplicate': key => #{title}, }"
+          "apt::key { 'duplicate': key => '#{title}', }"
         end
 
         it 'contains two apt::key resources' do
@@ -305,10 +305,10 @@ describe 'apt::key', :type => :define do
 
       context 'two apt::key resources, different ensure' do
         let :pre_condition do
-          "apt::key { 'duplicate': key => #{title}, ensure => 'absent', }"
+          "apt::key { 'duplicate': key => '#{title}', ensure => 'absent', }"
         end
         it 'informs the user of the impossibility' do
-          expect { subject }.to raise_error(/already ensured as absent/)
+          expect { is_expected.to compile }.to raise_error(/already ensured as absent/)
         end
       end
     end

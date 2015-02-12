@@ -137,8 +137,8 @@ describe 'apt::ppa', :type => :define do
       let(:title) { 'ppa:foo' }
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error, /lsbdistcodename fact not available: release parameter required/)
+          is_expected.to compile
+        }.to raise_error(/lsbdistcodename fact not available: release parameter required/)
       end
     end
 
@@ -155,8 +155,8 @@ describe 'apt::ppa', :type => :define do
       let(:title) { 'ppa:foo' }
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error, /apt::ppa is currently supported on Ubuntu only./)
+          is_expected.to compile
+        }.to raise_error(/apt::ppa is currently supported on Ubuntu only./)
       end
     end
   end

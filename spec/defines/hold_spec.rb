@@ -69,28 +69,28 @@ describe 'apt::hold' do
     context 'version => {}' do
       let :params do { :version => {}, } end
       it 'should fail' do
-        expect { subject }.to raise_error(/is not a string/)
+        expect { is_expected.to compile }.to raise_error(/is not a string/)
       end
     end
 
     context 'ensure => bananana' do
       let :params do default_params.merge({:ensure => 'bananana',}) end
       it 'should fail' do
-        expect { subject }.to raise_error(/does not match/)
+        expect { is_expected.to compile }.to raise_error(/does not match/)
       end
     end
 
     context 'package => []' do
       let :params do default_params.merge({:package => [],}) end
       it 'should fail' do
-        expect { subject }.to raise_error(/is not a string/)
+        expect { is_expected.to compile }.to raise_error(/is not a string/)
       end
     end
 
     context 'priority => bananana' do
       let :params do default_params.merge({:priority => 'bananana',}) end
       it 'should fail' do
-        expect { subject }.to raise_error(/must be an integer/)
+        expect { is_expected.to compile }.to raise_error(/must be an integer/)
       end
     end
   end

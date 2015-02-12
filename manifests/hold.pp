@@ -35,7 +35,11 @@ define apt::hold(
   validate_string($package)
   validate_string($version)
 
-  if ! is_integer($priority) {
+  if ! is_integer($priority)
+      # Old stdlib depends on this value being an integer-like string
+      # instead of an actual integer. This inline_template tricks
+      # stdlib 2.x into interpreting it correctly when future parser is on.
+      and ! is_integer(inline_template('<%= @priority.to_s %>')) {
     fail('$priority must be an integer')
   }
 

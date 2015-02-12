@@ -206,8 +206,8 @@ describe 'apt', :type => :class do
       end
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error)
+          is_expected.to compile
+        }.to raise_error(/"foo" is not a boolean.  It looks to be a String/)
       end
     end
 
@@ -219,8 +219,8 @@ describe 'apt', :type => :class do
       end
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error)
+          is_expected.to compile
+        }.to raise_error(/"foo" is not a boolean.  It looks to be a String/)
       end
     end
 
@@ -232,8 +232,8 @@ describe 'apt', :type => :class do
       end
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error)
+          is_expected.to compile
+        }.to raise_error(/"foo" is not a boolean.  It looks to be a String/)
       end
     end
 
@@ -245,8 +245,8 @@ describe 'apt', :type => :class do
       end
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error)
+          is_expected.to compile
+        }.to raise_error(/"foo" is not a boolean.  It looks to be a String/)
       end
     end
 
@@ -257,8 +257,8 @@ describe 'apt', :type => :class do
 
       it do
         expect {
-          should compile
-        }.to raise_error(Puppet::Error, /This module only works on Debian or derivatives like Ubuntu/)
+          is_expected.to compile
+        }.to raise_error(/This module only works on Debian or derivatives like Ubuntu/)
       end
     end
   end
