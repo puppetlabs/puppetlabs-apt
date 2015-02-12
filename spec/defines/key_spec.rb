@@ -276,7 +276,7 @@ describe 'apt::key', :type => :define do
     describe 'duplication' do
       context 'two apt::key resources for same key, different titles' do
         let :pre_condition do
-          "apt::key { 'duplicate': key => #{title}, }"
+          "apt::key { 'duplicate': key => '#{title}', }"
         end
 
         it 'contains two apt::key resources' do
@@ -305,7 +305,7 @@ describe 'apt::key', :type => :define do
 
       context 'two apt::key resources, different ensure' do
         let :pre_condition do
-          "apt::key { 'duplicate': key => #{title}, ensure => 'absent', }"
+          "apt::key { 'duplicate': key => '#{title}', ensure => 'absent', }"
         end
         it 'informs the user of the impossibility' do
           expect { is_expected.to compile }.to raise_error(/already ensured as absent/)
