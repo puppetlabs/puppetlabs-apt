@@ -14,6 +14,7 @@
 # file and in /etc/cron.daily/apt
 #
 class apt::unattended_upgrades (
+  $legacy_origin       = $::apt::params::legacy_origin,
   $origins             = $::apt::params::origins,
   $blacklist           = [],
   $update              = '1',
@@ -40,6 +41,7 @@ class apt::unattended_upgrades (
 ) inherits ::apt::params {
 
   validate_bool(
+    $legacy_origin,
     $auto_fix,
     $minimal_steps,
     $install_on_shutdown,
