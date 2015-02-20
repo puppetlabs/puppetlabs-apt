@@ -3,14 +3,6 @@ require 'open-uri'
 require 'net/ftp'
 require 'tempfile'
 
-if RUBY_VERSION == '1.8.7'
-  # Mothers cry, puppies die and Ruby 1.8.7's open-uri needs to be
-  # monkeypatched to support passing in :ftp_passive_mode.
-  require File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..',
-                                    'puppet_x', 'apt_key', 'patch_openuri.rb'))
-  OpenURI::Options.merge!({:ftp_active_mode => false,})
-end
-
 Puppet::Type.type(:apt_key).provide(:apt_key) do
 
   confine    :osfamily => :debian
@@ -20,11 +12,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
   def self.instances
     cli_args = ['adv','--list-keys', '--with-colons', '--fingerprint']
 
-    if RUBY_VERSION > '1.8.7'
-      key_output = apt_key(cli_args).encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '')
-    else
-      key_output = apt_key(cli_args)
-    end
+    key_output = apt_key(cli_args).encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '')
 
     pub_line, fpr_line = nil
 
