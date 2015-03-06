@@ -124,6 +124,29 @@ describe 'apt::ppa', :type => :define do
     }
   end
 
+  context 'without software properties' do
+    let(:title) { 'ppa:foo' }
+    let :facts do
+      {
+        :lsbdistrelease  => '14.04',
+        :lsbdistcodename => 'trusty',
+        :operatingsystem => 'Ubuntu',
+        :lsbdistid       => 'Ubuntu',
+        :osfamily        => 'Debian',
+      }
+    end
+    let :params do
+      {
+        'ensure' => 'absent',
+        'install_software_properties' => false,
+      }
+    end
+    it 'should not install software-properties' do
+      is_expected.not_to contain_package('python-software-properties')
+      is_expected.not_to contain_package('software-properties-common')
+    end
+  end
+
   context 'validation' do
     describe 'no release' do
       let :facts do
