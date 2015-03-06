@@ -41,6 +41,7 @@ class { 'apt':
   purge_sources_list   => false,
   purge_sources_list_d => false,
   purge_preferences_d  => false,
+  sources_list_path    => undef,
   update_timeout       => undef,
   fancy_progress       => undef
 }
@@ -273,6 +274,7 @@ apt::sources:
 * `update_timeout`: Overrides the exec timeout in seconds for `apt-get update`. Defaults to exec default (300).
 * `update_tries`: Sets how many times to attempt running `apt-get update`. Use this to work around transient DNS and HTTP errors. By default, the command runs only once.
 * `sources`: Passes a hash to create_resource to make new `apt::source` resources.
+* `sources_list_path`: Expects a path to a file which will be use to overwrite the sources.list file. Behaves exactly like the *source* property of the file resource. Will not be used if *purge_sources_list* is true. By default, the sources.list file will not be touched.
 * `fancy_progress`: Enables fancy progress bars for apt. Accepts 'true', 'false'. Defaults to 'false'.
 
 ####apt::unattended_upgrades
