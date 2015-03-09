@@ -60,6 +60,16 @@ define apt::source(
       before   => File["${name}.list"],
       origin   => $host,
     }
+  } else {
+    # Purge old apt::pin, as pinning isn't wanted (anymore)
+    if !defined(Apt::Pin[$name] ) {
+      apt::pin { $name:
+        ensure   => absent,
+        priority => $pin,
+        before   => File["${name}.list"],
+        origin   => $host,
+      }
+    }
   }
 
   if ($required_packages != false) and ($ensure == 'present') {

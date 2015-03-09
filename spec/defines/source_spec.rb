@@ -74,6 +74,14 @@ describe 'apt::source', :type => :define do
       'origin'   => 'debian.mirror.iweb.ca',
     })
     }
+    it { is_expected.to contain_file("my_source.pref").with({
+      'ensure' => 'present',
+      'path'   => '/etc/apt/preferences.d/my_source.pref',
+      'owner'  => 'root',
+      'group'  => 'root',
+      'mode'   => '0644',
+    })
+    }
 
     it { is_expected.to contain_exec("Required packages: 'vim' for my_source").that_comes_before('Exec[apt_update]').that_subscribes_to('File[my_source.list]').with({
       'command'     => '/usr/bin/apt-get -y install vim',
@@ -160,6 +168,10 @@ describe 'apt::source', :type => :define do
 
     it { is_expected.to contain_file('my_source.list').that_notifies('Exec[apt_update]').with({
       'ensure' => 'absent'
+    })
+    }
+    it { is_expected.to contain_file("my_source.pref").with({
+      'ensure' => 'absent',
     })
     }
   end

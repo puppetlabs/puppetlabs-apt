@@ -1,7 +1,7 @@
 require 'spec_helper'
 describe 'apt::backports', :type => :class do
 
-  describe 'when asigning a custom priority to backports' do
+  describe 'when assigning a custom priority to backports' do
     let :facts do
       {
         'lsbdistcodename' => 'Karmic',
