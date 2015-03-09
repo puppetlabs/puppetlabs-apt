@@ -45,11 +45,12 @@ class apt::backports(
     } else {
       $distid = 'ubuntu'
       $release_real = $::lsbdistcodename ? {
-        'qiana'  => 'trusty',
-        'petra'  => 'saucy',
-        'olivia' => 'raring',
-        'nadia'  => 'quantal',
-        'maya'   => 'precise',
+        'rebecca' => 'trusty',
+        'qiana'   => 'trusty',
+        'petra'   => 'saucy',
+        'olivia'  => 'raring',
+        'nadia'   => 'quantal',
+        'maya'    => 'precise',
       }
     }
   } else {
