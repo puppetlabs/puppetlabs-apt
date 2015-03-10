@@ -1,9 +1,10 @@
 # ppa.pp
 
 define apt::ppa(
-  $ensure  = 'present',
-  $release = $::lsbdistcodename,
-  $options = $apt::params::ppa_options,
+  $ensure          = 'present',
+  $release         = $::lsbdistcodename,
+  $options         = $apt::params::ppa_options,
+  $use_https_proxy = true,
 ) {
   include apt::params
   include apt::update
@@ -41,7 +42,14 @@ define apt::ppa(
             $proxy_env = []
           }
           default: {
-            $proxy_env = ["http_proxy=http://${proxy_host}:${proxy_port}", "https_proxy=http://${proxy_host}:${proxy_port}"]
+            case $use_https_proxy {
+              false, '', undef: {
+                $proxy_env = ["http_proxy=http://${proxy_host}:${proxy_port}"]
+              }
+              default: {
+                $proxy_env = ["http_proxy=http://${proxy_host}:${proxy_port}", "https_proxy=http://${proxy_host}:${proxy_port}"]
+              }
+            }
           }
         }
     } else {
