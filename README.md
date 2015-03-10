@@ -115,6 +115,17 @@ class { 'apt':
     
 * `apt::conf`: Specifies a custom configuration file. The priority defaults to 50, but you can set the priority parameter to load the file earlier or later. The content parameter passes specified content, if any, into the file resource.
 
+#### Hiera example
+
+```
+<pre>
+apt::configs:
+  'no_proxy':
+    content: 'Acquire::http::Proxy { apt.puppetlabs.com DIRECT; };'
+    priority: 05
+</pre>
+```
+
 * `apt::hold`: Holds a specific version of a package. You can hold a package to a full version or a partial version.
 
   To set a package's ensure attribute to 'latest' but get the version specified by `apt::hold`:
