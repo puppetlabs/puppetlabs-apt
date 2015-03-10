@@ -54,6 +54,7 @@
 class apt(
   $always_apt_update    = false,
   $apt_update_frequency = 'reluctantly',
+  $configs              = undef,
   $disable_keys         = undef,
   $proxy_host           = undef,
   $proxy_port           = '8080',
@@ -213,4 +214,11 @@ class apt(
     validate_hash($sources)
     create_resources('apt::source', $sources)
   }
+
+  # manage configs if present
+  if $configs != undef {
+    validate_hash($configs)
+    create_resources('apt::conf', $configs)
+  }
+
 }
