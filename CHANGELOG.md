@@ -1,3 +1,37 @@
+##2015-03-17 - Supported Release 1.8.0
+###Summary
+
+This is the last planned feature release of the 1.x series of this module. All new features will be evaluated for puppetlabs-apt 2.x.
+
+This release includes many important features, including support for full fingerprints, and fixes issues where `apt_key` was not supporting user/password and `apt_has_updates` was not properly parsing the `apt-check` output.
+
+####Changes to default behavior
+- The apt module will now throw warnings if you don't use full fingerprints for `apt_key`s
+
+####Features
+- Use gpg to check keys to work around https://bugs.launchpad.net/ubuntu/+source/gnupg2/+bug/1409117 (MODULES-1675)
+- Add 'oldstable' to the default update origins for wheezy
+- Add utopic, vivid, and cumulus compatibility
+- Add support for full fingerprints
+- New parameter for `apt::source`
+  - `trusted_source`
+- New parameters for `apt::ppa`
+  - `package_name`
+  - `package_manage`
+- New parameter for `apt::unattended_upgrades`
+  - `legacy_origin`
+- Separate `apt::pin` from `apt::backports` to allow pin by release instead of origin
+
+####Bugfixes
+- Cleanup lint and future parser issues
+- Fix to support username and passwords again for `apt_key` (MODULES-1119)
+- Fix issue where `apt::force` `$install_check` didn't work with non-English locales (MODULES-1231)
+- Allow 5 digit ports in `apt_key`
+- Fix for `ensure => absent` in `apt_key` (MODULES-1661)
+- Fix `apt_has_updates` not parsing `apt-check` output correctly
+- Fix inconsistent headers across files (MODULES-1200)
+- Clean up formatting for 50unattended-upgrades.erb
+
 ##2014-10-28 - Supported Release 1.7.0
 ###Summary
 
