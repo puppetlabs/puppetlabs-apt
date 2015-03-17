@@ -137,7 +137,12 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
   end
 
   def exists?
-    @property_hash[:ensure] == :present
+    # check if an existing, unexpired key with the same id is present
+    if self.class.instances.one?{ |key| key.id == resource[:id] && ! key.expired }
+      true
+    else
+      @property_hash[:ensure] == :present
+    end
   end
 
   def create
