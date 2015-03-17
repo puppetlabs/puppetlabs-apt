@@ -137,7 +137,13 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
   end
 
   def exists?
-    @property_hash[:ensure] == :present
+    # check if an existing, unexpired key with the same id is present; 
+    # we check for the last 8 characters of :id to support long key ids
+    if self.class.instances.one?{ |key| key.id == resource[:id][8..-1] && ! key.expired }
+      true
+    else
+      @property_hash[:ensure] == :present
+    end
   end
 
   def create
