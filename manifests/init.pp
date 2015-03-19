@@ -43,6 +43,18 @@
 #   to work around transient DNS and HTTP errors. By default, the command
 #   will only be run once.
 #
+# [*sources*]
+#   A hash of sources to pass through to apt::source from an ENC such as hiera 
+#   Defaults to undef
+#
+# [*pins*]
+#   A hash of pins to pass through to apt::pin from an ENC such as hiera 
+#   Defaults to undef
+#
+# [*fancy_progress*]
+#   Enable or disable the fancy progress bar
+#   Defaults to undef
+#
 # === Examples
 #
 # class { 'apt': }
@@ -64,6 +76,7 @@ class apt(
   $update_timeout       = undef,
   $update_tries         = undef,
   $sources              = undef,
+  $pins                 = undef,
   $fancy_progress       = undef
 ) {
 
@@ -212,5 +225,11 @@ class apt(
   if $sources != undef {
     validate_hash($sources)
     create_resources('apt::source', $sources)
+  }
+
+  # manage pins if present
+  if $pins != undef {
+    validate_hash($pins)
+    create_resources('apt::pin', $pins)
   }
 }
