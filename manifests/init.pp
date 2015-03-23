@@ -34,6 +34,12 @@
 #   Accepts true or false. Defaults to false. If set
 #   to true, Puppet will purge all unmanaged entries from sources.list.d
 #
+# [*sources_list_path*]
+#   Expects a path to a file which will be use to overwrite the sources.list file.
+#   Behaves exactly like the *source* property of the file resource.
+#   Will not be used if *purge_sources_list* is true. By default, the sources.list
+#   file will not be touched.
+#
 # [*update_timeout*]
 #   Overrides the exec timeout in seconds for apt-get update.
 #   If not set defaults to Exec's default (300)
@@ -64,6 +70,7 @@ class apt(
   $update_timeout       = undef,
   $update_tries         = undef,
   $sources              = undef,
+  $sources_list_path    = undef,
   $fancy_progress       = undef
 ) {
 
@@ -78,11 +85,6 @@ class apt(
 
   validate_bool($purge_sources_list, $purge_sources_list_d,
                 $purge_preferences, $purge_preferences_d)
-
-  $sources_list_content = $purge_sources_list ? {
-    false => undef,
-    true  => "# Repos managed by puppet.\n",
-  }
 
   if $always_apt_update == true {
     Exec <| title=='apt_update' |> {
@@ -104,14 +106,26 @@ class apt(
   $preferences_d  = $apt::params::preferences_d
   $provider       = $apt::params::provider
 
-  file { 'sources.list':
-    ensure  => present,
-    path    => "${root}/sources.list",
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    content => $sources_list_content,
-    notify  => Exec['apt_update'],
+  if $purge_sources_list == true {
+    file { 'sources.list':
+      ensure  => present,
+      path    => "${root}/sources.list",
+      owner   => root,
+      group   => root,
+      mode    => '0644',
+      content => "# Repos managed by puppet.\n",
+      notify  => Exec['apt_update'],
+    }
+  } elsif $sources_list_path {
+    file { 'sources.list':
+      ensure => present,
+      path   => "${root}/sources.list",
+      owner  => root,
+      group  => root,
+      mode   => '0644',
+      source => $sources_list_path,
+      notify => Exec['apt_update'],
+    }
   }
 
   file { 'sources.list.d':
