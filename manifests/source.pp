@@ -17,6 +17,7 @@ define apt::source(
   $pin               = false,
   $architecture      = undef,
   $trusted_source    = false,
+  $sources_list_d    = undef,
 ) {
 
   include apt::params
@@ -25,7 +26,10 @@ define apt::source(
   validate_string($architecture)
   validate_bool($trusted_source)
 
-  $sources_list_d = $apt::params::sources_list_d
+  $_sources_list_d = $sources_list_d ? {
+    undef   => $apt::params::sources_list_d,
+    default => $sources_list_d,
+  }
   $provider       = $apt::params::provider
 
   if $release == 'UNDEF' {
@@ -40,7 +44,7 @@ define apt::source(
 
   file { "${name}.list":
     ensure  => $ensure,
-    path    => "${sources_list_d}/${name}.list",
+    path    => "${_sources_list_d}/${name}.list",
     owner   => root,
     group   => root,
     mode    => '0644',
