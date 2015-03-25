@@ -335,6 +335,7 @@ apt::sources:
 * `component`: Names the licensing component associated with the packages in the directory tree of the Release file. defaults to ''. Typical values can be 'main', 'dependencies' and 'restricted'
 * `originator`: Names the originator of the packages in the directory tree of the Release file. Defaults to ''. Most commonly, this is Debian.
 * `label`: Names the label of the packages in the directory tree of the Release file. Defaults to ''. Most commonly, this is Debian.
+* `preferences_d`: Override the preferences.d directory path. Defaults to '/etc/apt/preferences.d'.
 
 **Note**: Parameters release, origin, and version are mutually exclusive.
 
