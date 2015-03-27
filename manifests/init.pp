@@ -43,6 +43,15 @@
 #   to work around transient DNS and HTTP errors. By default, the command
 #   will only be run once.
 #
+# [*sources*]
+#   Passes a hash to create_resource to make new apt::source resources.
+#
+# [*keys*] 
+#   Passes a hash to create_resource to make new apt::key resources.
+#
+# [*fancy_progress*]
+#   Enables fancy progress bars for apt. Accepts 'true', 'false'. 
+#   Defaults to 'false'.
 # === Examples
 #
 # class { 'apt': }
@@ -64,6 +73,7 @@ class apt(
   $update_timeout       = undef,
   $update_tries         = undef,
   $sources              = undef,
+  $keys                 = undef,
   $fancy_progress       = undef
 ) {
 
@@ -212,5 +222,11 @@ class apt(
   if $sources != undef {
     validate_hash($sources)
     create_resources('apt::source', $sources)
+  }
+
+  # manage keys if present
+  if $keys != undef {
+    validate_hash($keys)
+    create_resources('apt::keys', $keys)
   }
 }

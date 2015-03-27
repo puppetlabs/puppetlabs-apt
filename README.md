@@ -31,7 +31,7 @@ Any Puppet code that uses anything from the apt module requires that the core ap
 
 Using the apt module consists predominantly of declaring classes and defined types that provide the desired functionality and features. This module provides common resources and options that are shared by the various defined types in the apt module, so you **must always** include this class in your manifests.
 
-```
+```puppet
 class { 'apt':
   always_apt_update    => false,
   apt_update_frequency => undef,
@@ -42,7 +42,10 @@ class { 'apt':
   purge_sources_list_d => false,
   purge_preferences_d  => false,
   update_timeout       => undef,
-  fancy_progress       => undef
+  update_tries         => undef,
+  sources              => undef,
+  keys                 => undef,
+  fancy_progress       => undef,
 }
 ```
 
@@ -64,7 +67,7 @@ class { 'apt':
 
 * `apt::release`: Sets the default Apt release. This class is particularly useful when using repositories that are unstable in Ubuntu, such as Debian.
 
-  ```
+  ```puppet
   class { 'apt::release':
     release_id => 'precise',
   }
@@ -72,7 +75,7 @@ class { 'apt':
 
 * `apt::unattended_upgrades`: This class manages the unattended-upgrades package and related configuration files for Ubuntu and Debian systems. You can configure the class to automatically upgrade all new package releases or just security releases.
 
-  ```
+  ```puppet
   class { 'apt::unattended_upgrades':
     blacklist     => [],
     update        => '1',
@@ -90,7 +93,7 @@ class { 'apt':
 
   A native Puppet type and provider for managing GPG keys for Apt is provided by this module.
 
-  ```
+  ```puppet
   apt_key { 'puppetlabs':
     ensure => 'present',
     id     => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
@@ -118,7 +121,7 @@ class { 'apt':
 
   To set a package's ensure attribute to 'latest' but get the version specified by `apt::hold`:
 
-  ```
+  ```puppet
   apt::hold { 'vim':
     version => '2:7.3.547-7',
   }
@@ -127,7 +130,7 @@ class { 'apt':
   Alternatively, if you want to hold your package at a partial version, you can use a wildcard. For example, you can hold Vim at version 7.3.*:
 
 
-  ```
+  ```puppet
   apt::hold { 'vim':
     version => '2:7.3.*',
   }
@@ -135,7 +138,7 @@ class { 'apt':
 
 * `apt::force`: Forces a package to be installed from a specific release. This is particularly useful when using repositories that are unstable in Ubuntu, such as Debian.
 
-  ```
+  ```puppet
   apt::force { 'glusterfs-server':
     release     => 'unstable',
     version     => '3.0.3',
@@ -155,7 +158,7 @@ class { 'apt':
 
 * `apt::key`: Adds a key to the list of keys used by Apt to authenticate packages. This type uses the aforementioned `apt_key` native type. As such, it no longer requires the `wget` command on which the old implementation depended.
 
-  ```
+  ```puppet
   apt::key { 'puppetlabs':
     key        => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
     key_server => 'pgp.mit.edu',
@@ -169,7 +172,7 @@ class { 'apt':
 
 * `apt::pin`: Defined type that adds an Apt pin for a certain release.
 
-  ```
+  ```puppet
   apt::pin { 'karmic': priority => 700 }
   apt::pin { 'karmic-updates': priority => 700 }
   apt::pin { 'karmic-security': priority => 700 }
@@ -177,7 +180,7 @@ class { 'apt':
 
   Note that you can also specify more complex pins using distribution properties.
 
-  ```
+  ```puppet
   apt::pin { 'stable':
     priority        => -10,
     originator      => 'Debian',
@@ -193,7 +196,7 @@ class { 'apt':
 
 * `apt::source`: Adds an Apt source to `/etc/apt/sources.list.d/`. For example:
 
-  ```
+  ```puppet
   apt::source { 'debian_unstable':
     comment           => 'This is the iWeb Debian unstable mirror',
     location          => 'http://debian.mirror.iweb.ca/debian/',
@@ -210,7 +213,7 @@ class { 'apt':
 
   For example, to configure your system so the source is the Puppet Labs Apt repository:
 
-  ```
+  ```puppet
   apt::source { 'puppetlabs':
     location   => 'http://apt.puppetlabs.com',
     repos      => 'main dependencies',
@@ -232,8 +235,7 @@ The apt module includes a few facts to describe the state of the Apt system:
 
 #### Hiera example
 
-```
-<pre>
+```yaml
 apt::sources:
   'debian_unstable':
     location: 'http://debian.mirror.iweb.ca/debian/'
@@ -251,7 +253,6 @@ apt::sources:
     repos: 'main dependencies'
     key: '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30'
     key_server: 'pgp.mit.edu'
-</pre>
 ```
 
 ### Parameters
@@ -272,6 +273,7 @@ apt::sources:
 * `update_timeout`: Overrides the exec timeout in seconds for `apt-get update`. Defaults to exec default (300).
 * `update_tries`: Sets how many times to attempt running `apt-get update`. Use this to work around transient DNS and HTTP errors. By default, the command runs only once.
 * `sources`: Passes a hash to create_resource to make new `apt::source` resources.
+* `keys`: Passes a hash to create_resource to make new `apt::key` resources.
 * `fancy_progress`: Enables fancy progress bars for apt. Accepts 'true', 'false'. Defaults to 'false'.
 
 ####apt::unattended_upgrades
@@ -356,7 +358,7 @@ The apt module is mostly a collection of defined resource types, which provide r
 
 This test sets up a Puppet Labs Apt repository. Start by creating a new smoke test, called puppetlabs-apt.pp, in the apt module's test folder. In this test, declare a single resource representing the Puppet Labs Apt source and GPG key:
 
-```
+```puppet
 class { 'apt': }
 
 apt::source { 'puppetlabs':
@@ -375,7 +377,7 @@ Check your smoke test for syntax errors:
 
 If you receive no output from that command, it means nothing is wrong. Then, apply the code:
 
-```
+```shell
 $ puppet apply --verbose tests/puppetlabs-apt.pp
 notice: /Stage[main]//Apt::Source[puppetlabs]/File[puppetlabs.list]/ensure: defined content as '{md5}3be1da4923fb910f1102a233b77e982e'
 info: /Stage[main]//Apt::Source[puppetlabs]/File[puppetlabs.list]: Scheduling refresh of Exec[puppetlabs apt update]
