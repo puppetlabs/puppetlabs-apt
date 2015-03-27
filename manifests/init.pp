@@ -64,6 +64,7 @@ class apt(
   $update_timeout       = undef,
   $update_tries         = undef,
   $sources              = undef,
+  $keys                 = undef,
   $fancy_progress       = undef
 ) {
 
@@ -212,5 +213,11 @@ class apt(
   if $sources != undef {
     validate_hash($sources)
     create_resources('apt::source', $sources)
+  }
+
+  # manage keys if present
+  if $keys != undef {
+    validate_hash($keys)
+    create_resources('apt::keys', $keys)
   }
 }
