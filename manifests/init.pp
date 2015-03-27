@@ -43,6 +43,15 @@
 #   to work around transient DNS and HTTP errors. By default, the command
 #   will only be run once.
 #
+# [*sources*]
+#   Passes a hash to create_resource to make new apt::source resources.
+#
+# [*keys*] 
+#   Passes a hash to create_resource to make new apt::key resources.
+#
+# [*fancy_progress*]
+#   Enables fancy progress bars for apt. Accepts 'true', 'false'. 
+#   Defaults to 'false'.
 # === Examples
 #
 # class { 'apt': }
