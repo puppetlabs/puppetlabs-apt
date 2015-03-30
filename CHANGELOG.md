@@ -1,3 +1,82 @@
+##2015-04-07 - Supported Release 2.0.0
+###Summary
+
+This is a major rewrite of the apt module. Many classes and defines were removed, but all existing functionality should still work. Please carefully review documentation before upgrading.
+
+####Backwards-incompatible changes
+
+As this is a major rewrite of the module there are a great number of backwards incompatible changes. Please review this and the updated README carefully before upgrading.
+
+#####`apt_key`
+- `keyserver_options` parameter renamed to `options`
+
+#####`apt::backports`
+- TODO - awaiting PR
+
+#####`apt::builddep`
+- This define was removed. Functionality can be matched passing 'build-dep' to `install_options` in the package resource. [Example](examples/builddep.pp)
+
+#####`apt::debian::testing`
+- This class was removed. Manually add an `apt::source` instead. [Example](examples/debian_testing.pp)
+
+#####`apt::debian::unstable`
+- This class was removed. Manually add an `apt::source` instead. [Example](examples/debian_unstable.pp)
+
+#####`apt::force`
+- This define was removed. Functionallity can be matched by setting `install_options` in the package resource. See [here](examples/force.pp) for how to set the options.
+
+#####`apt::hold`
+- This define was removied. Simply use an `apt::pin` with `priority => 1001` for the same functionality.
+
+#####`apt`
+- `always_apt_update` - This parameter was removed. Use `update => { 'frequency' => 'always' }` instead.
+- `apt_update_frequency` - This parameter was removed. Use `update => { 'frequency' => <frequency> }` instead.
+- `disable_keys` - This parameter was removed. See this [example](examples/disable_keys.pp) if you need this functionality.
+- `proxy_host` - This parameter was removed. Use `proxy => { 'host' => <host> }` instead.
+- `proxy_port` - This parameter was removed. Use `proxy => { 'port' => <port> }` instead.
+- `purge_sources_list` - This parameter was removed. Use `purge => { 'sources.list' => <bool> }` instead. ***NOTE*** This now defaults to true.
+- `purge_sources_list_d` - This parameter was removed. Use `purge => { 'sources.list.d' => <bool> }` instead. ***NOTE*** This now defaults to true.
+- `purge_preferences` - This parameter was removed. Use `purge => { 'preferences' => <bool> }` instead. ***NOTE*** This now defaults to true.
+- `purge_preferences_d` - This parameter was removed. Use `purge => { 'preferences.d' => <bool> }` instead. ***NOTE*** This now defaults to true.
+- `update_timeout` - This parameter was removed. Use `update => { 'timeout' => <timeout> }` instead.
+- `update_tries` - This parameter was removed. Use `update => { 'tries' => <tries> }` instead.
+
+#####`apt::key`
+- `key` - This parameter was renamed to `id`.
+- `key_content` - This parameter was renamed to `content`.
+- `key_source` - This parameter was renamed to `source`.
+- `key_server` - This parameter was renamed to `server`.
+- `key_options` - This parameter was renamed to `options`.
+
+#####`apt::release`
+- This class was removed. See this [example](examples/release.pp) for how to achieve this functionality.
+
+#####`apt::source`
+- `include_src` - This parameter was removed. Use `include => { 'src' => <bool> }` instead. ***NOTE*** This now defaults to false.
+- `include_deb` - This parameter was removed. Use `include => { 'deb' => <bool> }` instead.
+- `required_packages` - This parameter was removed. Use package resources for these packages if needed.
+- `key` - This can either be a key id or a hash including key options. If using a hash, `key => { 'id' => <id> }` must be specified.
+- `key_server` - This parameter was removed. Use `key => { 'server' => <server> }` instead.
+- `key_content` - This parameter was removed. Use `key => { 'content' => <content> }` instead.
+- `key_source` - This parameter was removed. Use `key => { 'source' => <source> }` instead.
+- `trusted_source` - This parameter was renamed to `allow_unsigned`.
+
+#####`apt::unattended_upgrades`
+- This class was removed. TODO link to the puppet-community module!
+
+####Changes to default behavior
+- By default purge unmanaged files in 'sources.list', 'sources.list.d', 'preferences', and 'preferences.d'.
+- Changed default for `package_manage` in `apt::ppa` to `false`. Set to `true` in a single PPA if you need the package to be managed.
+- `apt::source` will no longer include the `src` entries by default. 
+
+####Features
+- Added the ability to pass hashes of `apt::key`s, `apt::ppa`s, and `apt::setting`s to `apt`.
+- Added 'https' key to `proxy` hash to allow disabling `https_proxy` for the `apt::ppa` environment.
+- Added `apt::setting` define to abstract away configuration.
+
+####Bugfixes
+- Fixes for strict variables.
+
 ##2015-03-17 - Supported Release 1.8.0
 ###Summary
 
