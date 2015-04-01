@@ -211,6 +211,10 @@ class apt(
   # manage sources if present
   if $sources != undef {
     validate_hash($sources)
-    create_resources('apt::source', $sources)
+    $full_hash_sources = hiera_hash('apt::source', $sources)
+    create_resources('apt::source', $full_hash_sources)
+  } else {
+    $full_hash_sources = hiera_hash('apt::source', {})
+    create_resources('apt::source', $full_hash_sources)
   }
 }
