@@ -76,6 +76,6 @@ define apt::pin(
     owner   => root,
     group   => root,
     mode    => '0644',
-    content => template('apt/_header.erb', 'apt/pin.pref.erb'),
+    content => template('apt/_conf_header.erb', 'apt/pin.pref.erb'),
   }
 }

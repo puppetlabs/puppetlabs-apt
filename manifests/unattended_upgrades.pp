@@ -66,7 +66,7 @@ class apt::unattended_upgrades (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('apt/_header.erb', 'apt/50unattended-upgrades.erb'),
+    content => template('apt/_conf_header.erb', 'apt/50unattended-upgrades.erb'),
     require => Package['unattended-upgrades'],
   }
 
@@ -75,7 +75,7 @@ class apt::unattended_upgrades (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('apt/_header.erb', 'apt/10periodic.erb'),
+    content => template('apt/_conf_header.erb', 'apt/10periodic.erb'),
     require => Package['unattended-upgrades'],
   }
 }
