@@ -10,7 +10,7 @@ define apt::conf (
 
   file { "${apt_conf_d}/${priority}${name}":
     ensure  => $ensure,
-    content => template('apt/_header.erb', 'apt/conf.erb'),
+    content => template('apt/_conf_header.erb', 'apt/conf.erb'),
     owner   => root,
     group   => root,
     mode    => '0644',

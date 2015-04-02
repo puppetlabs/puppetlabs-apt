@@ -44,7 +44,7 @@ define apt::source(
     owner   => root,
     group   => root,
     mode    => '0644',
-    content => template('apt/_header.erb', 'apt/source.list.erb'),
+    content => template('apt/_source_header.erb', 'apt/source.list.erb'),
     notify  => Exec['apt_update'],
   }
 
