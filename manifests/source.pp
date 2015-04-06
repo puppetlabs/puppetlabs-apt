@@ -8,7 +8,7 @@ define apt::source(
   $repos          = 'main',
   $include        = {},
   $key            = undef,
-  $pin            = false,
+  $pin            = undef,
   $architecture   = undef,
   $allow_unsigned = false,
 ) {
@@ -44,17 +44,18 @@ define apt::source(
     content => template('apt/_header.erb', 'apt/source.list.erb'),
   }
 
-  if ($pin != false) {
-    # Get the host portion out of the url so we can pin to origin
-    $url_split = split($location, '/')
-    $host      = $url_split[2]
-
-    apt::pin { $name:
-      ensure   => $ensure,
-      priority => $pin,
-      before   => $_before,
-      origin   => $host,
+  if $pin {
+    if is_hash($pin) {
+      $_pin = merge($pin, { 'ensure' => $ensure, 'before' => $_before })
+    } elsif (is_numeric($pin) or is_string($pin)) {
+      $url_split = split($location, '/')
+      $host      = $url_split[2]
+      $_pin = { 'ensure' => $ensure, 'priority'  => $pin,
+                'before' => $_before, 'origin'   => $host,}
+    } else {
+      fail('Received invalid value for pin parameter')
     }
+    create_resources('apt::pin', { "${name}" => $_pin })
   }
 
   # We do not want to remove keys when the source is absent.

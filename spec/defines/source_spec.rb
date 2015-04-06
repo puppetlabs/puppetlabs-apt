@@ -51,6 +51,31 @@ describe 'apt::source' do
         :osfamily        => 'Debian'
       }
     end
+
+    context 'with complex pin' do
+      let :params do
+        {
+          :location => 'hello.there',
+          :pin      => { 'release'     => 'wishwash',
+                         'explanation' => 'wishwash',
+                         'priority'    => 1001, },
+        }
+      end
+
+      it { is_expected.to contain_apt__setting('list-my_source').with({
+        :ensure => 'present',
+      }).with_content(/hello.there wheezy main\n/)
+      }
+
+      it { is_expected.to contain_apt__pin('my_source').that_comes_before('Apt::Setting[list-my_source]').with({
+        :ensure       => 'present',
+        :priority     => 1001,
+        :explanation  => 'wishwash',
+        :release      => 'wishwash',
+      })
+      }
+    end
+
     context 'with simple key' do
       let :params do
         {
@@ -235,5 +260,28 @@ describe 'apt::source' do
         }.to raise_error(Puppet::Error, /lsbdistcodename fact not available: release parameter required/)
       end
     end
+
+    context 'invalid pin' do
+      let :facts do
+        {
+          :lsbdistid       => 'Debian',
+          :lsbdistcodename => 'wheezy',
+          :osfamily        => 'Debian'
+        }
+      end
+      let :params do
+        {
+          :location => 'hello.there',
+          :pin      => true,
+        }
+      end
+
+      it do
+        expect {
+          is_expected.to compile
+        }.to raise_error(Puppet::Error, /invalid value for pin/)
+      end
+    end
+
   end
 end
