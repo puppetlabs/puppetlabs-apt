@@ -119,7 +119,27 @@ class apt::params {
     }
   }
   case $distid {
+    'debian': {
+      case $distcodename {
+        'squeeze': {
+          $backports = {'location' => 'http://backports.debian.org/debian-backports',
+                        'key'       => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
+                        'repos'     => 'main contrib non-free',
+          }
+        }
+        default: {
+          $backports = {'location' => 'http://ftp.debian.org/debian/',
+                        'key'       => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD624692555',
+                        'repos'     => 'main contrib non-free',
+          }
+        }
+      }
+    }
     'ubuntu': {
+      $backports = {'location' => 'http://archive.ubuntu.com/ubuntu',
+                    'key'       => '630239CC130E1A7FD81A27B140976EAF437D05B5',
+                    'repos'     => 'main universe multiverse restricted',
+      }
       case $distcodename {
         'lucid': {
           $ppa_options        = undef
