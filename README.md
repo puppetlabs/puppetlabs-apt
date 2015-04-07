@@ -213,7 +213,7 @@ apt::sources:
 * `location`: The URL of the apt repository. OS-dependent defaults are specifed in `apt::params` for Ubuntu and Debian. Required parameter for other OSes.
 * `release`: The distribution of the apt repository. Defaults to "${lsbdistcodename}-backports" for Ubuntu and Debian. Required parameter for other OSes.
 * `repos`: The component of the apt repository. OS-dependent defaults are speicifed in `apt::params` for Ubuntu and Debian. Required parameter for other OSes.
-* `key`: The key for the backports repository. Can either be a string or a hash. See [apt::setting][] for details on passing key as a hash. OS-dependent defaults are specified in `apt::params` for Ubuntu and Debian. Required parameter for other OSes.
+* `key`: The key for the backports repository. Can either be a string or a hash. See apt::setting for details on passing key as a hash. OS-dependent defaults are specified in `apt::params` for Ubuntu and Debian. Required parameter for other OSes.
 * `pin`: The pin priority for backports repository. Can either be a number, a string, or a hash that will be passed to `create\_resource to make a new pin. Defaults to `200`.
 
 ####apt::conf
@@ -283,7 +283,7 @@ It is recommended to read the manpage 'apt_preferences(5)'
   * 'content': See `content` in `apt::key`
   * 'source': See `source` in `apt::key`
   * 'options': See `options` in `apt::key`
-* `pin`: See [apt::pin][]. Defaults to undef. Can be a string, number, or a hash to be passed to `create\_resources` for `apt::pin`.
+* `pin`: See apt::pin. Defaults to undef. Can be a string, number, or a hash to be passed to `create\_resources` for `apt::pin`.
 * `architecture`: can be used to specify for which architectures information should be downloaded. If this option is not set all architectures defined by the APT::Architectures option will be downloaded. Defaults to `undef` which means all. Example values can be 'i386' or 'i386,alpha,powerpc'.
 * `allow\_unsigned`: can be set to indicate that packages from this source are always authenticated even if the Release file is not signed or the signature can't be checked. Defaults to `false`. Can be `true` or `false`.
 
