@@ -41,6 +41,12 @@ class { 'apt': }
 
 * `apt`: Main class, provides common resources and options. Allows Puppet to manage your system's sources.list file and sources.list.d directory. By default, it will purge any existing content it finds that wasn't declared with Puppet.
   
+  * `apt::backports`: This class adds the necessary components to get backports for Ubuntu and Debian. The release name defaults to "$lsbdistcodename-backports". Setting this manually can cause undefined and potentially serious behavior.
+
+    By default, this class drops a pin-file for backports, pinning it to a priority of 200. This is lower than the normal Debian archive, which gets a priority of 500 to ensure that packages with `ensure => latest` don't get magically upgraded from backports without your explicit permission.
+
+      If you raise the priority through the `pin_priority` parameter to 500---identical to the rest of the Debian mirrors---normal policy goes into effect, and Apt installs or upgrades to the newest version. This means that if a package is available from backports, it and its dependencies are pulled in from backports unless you explicitly set the `ensure` attribute of the `package` resource to `installed`/`present` or a specific version.
+
 * `apt::params`: Sets defaults for the apt module parameters.
 
 * `apt::update`: Runs `apt-get update`, updating the list of available packages and their versions without installing or upgrading any packages. The update runs on the first Puppet run after you include the class, then whenever `notify  => Exec['apt_update']` occurs; i.e., whenever config files get updated or other relevant changes occur. If you set `update['frequency']` to `'always'`, the update runs on every Puppet run.
@@ -178,7 +184,7 @@ apt::sources:
 
 ### Parameters
 
-#### apt
+####apt
 
 * `update`: Hash to configure various update settings. Valid keys are:
   * 'frequency': The run frequency for `apt-get update`. Defaults to 'reluctantly'. Accepts the following values:
@@ -201,6 +207,14 @@ apt::sources:
 * `ppas`: Passes a hash to `create\_resource` to make new `apt::ppa` resources.
 * `settings`: Passes a hash to `create\_resource` to make new `apt::setting` resources.
 * `sources`: Passes a hash to `create\_resource` to make new `apt::source` resources.
+
+####apt::backports
+
+* `location`: The URL of the apt repository. OS-dependent defaults are specifed in `apt::params` for Ubuntu and Debian. Required parameter for other OSes.
+* `release`: The distribution of the apt repository. Defaults to "${lsbdistcodename}-backports" for Ubuntu and Debian. Required parameter for other OSes.
+* `repos`: The component of the apt repository. OS-dependent defaults are speicifed in `apt::params` for Ubuntu and Debian. Required parameter for other OSes.
+* `key`: The key for the backports repository. Can either be a string or a hash. See apt::setting for details on passing key as a hash. OS-dependent defaults are specified in `apt::params` for Ubuntu and Debian. Required parameter for other OSes.
+* `pin`: The pin priority for backports repository. Can either be a number, a string, or a hash that will be passed to `create\_resource to make a new pin. Defaults to `200`.
 
 ####apt::conf
 
@@ -269,7 +283,7 @@ It is recommended to read the manpage 'apt_preferences(5)'
   * 'content': See `content` in `apt::key`
   * 'source': See `source` in `apt::key`
   * 'options': See `options` in `apt::key`
-* `pin`: See apt::pin. Defaults to false.
+* `pin`: See apt::pin. Defaults to undef. Can be a string, number, or a hash to be passed to `create\_resources` for `apt::pin`.
 * `architecture`: can be used to specify for which architectures information should be downloaded. If this option is not set all architectures defined by the APT::Architectures option will be downloaded. Defaults to `undef` which means all. Example values can be 'i386' or 'i386,alpha,powerpc'.
 * `allow\_unsigned`: can be set to indicate that packages from this source are always authenticated even if the Release file is not signed or the signature can't be checked. Defaults to `false`. Can be `true` or `false`.
 
