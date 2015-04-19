@@ -17,7 +17,7 @@ class apt::update {
         #if we should kick apt_update.
         $daily_threshold = (strftime('%s') - 86400)
         if $::apt_update_last_success {
-          if $::apt_update_last_success < $daily_threshold {
+          if $::apt_update_last_success + 0 < $daily_threshold {
             $_kick_apt = true
           } else {
             $_kick_apt = false
