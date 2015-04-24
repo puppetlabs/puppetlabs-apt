@@ -17,7 +17,7 @@ describe 'apt_reboot_required fact' do
       Facter.fact(:osfamily).stubs(:value).returns 'Debian'
       File.stubs(:file?).returns false
     }
-    it { expect(Facter.fact(:apt_reboot_required).value).to eq nil }
+    it { expect(Facter.fact(:apt_reboot_required).value).to eq false }
   end
 
 end
