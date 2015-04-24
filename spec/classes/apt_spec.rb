@@ -127,6 +127,42 @@ describe 'apt' do
 
   end
 
+  context 'with source.list overwrite defined and source.list purge false' do
+    let(:params) { {
+      :overwrite=> {
+        'sources.list' => 'puppet:///files/my_sources.list',
+      },
+      :purge   => { 'sources.list' => false },
+    } }
+
+    it {
+      is_expected.to contain_file('sources.list').only_with({
+        :ensure  => 'file',
+        :path    => '/etc/apt/sources.list',
+        :owner   => 'root',
+        :group   => 'root',
+        :mode    => '0644',
+        :source  => 'puppet:///files/my_sources.list',
+        :notify  => 'Exec[apt_update]',
+      })
+    }
+  end
+
+  context 'with source.list overwrite defined and source.list purge true' do
+    let(:params) { {
+      :overwrite => {
+        'sources.list' => 'puppet:///files/my_sources.list',
+      },
+      :purge   => { 'sources.list' => true },
+    } }
+
+    it {
+      is_expected.to contain_file('sources.list').with({
+        :source => nil,
+      })
+    }
+  end
+
   context 'with sources defined on valid osfamily' do
     let :facts do
       { :osfamily        => 'Debian',
