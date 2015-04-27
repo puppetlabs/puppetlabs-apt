@@ -153,6 +153,7 @@ The apt module includes a few facts to describe the state of the Apt system:
 * `apt\_security\_updates`: The number of updates which are security updates
 * `apt\_package\_updates`: The package names that are available for update. In Facter 2.0 and later, this will be a list type; in earlier versions, it is a comma-delimited string.
 * `apt\_update\_last\_success`: The date, in epochtime, of the most recent successful `apt-get update` run. This is determined by reading the mtime of  /var/lib/apt/periodic/update-success-stamp.
+* `apt\_reboot\_required`: Determines if a reboot is necessary after updates have been installed. 
 
 **Note:** The facts depend on 'update-notifier' being installed on your system. Though this is a GNOME daemon only the support files are needed so the package 'update-notifier-common' is enough to enable this functionality.
 
