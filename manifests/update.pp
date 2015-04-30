@@ -50,8 +50,11 @@ class apt::update {
   } else {
     $_refresh = true
   }
+  #In order to not set Puppet's 'change' flag, do the real work in the unless clause.
+  #If that fails, then the command will re-run and also fail.
   exec { 'apt_update':
     command     => "${::apt::provider} update",
+    unless      => "${::apt::provider} update",
     logoutput   => 'on_failure',
     refreshonly => $_refresh,
     timeout     => $::apt::_update['timeout'],
