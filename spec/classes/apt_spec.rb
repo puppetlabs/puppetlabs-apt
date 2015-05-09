@@ -129,7 +129,7 @@ describe 'apt' do
 
   context 'with source.list overwrite defined and source.list purge false' do
     let(:params) { {
-      :overwrite=> {
+      :overwrite => {
         'sources.list' => 'puppet:///files/my_sources.list',
       },
       :purge   => { 'sources.list' => false },
@@ -153,7 +153,7 @@ describe 'apt' do
       :overwrite => {
         'sources.list' => 'puppet:///files/my_sources.list',
       },
-      :purge   => { 'sources.list' => true },
+      :purge => { 'sources.list' => true },
     } }
 
     it {
