@@ -2,3 +2,9 @@ Acquire::http::proxy "http://<%= @_proxy['host'] %>:<%= @_proxy['port'] %>/";
 <%- if @_proxy['https'] %>
 Acquire::https::proxy "https://<%= @_proxy['host'] %>:<%= @_proxy['port'] %>/";
 <%- end -%>
+<%- if @_proxy['exceptions'] %>
+    <%- @_proxy['exceptions'].each do |host| -%>
+Acquire::http::proxy::<%= host %> DIRECT;
+Acquire::https::proxy::<%= host %> DIRECT;
+    <%- end -%>
+<%- end -%>
