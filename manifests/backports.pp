@@ -29,12 +29,12 @@ class apt::backports (
     }
   }
 
-  if ($::apt::xfacts['lsbdistid'] == 'debian' or $::apt::xfacts['lsbdistid'] == 'ubuntu') {
+  if ($::apt::params::xfacts['lsbdistid'] == 'debian' or $::apt::params::xfacts['lsbdistid'] == 'ubuntu') {
     unless $location {
       $_location = $::apt::backports['location']
     }
     unless $release {
-      $_release = "${::apt::xfacts['lsbdistcodename']}-backports"
+      $_release = "${::apt::params::xfacts['lsbdistcodename']}-backports"
     }
     unless $repos {
       $_repos = $::apt::backports['repos']
