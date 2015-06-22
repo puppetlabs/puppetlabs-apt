@@ -2,15 +2,17 @@
 define apt::ppa(
   $ensure         = 'present',
   $options        = $::apt::ppa_options,
-  $release        = $::apt::xfacts['lsbdistcodename'],
+  $release        = $::apt::params::xfacts['lsbdistcodename'],
   $package_name   = $::apt::ppa_package,
   $package_manage = false,
 ) {
+  include 'apt::params'
+
   unless $release {
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
-  if $::apt::xfacts['lsbdistid'] == 'Debian' {
+  if $::apt::params::xfacts['lsbdistid'] == 'Debian' {
     fail('apt::ppa is not currently supported on Debian.')
   }
 
