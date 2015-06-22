@@ -4,7 +4,7 @@ class apt::backports (
   $repos    = undef,
   $key      = undef,
   $pin      = 200,
-){
+) inherits apt::params {
   if $location {
     validate_string($location)
     $_location = $location

@@ -6,6 +6,8 @@ define apt::ppa(
   $package_name   = $::apt::ppa_package,
   $package_manage = false,
 ) {
+  include 'apt::params'
+
   unless $release {
     fail('lsbdistcodename fact not available: release parameter required')
   }
