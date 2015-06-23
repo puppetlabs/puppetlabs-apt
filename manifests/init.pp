@@ -1,12 +1,13 @@
 #
 class apt(
-  $update   = {},
-  $purge    = {},
-  $proxy    = {},
-  $sources  = {},
-  $keys     = {},
-  $ppas     = {},
-  $settings = {},
+  $update    = {},
+  $purge     = {},
+  $proxy     = {},
+  $overwrite = {},
+  $sources   = {},
+  $keys      = {},
+  $ppas      = {},
+  $settings  = {},
 ) inherits ::apt::params {
 
   $frequency_options = ['always','daily','weekly','reluctantly']
@@ -59,6 +60,11 @@ class apt(
 
   $_proxy = merge($apt::proxy_defaults, $proxy)
 
+  validate_hash($overwrite)
+  if $overwrite['sources.list'] {
+    validate_string($overwrite['sources.list'])
+  }
+
   validate_hash($sources)
   validate_hash($keys)
   validate_hash($settings)
@@ -69,6 +75,11 @@ class apt(
       priority => '01',
       content  => template('apt/_conf_header.erb', 'apt/proxy.erb'),
     }
+  }
+
+  $sources_list_template = $_purge['sources.list'] ? {
+    false => $overwrite['sources.list'],
+    true  => undef,
   }
 
   $sources_list_content = $_purge['sources.list'] ? {
@@ -99,6 +110,7 @@ class apt(
     group   => root,
     mode    => '0644',
     content => $sources_list_content,
+    source  => $sources_list_template,
     notify  => Exec['apt_update'],
   }
 

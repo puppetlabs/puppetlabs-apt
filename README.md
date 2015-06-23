@@ -238,6 +238,10 @@ Main class, includes all other classes.
 
   * 'preferences.list.d': Specifies whether to purge any unmanaged entries from `preferences.list.d`. Valid options: 'true' and 'false'. Default: 'false'.
 
+* `overwrite`: Hash to overwrite various files. Omitted keys are ignored. If the key is also set to `true` in the `purge` parameter the `overwrite` parameter is ignored. Valid options: a hash made up from the following keys:
+  
+  * 'sources.list': Expects a URI pointing to a remote file, or a fully qualified path to a file available on the local system that will overwrite the `/etc/apt/sources.list`.
+
 * `settings`: Creates new `apt::setting` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
 * `sources`: Creates new `apt::setting` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
