@@ -14,7 +14,7 @@
 #
 # == Examples
 #
-#   include apt::backports
+#   include ::apt::backports
 #
 #   class { 'apt::backports':
 #     release => 'natty',
@@ -31,7 +31,7 @@
 class apt::backports(
   $release      = $::lsbdistcodename,
   $location     = $::apt::params::backports_location,
-  $pin_priority = 200,
+  $pin_priority = 200
 ) inherits apt::params {
 
   if ! is_integer($pin_priority) {

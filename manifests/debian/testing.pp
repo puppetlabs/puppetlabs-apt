@@ -1,7 +1,7 @@
 # testing.pp
 
 class apt::debian::testing {
-  include apt
+  include ::apt
 
   # deb http://debian.mirror.iweb.ca/debian/ testing main contrib non-free
   # deb-src http://debian.mirror.iweb.ca/debian/ testing main contrib non-free

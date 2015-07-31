@@ -27,7 +27,7 @@ define apt::hold(
   $version,
   $ensure   = 'present',
   $package  = $title,
-  $priority = 1001,
+  $priority = 1001
 ){
 
   validate_string($title)

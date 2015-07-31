@@ -56,7 +56,7 @@ define apt::key (
   $key_content = undef,
   $key_source  = undef,
   $key_server  = undef,
-  $key_options = undef,
+  $key_options = undef
 ) {
 
   validate_re($key, ['\A(0x)?[0-9a-fA-F]{8}\Z', '\A(0x)?[0-9a-fA-F]{16}\Z', '\A(0x)?[0-9a-fA-F]{40}\Z'])

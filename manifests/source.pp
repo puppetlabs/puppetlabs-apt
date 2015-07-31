@@ -16,7 +16,7 @@ define apt::source(
   $key_source        = undef,
   $pin               = false,
   $architecture      = undef,
-  $trusted_source    = false,
+  $trusted_source    = false
 ) {
 
   include apt::params

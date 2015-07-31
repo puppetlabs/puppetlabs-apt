@@ -37,7 +37,7 @@ class apt::unattended_upgrades (
   $min_age             = '0',
   $max_size            = '0',
   $download_delta      = '0',
-  $verbose             = '0',
+  $verbose             = '0'
 ) inherits ::apt::params {
 
   validate_bool(
@@ -52,7 +52,7 @@ class apt::unattended_upgrades (
   validate_array($origins)
 
   if $randomsleep {
-    unless is_numeric($randomsleep) {
+    if ! is_numeric($randomsleep) {
       fail('randomsleep must be numeric')
     }
   }

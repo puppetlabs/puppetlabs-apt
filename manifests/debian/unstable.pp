@@ -1,7 +1,7 @@
 # unstable.pp
 
 class apt::debian::unstable {
-  include apt
+  include ::apt
 
   # deb http://debian.mirror.iweb.ca/debian/ unstable main contrib non-free
   # deb-src http://debian.mirror.iweb.ca/debian/ unstable main contrib non-free

@@ -4,7 +4,7 @@ define apt::conf (
   $priority = '50'
 ) {
 
-  include apt::params
+  include ::apt::params
 
   $apt_conf_d = $apt::params::apt_conf_d
 

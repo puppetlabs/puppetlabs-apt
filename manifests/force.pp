@@ -6,7 +6,7 @@ define apt::force(
   $version     = false,
   $timeout     = 300,
   $cfg_files   = 'none',
-  $cfg_missing = false,
+  $cfg_missing = false
 ) {
 
   validate_re($cfg_files, ['^new', '^old', '^unchanged', '^none'])
