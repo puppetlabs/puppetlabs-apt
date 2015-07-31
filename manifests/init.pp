@@ -56,6 +56,11 @@ class apt(
   if $proxy['https'] {
     validate_bool($proxy['https'])
   }
+  if $proxy['exceptions'] {
+    unless is_array($proxy['exceptions']) {
+      fail('$proxy exceptions must be an array')
+    }
+  }
 
   $_proxy = merge($apt::proxy_defaults, $proxy)
 

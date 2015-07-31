@@ -229,6 +229,8 @@ Main class, includes all other classes.
 
   * 'https': Specifies whether to enable https proxies. Valid options: 'true' and 'false'. Default: 'false'.
 
+  * 'exceptions': A list of hosts to which apt should make a direct exception (bypassing the proxy). Valid options: an array of strings containing hostnames.  Default: undef.
+
 * `purge`: Specifies whether to purge any existing settings that aren't managed by Puppet. Valid options: a hash made up from the following keys:
 
   * 'sources.list': Specifies whether to purge any unmanaged entries from `sources.list`. Valid options: 'true' and 'false'. Default: 'false'.
