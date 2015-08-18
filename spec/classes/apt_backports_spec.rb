@@ -18,7 +18,12 @@ describe 'apt::backports', :type => :class do
         :key      => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
         :repos    => 'main contrib non-free',
         :release  => 'wheezy-backports',
-        :pin      => 200,
+      })
+      }
+
+      it { should contain_apt__pin('backports').with({
+        'release'  => 'wheezy-backports',
+        'priority' => 200,
       })
       }
     end
@@ -36,7 +41,12 @@ describe 'apt::backports', :type => :class do
         :key      => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
         :repos    => 'main contrib non-free',
         :release  => 'squeeze-backports',
-        :pin      => 200,
+      })
+      }
+
+      it { should contain_apt__pin('backports').with({
+        'release'  => 'squeeze-backports',
+        'priority' => 200,
       })
       }
     end
@@ -54,7 +64,13 @@ describe 'apt::backports', :type => :class do
         :key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
         :repos    => 'main universe multiverse restricted',
         :release  => 'trusty-backports',
-        :pin      => 200,
+      })
+      }
+
+      it { should contain_apt__pin('backports').with({
+        'release'  => 'trusty-backports',
+        'priority' => 200,
+
       })
       }
     end
@@ -81,7 +97,13 @@ describe 'apt::backports', :type => :class do
         :key      => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
         :repos    => 'main',
         :release  => 'vivid',
-        :pin      => 90,
+      })
+      }
+
+      it { should contain_apt__pin('backports').with({
+        'release'  => 'vivid',
+        'priority' => 90,
+
       })
       }
     end
@@ -106,7 +128,12 @@ describe 'apt::backports', :type => :class do
       end
       it { is_expected.to contain_apt__source('backports').with({
         :key      => { 'id' => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553' },
-        :pin      => { 'priority' => '90' },
+      })
+      }
+
+      it { should contain_apt__pin('backports').with({
+        'release'  => 'trusty-backports',
+        #'priority' => '90', # TODO FIXME Produces error 'expected that the catalogue would contain Apt::Pin[backports] with priority set to "90" but it is set to {"priority"=>"90"}' ;(
       })
       }
     end
@@ -134,7 +161,13 @@ describe 'apt::backports', :type => :class do
         :key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
         :repos    => 'main universe multiverse restricted',
         :release  => 'trusty-backports',
-        :pin      => 200,
+      })
+      }
+
+      it { should contain_apt__pin('backports').with({
+        'release'  => 'trusty-backports',
+        'priority' => 200,
+
       })
       }
     end

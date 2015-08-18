@@ -48,12 +48,17 @@ class apt::backports (
     }
   }
 
+  apt::pin { 'backports':
+    before   => Apt::Source['backports'],
+    release  => $_release,
+    priority => $pin,
+  }
+
   apt::source { 'backports':
     location => $_location,
     release  => $_release,
     repos    => $_repos,
     key      => $_key,
-    pin      => $pin,
   }
 
 }
