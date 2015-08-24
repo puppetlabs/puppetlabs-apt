@@ -22,7 +22,7 @@ describe 'apt::setting' do
     context 'with title=pref-teddybear' do
       let(:title) { 'pref-teddybear' }
       let(:params) { default_params }
-      it { is_expected.to contain_file('/etc/apt/preferences.d/50teddybear').that_notifies('Class[Apt::Update]') }
+      it { is_expected.to contain_file('/etc/apt/preferences.d/teddybear.pref').that_notifies('Class[Apt::Update]') }
     end
 
     context 'with title=list-teddybear' do
