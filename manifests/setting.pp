@@ -37,7 +37,7 @@ define apt::setting (
     validate_string($content)
   }
 
-  if $setting_type == 'list' {
+  if ($setting_type == 'list') or ($setting_type == 'pref') {
     $_priority = ''
   } else {
     $_priority = $priority
