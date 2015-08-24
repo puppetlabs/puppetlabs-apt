@@ -61,7 +61,7 @@ class apt::params {
     },
     'pref'   => {
       'path' => $preferences_d,
-      'ext'  => '',
+      'ext'  => '.pref',
     },
     'list'   => {
       'path' => $sources_list_d,
