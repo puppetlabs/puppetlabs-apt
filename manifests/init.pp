@@ -6,6 +6,7 @@ class apt(
   $sources  = {},
   $keys     = {},
   $ppas     = {},
+  $pins     = {},
   $settings = {},
 ) inherits ::apt::params {
 
@@ -66,6 +67,7 @@ class apt(
   validate_hash($keys)
   validate_hash($settings)
   validate_hash($ppas)
+  validate_hash($pins)
 
   if $_proxy['ensure'] == 'absent' or $_proxy['host'] {
     apt::setting { 'conf-proxy':
@@ -152,5 +154,10 @@ class apt(
   # manage settings if present
   if $settings {
     create_resources('apt::setting', $settings)
+  }
+
+  # manage pins if present
+  if $pins {
+    create_resources('apt::pin', $pins)
   }
 }
