@@ -243,7 +243,7 @@ Main class, includes all other classes.
 
 * `settings`: Creates new `apt::setting` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
-* `sources`: Creates new `apt::setting` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
+* `sources`: Creates new `apt::source` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
 * `update`: Configures various update settings. Valid options: a hash made up from the following keys:
 
