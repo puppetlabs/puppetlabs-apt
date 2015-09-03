@@ -237,6 +237,23 @@ describe 'apt' do
     it { is_expected.to contain_apt__setting('pref-banana')}
   end
 
+  context 'with pins defined on valid osfamily' do
+    let :facts do
+      { :osfamily        => 'Debian',
+        :lsbdistcodename => 'precise',
+        :lsbdistid       => 'Debian',
+        :puppetversion   => Puppet.version,
+      }
+    end
+    let(:params) { { :pins => {
+      'stable' => { 'priority' => 600, 'order' => 50 },
+      'testing' =>  { 'priority' => 700, 'order' => 100 },
+    } } }
+
+    it { is_expected.to contain_apt__pin('stable') }
+    it { is_expected.to contain_apt__pin('testing') }
+  end
+
   describe 'failing tests' do
     context "purge['sources.list']=>'banana'" do
       let(:params) { { :purge => { 'sources.list' => 'banana' }, } }
