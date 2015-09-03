@@ -4,7 +4,7 @@
 define apt::pin(
   $ensure          = present,
   $explanation     = undef,
-  $order           = 50,
+  $order           = undef,
   $packages        = '*',
   $priority        = 0,
   $release         = '', # a=
