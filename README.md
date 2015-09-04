@@ -148,6 +148,22 @@ apt::source { 'puppetlabs':
 },
 ~~~
 
+### Add an Apt source served over HTTPS
+
+~~~puppet
+include apt::transport_https
+
+apt::source { 'nodesource':
+  location => "https://deb.nodesource.com/node_0.10",
+  release  => $::lsbdistcodename,
+  repos    => 'main',
+  key      => {
+    'id'     => '9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280',
+    'source' => 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key',
+  }
+}
+~~~
+
 ### Configure Apt from Hiera
 
 ~~~yaml
@@ -180,6 +196,7 @@ apt::sources:
 
 * [`apt`](#class-apt)
 * [`apt::backports`](#class-aptbackports)
+* [`apt::transport_https`](#class-apttransport_https)
 
 #### Private Classes
 
@@ -278,6 +295,14 @@ Manages backports.
 
   * Debian: 'main contrib non-free'
   * Ubuntu: 'main universe multiverse restricted'
+
+#### Class: `apt::transport_https`
+
+Enables APT sources served over HTTPS.
+
+##### Parameters (all optional)
+
+* `ensure`: The installed state of the necessary packages. Valid options: 'present', 'absent', 'purged', 'held', and 'latest'. Default: 'present'.
 
 #### Define: `apt::conf`
 
