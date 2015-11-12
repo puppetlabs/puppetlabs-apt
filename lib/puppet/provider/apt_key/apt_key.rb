@@ -118,7 +118,13 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
     parsedValue = URI::parse(value)
     if parsedValue.scheme.nil?
       fail("The file #{value} does not exist") unless File.exists?(value)
-      value
+      # Because the tempfile method has to return a live object to prevent GC
+      # of the underlying file from occuring too early, we also have to return
+      # a file object here.  The caller can still call the #path method on the
+      # closed file handle to get the path.
+      f = File.open(value, 'r')
+      f.close
+      f
     else
       begin
         key = parsedValue.read
@@ -132,6 +138,9 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
     end
   end
 
+  # The tempfile method needs to return the tempfile object to the caller, so
+  # that it doesn't get deleted by the GC immediately after it returns.  We
+  # want the caller to control when it goes out of scope.
   def tempfile(content)
     file = Tempfile.new('apt_key')
     file.write content
@@ -155,7 +164,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
         warning('/usr/bin/gpg cannot be found for verification of the id.')
       end
     end
-    file.path
+    file
   end
 
   def exists?
@@ -173,9 +182,11 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       end
       command.push('--recv-keys', resource[:id])
     elsif resource[:content]
-      command.push('add', tempfile(resource[:content]))
+      key_file = tempfile(resource[:content])
+      command.push('add', key_file.path)
     elsif resource[:source]
-      command.push('add', source_to_file(resource[:source]))
+      key_file = source_to_file(resource[:source])
+      command.push('add', key_file.path)
     # In case we really screwed up, better safe than sorry.
     else
       fail("an unexpected condition occurred while trying to add the key: #{resource[:id]}")
