@@ -81,6 +81,22 @@ describe 'apt::source' do
       }
     end
 
+    context 'with complex location' do
+      let :params do
+        {
+          :comment  => 'foo',
+          :location => 'http://10.0.0.1:8000/debian/',
+          :release  => 'sid',
+          :repos    => 'testing',
+          :pin      => '1050',
+        }
+      end
+      it { is_expected.to contain_apt__pin('my_source').with({
+        :origin   => '10.0.0.1',
+      })
+      }
+    end
+
     context 'with simple key' do
       let :params do
         {
