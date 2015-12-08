@@ -123,12 +123,12 @@ define apt::source(
       $_pin = merge($pin, { 'ensure' => $ensure, 'before' => $_before })
     } elsif (is_numeric($pin) or is_string($pin)) {
       $url_split = split($location, '/')
-      $host      = $url_split[2]
+      $host      = split($url_split[2], ':')
       $_pin = {
         'ensure'   => $ensure,
         'priority' => $pin,
         'before'   => $_before,
-        'origin'   => $host,
+        'origin'   => $host[0],
       }
     } else {
       fail('Received invalid value for pin parameter')
