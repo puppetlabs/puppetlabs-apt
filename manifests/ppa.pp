@@ -21,7 +21,7 @@ define apt::ppa(
 
   if $ensure == 'present' {
     if $package_manage {
-      package { $package_name: }
+      ensure_resource('package', $package_name, {})
 
       $_require = [File['sources.list.d'], Package[$package_name]]
     } else {
