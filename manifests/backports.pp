@@ -4,7 +4,7 @@ class apt::backports (
   $repos    = undef,
   $key      = undef,
   $pin      = 200,
-){
+) inherits apt {
   if $location {
     validate_string($location)
     $_location = $location
@@ -23,7 +23,7 @@ class apt::backports (
     }
     $_key = $key
   }
-  if ($::apt::xfacts['lsbdistid'] == 'debian' or $::apt::xfacts['lsbdistid'] == 'ubuntu') {
+  if ($::apt::xfacts['lsbdistid'] == 'Debian' or $::apt::xfacts['lsbdistid'] == 'Ubuntu') {
     unless $location {
       $_location = $::apt::backports['location']
     }
