@@ -1,3 +1,22 @@
+##Supported Release 2.2.2
+###Summary
+
+Several bug fixes and the addition of support updates to Debian 8 and Ubunto Wily.
+
+####Bugfixes
+- Small fixes to descriptions within the readme and the addition of some examples.
+- Updates to run on Ubunto Wily.
+- Fixed apt_key tempfile race condition.
+- Run stages limitation added to the documentation.
+- Remove unneeded whitespace in source.list template.
+- Handle PPA names that contain a plus character.
+- Update to current msync configs.
+- Avoid duplicate package resources when package_manage => true.
+- Avoid multiple package resource declarations.
+- Ensure PPAs in tests have valid form.
+- Look for correct sources.list.d file for apt::ppa.
+- Debian 8 support addiiton to metadata.
+
 ##Supported Release 2.2.1
 ###Summary
 
