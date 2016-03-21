@@ -1,0 +1,31 @@
+---
+
+apt::sources_hiera_merge: false
+apt::keys_hiera_merge: false
+apt::ppas_hiera_merge: false
+apt::pins_hiera_merge: false
+apt::settings_hiera_merge: false
+
+apt::sources:
+  "archive.ubuntu.com-%{lsbdistcodename}-backports":
+    location: 'http://archive.ubuntu.com/ubuntu'
+    key: '630239CC130E1A7FD81A27B140976EAF437D05B5'
+    repos: 'main restricted universe'
+    release: "%{lsbdistcodename}-backports"
+
+apt::keys:
+  '4BD6EC30':
+    server: 'pgp.mit.edu'
+
+apt::settings:
+  'pref-banana':
+    content: 'banana'
+
+apt::pins:
+  'testing':
+    priority: 700
+    order: 100
+
+apt::ppas:
+  'ppa:nginx/stable':
+    ensure: present

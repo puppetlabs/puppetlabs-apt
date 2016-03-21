@@ -262,7 +262,11 @@ Main class, includes all other classes.
 
 * `keys`: Creates new `apt::key` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
+* 'keys_hiera_merge': Configure apt to merge apt::keys from all hiera levels. Default: false.
+
 * `ppas`: Creates new `apt::ppa` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
+
+* 'ppas_hiera_merge': Configure apt to merge apt::ppas from all hiera levels. Default: false.
 
 * `proxy`: Configures Apt to connect to a proxy server. Valid options: a hash made up from the following keys:
 
@@ -286,9 +290,15 @@ Main class, includes all other classes.
 
 * `settings`: Creates new `apt::setting` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
+* 'settings_hiera_merge': Configure apt to merge apt::settings from all hiera levels. Default: false.
+
 * `sources`: Creates new `apt::source` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
 
+* 'sources_hiera_merge': Configure apt to merge apt::sources from all hiera levels. Default: false.
+
 * `pins`: Creates new `apt::pin` resources. Valid options: a hash to be passed to the [`create_resources` function](https://docs.puppetlabs.com/references/latest/function.html#createresources). Default: {}.
+
+* 'pins_hiera_merge': Configure apt to merge apt::pins from all hiera levels. Default: false.
 
 * `update`: Configures various update settings. Valid options: a hash made up from the following keys:
 

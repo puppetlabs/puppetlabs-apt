@@ -1,0 +1,34 @@
+---
+
+apt::sources:
+  "archive.ubuntu.com-%{lsbdistcodename}":
+    location: 'http://archive.ubuntu.com/ubuntu'
+    key: '630239CC130E1A7FD81A27B140976EAF437D05B5'
+    repos: 'main universe multiverse restricted'
+  "archive.ubuntu.com-%{lsbdistcodename}-security":
+    location: 'http://archive.ubuntu.com/ubuntu'
+    key: '630239CC130E1A7FD81A27B140976EAF437D05B5'
+    repos: 'main universe multiverse restricted'
+    release: "%{lsbdistcodename}-security"
+  "archive.ubuntu.com-%{lsbdistcodename}-updates":
+    location: 'http://archive.ubuntu.com/ubuntu'
+    key: '630239CC130E1A7FD81A27B140976EAF437D05B5'
+    repos: 'main universe multiverse restricted'
+    release: "%{lsbdistcodename}-updates"
+
+apt::keys:
+  '55BE302B':
+    server: 'subkeys.pgp.net'
+
+apt::settings:
+  'conf-banana':
+    content: 'banana'
+
+apt::pins:
+  'stable':
+    priority: 600
+    order: 50
+
+apt::ppas:
+  'ppa:drizzle-developers/ppa':
+    ensure: present

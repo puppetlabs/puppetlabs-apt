@@ -304,4 +304,100 @@ describe 'apt' do
       end
     end
   end
+
+  hiera_parameters_matrix = {
+    'sources' => {
+      :nomerge_entries  => [ 'archive.ubuntu.com-trusty-backports', ],
+      :merge_entries    => [ 'archive.ubuntu.com-trusty',
+                             'archive.ubuntu.com-trusty-security',
+                             'archive.ubuntu.com-trusty-updates',
+                             'archive.ubuntu.com-trusty-backports',
+      ],
+    },
+    'keys' => {
+      :nomerge_entries  => [ '4BD6EC30', ],
+      :merge_entries    => [ '4BD6EC30',
+                             '55BE302B'
+      ],
+    },
+    'ppas' => {
+      :nomerge_entries   => [ 'ppa:nginx/stable', ],
+      :merge_entries     => [ 'ppa:nginx/stable',
+                              'ppa:drizzle-developers/ppa',
+      ],
+    },
+    'pins' => {
+      :nomerge_entries   => [ 'testing', ],
+      :merge_entries     => [ 'testing',
+                              'stable',
+      ],
+    },
+    'settings' => {
+      :nomerge_entries   => [ 'pref-banana', ],
+      :merge_entries     => [ 'pref-banana',
+                              'conf-banana'
+      ],
+    },
+  }
+
+  describe 'configured from hiera' do
+    context 'with defaults for all parameters' do
+      it { should contain_class('apt') }
+    end
+
+    [true,false].each do |value|
+      context "with data specified in hiera and hiera_merge parameters set to #{value}" do
+        if value == true
+          _fqdn = 'hieramerge.example.com'
+          _var  = :merge_entries
+        else
+          _fqdn = 'nohieramerge.example.com'
+          _var  = :nomerge_entries
+        end
+        let :facts do
+          {
+            :osfamily         => 'Debian',
+            :lsbdistcodename  => 'trusty',
+            :lsbdistid        => 'ubuntu',
+            :lsbdistrelease   => '14.04',
+            :fqdn             => "#{_fqdn}",
+            :specific         => 'hiera',
+          }
+        end
+
+        it { should contain_class('apt') }
+
+        hiera_parameters_matrix['sources'][_var].each do |hiera_entry|
+          it {
+            should contain_apt__source(hiera_entry)
+          }
+        end
+
+        hiera_parameters_matrix['keys'][_var].each do |hiera_entry|
+          it {
+            should contain_apt__key(hiera_entry)
+          }
+        end
+
+        hiera_parameters_matrix['ppas'][_var].each do |hiera_entry|
+          it {
+            should contain_apt__ppa(hiera_entry)
+          }
+        end
+
+        hiera_parameters_matrix['pins'][_var].each do |hiera_entry|
+          it {
+            should contain_apt__pin(hiera_entry)
+          }
+        end
+
+        hiera_parameters_matrix['settings'][_var].each do |hiera_entry|
+          it {
+            should contain_apt__setting(hiera_entry)
+          }
+        end
+
+      end
+    end
+  end
 end
