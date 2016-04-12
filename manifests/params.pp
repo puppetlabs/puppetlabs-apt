@@ -131,16 +131,12 @@ class apt::params {
         'repos'    => 'main universe multiverse restricted',
       }
 
-      case $xfacts['lsbdistcodename'] {
-        'lucid': {
+      case versioncmp($xfacts['lsbdistrelease'], '14.00') {
+        -1: {
           $ppa_options        = undef
           $ppa_package        = 'python-software-properties'
         }
-        'precise': {
-          $ppa_options        = '-y'
-          $ppa_package        = 'python-software-properties'
-        }
-        'trusty', 'utopic', 'vivid', 'wily': {
+        1: {
           $ppa_options        = '-y'
           $ppa_package        = 'software-properties-common'
         }
