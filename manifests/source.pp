@@ -18,7 +18,7 @@ define apt::source(
   $key_content       = undef,
   $key_source        = undef,
   $trusted_source    = undef,
-  $notify_update     = undef,
+  $notify_update     = true,
 ) {
   validate_string($architecture, $comment, $location, $repos)
   validate_bool($allow_unsigned)
