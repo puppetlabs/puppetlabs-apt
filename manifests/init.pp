@@ -63,10 +63,10 @@ class apt (
   if $proxy['host'] and size($proxy['host']) > 3 {
     # '.' is an RFC-valid domain name, but not usable in this context
     if is_ipv4_address($proxy['host']) or is_domain_name($proxy['host']) {
-      $proxy['safehost'] = $proxy['host']
+      $safehost = $proxy['host']
     } elsif is_ipv6_address($proxy['host']) {
       # IPv6 needs to be enclosed in [] to be used properly in the template
-      $proxy['safehost'] = enclose_ipv6($proxy['host'])
+      $safehost = enclose_ipv6($proxy['host'])
     } else {
       # Invalid proxy host format
       fail("The proxy['host'] specified ( ${proxy['host']} ) is not a valid IP or hostname.")

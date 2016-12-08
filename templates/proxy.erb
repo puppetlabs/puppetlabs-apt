@@ -1,4 +1,4 @@
-Acquire::http::proxy "http://<%= @_proxy['safehost'] %>:<%= @_proxy['port'] %>/";
+Acquire::http::proxy "http://<%= @safehost %>:<%= @_proxy['port'] %>/";
 <%- if @_proxy['https'] %>
-Acquire::https::proxy "https://<%= @_proxy['safehost'] %>:<%= @_proxy['port'] %>/";
+Acquire::https::proxy "https://<%= @safehost %>:<%= @_proxy['port'] %>/";
 <%- end -%>
