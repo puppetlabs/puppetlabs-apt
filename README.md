@@ -192,21 +192,21 @@ apt::source { "archive.ubuntu.com-${lsbdistcodename}":
   key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
   repos    => 'main universe multiverse restricted',
 }
- 
+
 apt::source { "archive.ubuntu.com-${lsbdistcodename}-security":
   location => 'http://archive.ubuntu.com/ubuntu',
   key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
   repos    => 'main universe multiverse restricted',
   release  => "${lsbdistcodename}-security"
 }
- 
+
 apt::source { "archive.ubuntu.com-${lsbdistcodename}-updates":
   location => 'http://archive.ubuntu.com/ubuntu',
   key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
   repos    => 'main universe multiverse restricted',
   release  => "${lsbdistcodename}-updates"
 }
- 
+
 apt::source { "archive.ubuntu.com-${lsbdistcodename}-backports":
  location => 'http://archive.ubuntu.com/ubuntu',
  key      => '630239CC130E1A7FD81A27B140976EAF437D05B5',
@@ -268,7 +268,7 @@ Main class, includes all other classes.
 
 * `proxy`: Configures Apt to connect to a proxy server. Valid options: a hash made up from the following keys:
 
-  * 'host': Specifies a proxy host to be stored in `/etc/apt/apt.conf.d/01proxy`. Valid options: a string containing a hostname. Default: undef.
+  * 'host': Specifies a proxy host to be stored in `/etc/apt/apt.conf.d/01proxy`. Valid options: a string containing a hostname, IPv4 or IPv6 address. Default: undef.
 
   * 'port': Specifies a proxy port to be stored in `/etc/apt/apt.conf.d/01proxy`. Valid options: a string containing a port number. Default: '8080'.
 

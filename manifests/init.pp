@@ -53,26 +53,28 @@ class apt (
   if $proxy['ensure'] {
     validate_re($proxy['ensure'], ['file', 'present', 'absent'])
   }
-  if $proxy['host'] {
-    validate_string($proxy['host'])
-  }
   if $proxy['port'] {
-    unless is_integer($proxy['port']) {
-      fail('$proxy port must be an integer')
-    }
+    validate_integer($proxy['port'], 65535, 0)
   }
   if $proxy['https'] {
     validate_bool($proxy['https'])
   }
+  # Validate that $proxy['host'] is a valid, usable domain name or IP address
+  if $proxy['host'] and size($proxy['host']) > 3 {
+    # '.' is an RFC-valid domain name, but not usable in this context
+    if is_ipv4_address($proxy['host']) or is_domain_name($proxy['host']) {
+      $safehost = $proxy['host']
+    } elsif is_ipv6_address($proxy['host']) {
+      # IPv6 needs to be enclosed in [] to be used properly in the template
+      $safehost = enclose_ipv6($proxy['host'])
+    } else {
+      # Invalid proxy host format
+      fail("The proxy['host'] specified ( ${proxy['host']} ) is not a valid IP or hostname.")
+    }
+    fail("The proxy['host'] specified ( ${proxy['host']} ) is too small to be a valid IP or hostname.")
+  }
 
   $_proxy = merge($apt::proxy_defaults, $proxy)
-
-  validate_hash($confs)
-  validate_hash($sources)
-  validate_hash($keys)
-  validate_hash($settings)
-  validate_hash($ppas)
-  validate_hash($pins)
 
   if $_proxy['ensure'] == 'absent' or $_proxy['host'] {
     apt::setting { 'conf-proxy':
@@ -81,6 +83,13 @@ class apt (
       content  => template('apt/_conf_header.erb', 'apt/proxy.erb'),
     }
   }
+
+  validate_hash($confs)
+  validate_hash($sources)
+  validate_hash($keys)
+  validate_hash($settings)
+  validate_hash($ppas)
+  validate_hash($pins)
 
   $sources_list_content = $_purge['sources.list'] ? {
     true    => "# Repos managed by puppet.\n",

@@ -92,6 +92,16 @@ describe 'apt' do
       )}
     end
 
+    context 'host=2001:db8::21' do
+      let(:params) { { :proxy => { 'host' => '2001:db8::21'} } }
+      it { is_expected.to contain_apt__setting('conf-proxy').with({
+        :priority => '01',
+      }).with_content(
+        /Acquire::http::proxy "http:\/\/\[2001:db8::21\]:8080\/";/
+      ).without_content(
+        /Acquire::https::proxy/
+      )}
+    end
     context 'ensure=absent' do
       let(:params) { { :proxy => { 'ensure' => 'absent'} } }
       it { is_expected.to contain_apt__setting('conf-proxy').with({
