@@ -248,7 +248,7 @@ describe 'apt::key', :type => :define do
         :key_content => [],
       } end
       it 'fails' do
-        expect { subject.call }.to raise_error(/is not a string/)
+        expect { subject.call }.to raise_error(/expects a String value/)
       end
     end
 
@@ -266,7 +266,7 @@ describe 'apt::key', :type => :define do
         :key_options => {},
       } end
       it 'fails' do
-        expect { subject.call }.to raise_error(/is not a string/)
+        expect { subject.call }.to raise_error(/expects a String value/)
       end
     end
 
@@ -277,7 +277,7 @@ describe 'apt::key', :type => :define do
         }
       end
       it 'fails' do
-        expect { subject.call }.to raise_error(/does not match/)
+        expect { subject.call }.to raise_error(/a match for Enum\['absent', 'present'\], got 'foo'/)
       end
     end
 

@@ -1,21 +1,22 @@
 # ppa.pp
 define apt::ppa(
-  $ensure         = 'present',
-  $options        = $::apt::ppa_options,
-  $release        = $::apt::xfacts['lsbdistcodename'],
-  $package_name   = $::apt::ppa_package,
-  $package_manage = false,
+  Variant[String, Stdlib::Compat::String] $ensure                 = 'present',
+  Optional[Variant[String, Stdlib::Compat::String]] $options      = $::apt::ppa_options,
+  Optional[Variant[String, Stdlib::Compat::String]] $release      = $facts['lsbdistcodename'],
+  Optional[Variant[String, Stdlib::Compat::String]] $package_name = $::apt::ppa_package,
+  Boolean $package_manage                                         = false,
 ) {
+
   unless $release {
     fail('lsbdistcodename fact not available: release parameter required')
   }
 
-  if $::apt::xfacts['lsbdistid'] == 'Debian' {
+  if $facts['lsbdistid'] == 'Debian' {
     fail('apt::ppa is not currently supported on Debian.')
   }
 
-  if versioncmp($::apt::xfacts['lsbdistrelease'], '15.10') >= 0 {
-    $distid = downcase($::apt::xfacts['lsbdistid'])
+  if versioncmp($facts['lsbdistrelease'], '15.10') >= 0 {
+    $distid = downcase($facts['lsbdistid'])
     $filename = regsubst($name, '^ppa:([^/]+)/(.+)$', "\\1-${distid}-\\2-${release}")
   } else {
     $filename = regsubst($name, '^ppa:([^/]+)/(.+)$', "\\1-\\2-${release}")
@@ -28,7 +29,6 @@ define apt::ppa(
   if $ensure == 'present' {
     if $package_manage {
       ensure_packages($package_name)
-
       $_require = [File['sources.list.d'], Package[$package_name]]
     } else {
       $_require = File['sources.list.d']
