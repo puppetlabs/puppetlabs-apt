@@ -2,23 +2,20 @@
 # pin a release in apt, useful for unstable repositories
 
 define apt::pin(
-  $ensure          = present,
-  $explanation     = undef,
-  $order           = 50,
-  $packages        = '*',
-  $priority        = 0,
-  $release         = '', # a=
-  $origin          = '',
-  $version         = '',
-  $codename        = '', # n=
-  $release_version = '', # v=
-  $component       = '', # c=
-  $originator      = '', # o=
-  $label           = ''  # l=
+  Optional[Enum['file', 'present', 'absent']] $ensure                             = present,
+  Optional[Variant[String, Stdlib::Compat::String]] $explanation                  = undef,
+  Variant[Integer,  Stdlib::Compat::Integer] $order                               = 50,
+  Variant[String, Stdlib::Compat::String, Stdlib::Compat::Array, Array] $packages = '*',
+  Variant[Numeric, String, Stdlib::Compat::String] $priority                      = 0,
+  Optional[Variant[String, Stdlib::Compat::String]] $release                      = '', # a=
+  Optional[Variant[String, Stdlib::Compat::String]] $origin                       = '',
+  Optional[Variant[String, Stdlib::Compat::String]] $version                      = '',
+  Optional[Variant[String, Stdlib::Compat::String]] $codename                     = '', # n=
+  Optional[Variant[String, Stdlib::Compat::String]] $release_version              = '', # v=
+  Optional[Variant[String, Stdlib::Compat::String]] $component                    = '', # c=
+  Optional[Variant[String, Stdlib::Compat::String]] $originator                   = '', # o=
+  Optional[Variant[String, Stdlib::Compat::String]] $label                        = '',  # l=
 ) {
-  if $order and !is_integer($order) {
-    fail('Only integers are allowed in the apt::pin order param')
-  }
 
   if $explanation {
     $_explanation = $explanation
@@ -36,7 +33,8 @@ define apt::pin(
     $release_version,
     $component,
     $originator,
-    $label]
+    $label    ,
+  ]
   $pin_release = join($pin_release_array, '')
 
   # Read the manpage 'apt_preferences(5)', especially the chapter
@@ -71,10 +69,28 @@ define apt::pin(
   # be silently ignored.
   $file_name = regsubst($title, '[^0-9a-z\-_\.]', '_', 'IG')
 
+  $headertmp = epp('apt/_header.epp')
+
+  $pinpreftmp = epp('apt/pin.pref.epp', {
+      'name'            => $name,
+      'pin_release'     => $pin_release,
+      'release'         => $release,
+      'codename'        => $codename,
+      'release_version' => $release_version,
+      'component'       => $component,
+      'originator'      => $originator,
+      'label'           => $label,
+      'version'         => $version,
+      'origin'          => $origin,
+      'explanation'     => $_explanation,
+      'packages_string' => $packages_string,
+      'priority'        => $priority,
+  })
+
   apt::setting { "pref-${file_name}":
     ensure        => $ensure,
     priority      => $order,
-    content       => template('apt/_header.erb', 'apt/pin.pref.erb'),
+    content       => "${headertmp}${pinpreftmp}",
     notify_update => false,
   }
 }
