@@ -1,0 +1,4 @@
+---
+#Trusty
+apt::ppa_options: '-y'
+apt::ppa_package: 'software-properties-common'

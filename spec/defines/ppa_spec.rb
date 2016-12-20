@@ -7,6 +7,7 @@ describe 'apt::ppa' do
   describe 'defaults' do
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '11', :full => '11.04' }},
         :lsbdistrelease  => '11.04',
         :lsbdistcodename => 'natty',
         :operatingsystem => 'Ubuntu',
@@ -31,6 +32,7 @@ describe 'apt::ppa' do
   describe 'Ubuntu 15.10 sources.list filename' do
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '15', :full => '15.10' }},
         :lsbdistrelease  => '15.10',
         :lsbdistcodename => 'wily',
         :operatingsystem => 'Ubuntu',
@@ -69,6 +71,7 @@ describe 'apt::ppa' do
     end
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '11', :full => '11.04' }},
         :lsbdistrelease  => '11.04',
         :lsbdistcodename => 'natty',
         :operatingsystem => 'Ubuntu',
@@ -104,6 +107,7 @@ describe 'apt::ppa' do
     end
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '11', :full => '11.04' }},
         :lsbdistrelease  => '11.04',
         :lsbdistcodename => 'natty',
         :operatingsystem => 'Ubuntu',
@@ -141,6 +145,7 @@ describe 'apt::ppa' do
     end
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '11', :full => '11.04' }},
         :lsbdistrelease  => '11.04',
         :lsbdistcodename => 'natty',
         :operatingsystem => 'Ubuntu',
@@ -180,6 +185,7 @@ describe 'apt::ppa' do
     end
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '14', :full => '14.04' }},
         :lsbdistrelease  => '14.04',
         :lsbdistcodename => 'trusty',
         :operatingsystem => 'Ubuntu',
@@ -216,6 +222,7 @@ describe 'apt::ppa' do
     end
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '14', :full => '14.04' }},
         :lsbdistrelease  => '14.04',
         :lsbdistcodename => 'trusty',
         :operatingsystem => 'Ubuntu',
@@ -250,6 +257,7 @@ describe 'apt::ppa' do
     end
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '14', :full => '14.04' }},
         :lsbdistrelease  => '14.04',
         :lsbdistcodename => 'trusty',
         :operatingsystem => 'Ubuntu',
@@ -284,6 +292,7 @@ describe 'apt::ppa' do
     end
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '14', :full => '14.04' }},
         :lsbdistrelease  => '14.04',
         :lsbdistcodename => 'trusty',
         :operatingsystem => 'Ubuntu',
