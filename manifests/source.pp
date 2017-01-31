@@ -4,7 +4,7 @@ define apt::source(
   $location          = undef,
   $comment           = $name,
   $ensure            = present,
-  $release           = undef,
+  $release           = 'UNDEF',
   $repos             = 'main',
   $include           = {},
   $key               = undef,
@@ -68,7 +68,7 @@ define apt::source(
     $_allow_unsigned = $allow_unsigned
   }
 
-  if ! $release {
+  if $release == 'UNDEF' {
     $_release = $::apt::params::xfacts['lsbdistcodename']
     unless $_release {
       fail('lsbdistcodename fact not available: release parameter required')

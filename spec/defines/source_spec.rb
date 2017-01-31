@@ -364,6 +364,19 @@ describe 'apt::source' do
       end
     end
 
+    context 'release is empty string' do
+      let :facts do
+        {
+          :lsbdistid       => 'Debian',
+          :osfamily        => 'Debian',
+          :puppetversion   => Puppet.version,
+        }
+      end
+      let(:params) { { :location => 'hello.there', :release => '' } }
+
+      it { is_expected.to contain_apt__setting('list-my_source').with_content(/hello\.there  main/) }
+    end
+
     context 'invalid pin' do
       let :facts do
         {
