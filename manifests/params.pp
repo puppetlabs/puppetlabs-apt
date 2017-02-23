@@ -4,6 +4,7 @@ class apt::params {
   $sources_list_d = "${root}/sources.list.d"
   $apt_conf_d     = "${root}/apt.conf.d"
   $preferences_d  = "${root}/preferences.d"
+  $trusted_d      = "${root}/trusted.d"
 
   case $::lsbdistid {
     'debian': {
