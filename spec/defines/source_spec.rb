@@ -15,9 +15,9 @@ describe 'apt::source' do
     context 'without location' do
       let :facts do
         {
-          :lsbdistid       => 'Debian',
-          :lsbdistcodename => 'wheezy',
+          :os => { :family => 'Debian' },
           :osfamily        => 'Debian',
+          :lsbdistcodename => 'wheezy',
           :puppetversion   => Puppet.version,
         }
       end
@@ -48,9 +48,12 @@ describe 'apt::source' do
   describe 'no defaults' do
     let :facts do
       {
+        :os => { :family => 'Debian', :name => 'Debian', :release => { :major => '7', :full => '7.0' }},
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
         :osfamily        => 'Debian',
+        :operatingsystem => 'Debian',
+        :lsbdistrelease  => '7.0',
         :puppetversion   => Puppet.version,
       }
     end

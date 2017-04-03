@@ -2,7 +2,17 @@ require 'spec_helper'
 
 describe 'apt::setting' do
   let(:pre_condition) { 'class { "apt": }' }
-  let(:facts) { { :lsbdistid => 'Debian', :osfamily => 'Debian', :lsbdistcodename => 'wheezy', :puppetversion   => Puppet.version, } }
+  let :facts do
+    {
+      :os => { :distro => { :codename => 'wheezy' }, :family => 'Debian', :name => 'Debian', :release => { :major => '7', :full => '7.0' }},
+      :lsbdistrelease  => '7.0',
+      :lsbdistcodename => 'wheezy',
+      :operatingsystem => 'Debian',
+      :osfamily        => 'Debian',
+      :lsbdistid       => 'Debian',
+      :puppetversion   => Puppet.version,
+    }
+  end
   let(:title) { 'conf-teddybear' }
 
   let(:default_params) { { :content => 'di' } }
@@ -82,21 +92,21 @@ describe 'apt::setting' do
       let(:title) { 'ext-teddybear' }
       let(:params) { default_params }
       it do
-        expect { subject.call }.to raise_error(Puppet::Error, /must start with /)
+        expect { subject.call }.to raise_error(Puppet::Error, /must start with either/)
       end
     end
 
     context 'with ensure=banana' do
       let(:params) { default_params.merge({ :ensure => 'banana' }) }
       it do
-        expect { subject.call }.to raise_error(Puppet::Error, /"banana" does not /)
+        expect { subject.call }.to raise_error(Puppet::Error, /Enum\['absent', 'file', 'present'\], got 'banana'/)
       end
     end
 
     context 'with priority=1.2' do
       let(:params) { default_params.merge({ :priority => 1.2 }) }
       if Puppet::Util::Package.versioncmp(Puppet.version, '4.0') >= 0 || ENV["FUTURE_PARSER"] == 'yes'
-        it { is_expected.to compile.and_raise_error(/input needs to be a String/) }
+        it { is_expected.to compile.and_raise_error(/parameter 'priority' expects a value of type Integer, String, Pattern, or Array, got Float/) }
       else
         it { is_expected.to compile.and_raise_error(/priority must be an integer or a zero-padded integer/) }
       end

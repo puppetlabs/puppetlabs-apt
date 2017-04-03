@@ -8,18 +8,16 @@ describe 'apt::pin', :type => :define do
 
   context 'defaults' do
     it { is_expected.to contain_apt__setting("pref-my_pin").with_content(/Explanation: : my_pin\nPackage: \*\nPin: release a=my_pin\nPin-Priority: 0\n/)}
-    it { is_expected.to contain_apt__setting("pref-my_pin") }
   end
 
   context 'set version' do
     let :params do
       {
         'packages' => 'vim',
-        'version'  => '1',
+        'version'  => "1",
       }
     end
     it { is_expected.to contain_apt__setting("pref-my_pin").with_content(/Explanation: : my_pin\nPackage: vim\nPin: version 1\nPin-Priority: 0\n/)}
-    it { is_expected.to contain_apt__setting("pref-my_pin") }
   end
 
   context 'set origin' do
@@ -30,7 +28,6 @@ describe 'apt::pin', :type => :define do
       }
     end
     it { is_expected.to contain_apt__setting("pref-my_pin").with_content(/Explanation: : my_pin\nPackage: vim\nPin: origin test\nPin-Priority: 0\n/)}
-    it { is_expected.to contain_apt__setting("pref-my_pin") }
   end
 
   context 'not defaults' do
@@ -81,7 +78,7 @@ describe 'apt::pin', :type => :define do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /Only integers are allowed/)
+        }.to raise_error(Puppet::Error, /expects a value of type Integer/)
       end
     end
 

@@ -1,0 +1,11 @@
+---
+apt::provider: '/usr/bin/apt-get'
+apt::keyserver: 'keyserver.ubuntu.com'
+apt::update_defaults: { frequency: 'reluctantly', timeout: ~, tries: ~ }
+apt::proxy_defaults: { ensure: ~, host: ~, port: 8080, https: false }
+apt::purge_defaults: { sources.list: false, sources.list.d: false, preferences: false, preferences.d: false }
+apt::proxy_defaults: { ensure: ~, host: ~, port: 8080, https: false }
+apt::include_defaults: { deb: true, src: false }
+apt::ppa_options: ~
+apt::ppa_package: ~
+apt::backports: ~

@@ -1,64 +1,45 @@
 # source.pp
 # add an apt source
 define apt::source(
-  $location          = undef,
-  $comment           = $name,
-  $ensure            = present,
-  $release           = undef,
-  $repos             = 'main',
-  $include           = {},
-  $key               = undef,
-  $pin               = undef,
-  $architecture      = undef,
-  $allow_unsigned    = false,
-  $include_src       = undef,
-  $include_deb       = undef,
-  $required_packages = undef,
-  $key_server        = undef,
-  $key_content       = undef,
-  $key_source        = undef,
-  $trusted_source    = undef,
-  $notify_update     = true,
+  Optional[Variant[String, Stdlib::Compat::String]] $location                         = undef,
+  Variant[String, Stdlib::Compat::String] $comment                                    = $name,
+  Variant[String, Stdlib::Compat::String] $ensure                                     = present,
+  Optional[Variant[String, Stdlib::Compat::String]] $release                          = undef,
+  Variant[String, Stdlib::Compat::String] $repos                                      = 'main',
+  Optional[Variant[Hash, Stdlib::Compat::Hash]] $include                              = {},
+  Optional[Variant[String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $key  = undef,
+  $pin                                                                                = undef,
+  Optional[Variant[String, Stdlib::Compat::String]] $architecture                     = undef,
+  Boolean $allow_unsigned                                                             = false,
+  Boolean $notify_update                                                              = true,
+  Optional[Variant[String, Stdlib::Compat::String]] $key_server                       = undef,
+  Optional[Variant[String, Stdlib::Compat::String]] $key_content                      = undef,
+  Optional[Variant[String, Stdlib::Compat::String]] $key_source                       = undef,
+  Optional[Boolean] $include_src                                                      = undef,
+  Optional[Boolean] $include_deb                                                      = undef,
+  $required_packages                                                                  = undef,
+  $trusted_source                                                                     = undef,
 ) {
-  validate_string($architecture, $comment, $location, $repos)
-  validate_bool($allow_unsigned)
-  validate_hash($include)
+
+  validate_legacy(String, 'validate_string', $architecture, $comment, $location, $repos)
+  validate_legacy(Boolean, 'validate_bool', $allow_unsigned)
+  validate_legacy(Hash, 'validate_hash', $include)
 
   # This is needed for compat with 1.8.x
   include ::apt
 
   $_before = Apt::Setting["list-${title}"]
 
-  if $include_src != undef {
-    deprecation('apt $include_src', "\$include_src is deprecated and will be removed in the next major release, please use \$include => { 'src' => ${include_src} } instead")
-  }
-
-  if $include_deb != undef {
-    deprecation('apt $include_deb', "\$include_deb is deprecated and will be removed in the next major release, please use \$include => { 'deb' => ${include_deb} } instead")
-  }
-
   if $required_packages != undef {
     deprecation('apt $required_packages', '$required_packages is deprecated and will be removed in the next major release, please use package resources instead.')
     exec { "Required packages: '${required_packages}' for ${name}":
-      command     => "${::apt::params::provider} -y install ${required_packages}",
+      command     => "${::apt::provider} -y install ${required_packages}",
       logoutput   => 'on_failure',
       refreshonly => true,
       tries       => 3,
       try_sleep   => 1,
       before      => $_before,
     }
-  }
-
-  if $key_server != undef {
-    deprecation('apt $key_server', "\$key_server is deprecated and will be removed in the next major release, please use \$key => { 'server' => ${key_server} } instead.")
-  }
-
-  if $key_content != undef {
-    deprecation('apt $key_content', "\$key_content is deprecated and will be removed in the next major release, please use \$key => { 'content' => ${key_content} } instead.")
-  }
-
-  if $key_source != undef {
-    deprecation('apt $key_source', "\$key_source is deprecated and will be removed in the next major release, please use \$key => { 'source' => ${key_source} } instead.")
   }
 
   if $trusted_source != undef {
@@ -69,8 +50,9 @@ define apt::source(
   }
 
   if ! $release {
-    $_release = $::apt::params::xfacts['lsbdistcodename']
-    unless $_release {
+    if $facts['lsbdistcodename'] {
+      $_release = $facts['lsbdistcodename']
+    } else {
       fail('lsbdistcodename fact not available: release parameter required')
     }
   } else {
@@ -94,7 +76,7 @@ define apt::source(
     $_deprecated_include = {}
   }
 
-  $_include = merge($::apt::params::include_defaults, $_deprecated_include, $include)
+  $includes = merge($::apt::include_defaults, $_deprecated_include, $include)
 
   $_deprecated_key = {
     'key_server'  => $key_server,
@@ -107,16 +89,28 @@ define apt::source(
       unless $key['id'] {
         fail('key hash must contain at least an id entry')
       }
-      $_key = merge($::apt::params::source_key_defaults, $_deprecated_key, $key)
+      $_key = merge($::apt::source_key_defaults, $_deprecated_key, $key)
     } else {
-      validate_string($key)
+      validate_legacy(String, 'validate_string', $key)
       $_key = merge( { 'id' => $key }, $_deprecated_key)
     }
   }
 
+  $header = epp('apt/_header.epp')
+
+  $sourcelist = epp('apt/source.list.epp', {
+    'comment'        => $comment,
+    'includes'       => $includes,
+    'architecture'   => $architecture,
+    'allow_unsigned' => $_allow_unsigned,
+    'location'       => $location,
+    'release'        => $_release,
+    'repos'          => $repos,
+  })
+
   apt::setting { "list-${name}":
     ensure        => $ensure,
-    content       => template('apt/_header.erb', 'apt/source.list.erb'),
+    content       => "${header}${sourcelist}",
     notify_update => $notify_update,
   }
 
