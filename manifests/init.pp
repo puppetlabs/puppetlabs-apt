@@ -3,32 +3,32 @@
 # Manage APT (Advanced Packaging Tool)
 #
 class apt (
-  Variant[Hash, Stdlib::Compat::Hash] $update_defaults,
-  Variant[Hash, Stdlib::Compat::Hash] $purge_defaults,
-  Variant[Hash, Stdlib::Compat::Hash] $proxy_defaults,
-  Variant[Hash, Stdlib::Compat::Hash] $include_defaults,
-  Variant[String, Stdlib::Compat::String] $provider,
-  Variant[String, Stdlib::Compat::String] $keyserver,
-  Variant[String, Stdlib::Compat::String] $ppa_options,
-  Variant[String, Stdlib::Compat::String] $ppa_package,
-  Optional[Variant[Hash, Stdlib::Compat::Hash]] $backports,
-  Variant[Hash, Stdlib::Compat::Hash] $confs                = {},
-  Variant[Hash, Stdlib::Compat::Hash] $update               = {},
-  Variant[Hash, Stdlib::Compat::Hash] $purge                = {},
-  Variant[Hash, Stdlib::Compat::Hash] $proxy                = {},
-  Variant[Hash, Stdlib::Compat::Hash] $sources              = {},
-  Variant[Hash, Stdlib::Compat::Hash] $keys                 = {},
-  Variant[Hash, Stdlib::Compat::Hash] $ppas                 = {},
-  Variant[Hash, Stdlib::Compat::Hash] $pins                 = {},
-  Variant[Hash, Stdlib::Compat::Hash] $settings             = {},
-  Variant[String, Stdlib::Compat::String] $root             = '/etc/apt',
-  Variant[String, Stdlib::Compat::String] $sources_list     = "${root}/sources.list",
-  Variant[String, Stdlib::Compat::String] $sources_list_d   = "${root}/sources.list.d",
-  Variant[String, Stdlib::Compat::String] $conf_d           = "${root}/apt.conf.d",
-  Variant[String, Stdlib::Compat::String] $preferences      = "${root}/preferences",
-  Variant[String, Stdlib::Compat::String] $preferences_d    = "${root}/preferences.d",
-  Variant[Hash, Stdlib::Compat::Hash] $config_files         = { conf => { path => $conf_d, ext => '' }, pref => { path => $preferences_d, ext => '.pref' }, list => { path => $sources_list_d, ext => '.list' } },
-  Variant[Hash, Stdlib::Compat::Hash] $source_key_defaults  = { 'server' => $keyserver, 'options' => undef, 'content' => undef, 'source' => undef },
+  Hash $update_defaults,
+  Hash $purge_defaults,
+  Hash $proxy_defaults,
+  Hash $include_defaults,
+  String $provider,
+  String $keyserver,
+  Optional[String] $ppa_options,
+  Optional[String] $ppa_package,
+  Optional[Hash] $backports,
+  Hash $confs                = {},
+  Hash $update               = {},
+  Hash $purge                = {},
+  Hash $proxy                = {},
+  Hash $sources              = {},
+  Hash $keys                 = {},
+  Hash $ppas                 = {},
+  Hash $pins                 = {},
+  Hash $settings             = {},
+  String $root               = '/etc/apt',
+  String $sources_list       = "${root}/sources.list",
+  String $sources_list_d     = "${root}/sources.list.d",
+  String $conf_d             = "${root}/apt.conf.d",
+  String $preferences        = "${root}/preferences",
+  String $preferences_d      = "${root}/preferences.d",
+  Hash $config_files         = { conf => { path => $conf_d, ext => '' }, pref => { path => $preferences_d, ext => '.pref' }, list => { path => $sources_list_d, ext => '.list' } },
+  Hash $source_key_defaults  = { 'server' => $keyserver, 'options' => undef, 'content' => undef, 'source' => undef },
 ) {
 
   if $facts['osfamily'] != 'Debian' {
@@ -36,65 +36,50 @@ class apt (
   }
 
   $frequency_options = ['always','daily','weekly','reluctantly']
-  validate_legacy(Hash, 'validate_hash', $update)
+
   if $update['frequency'] {
     validate_re($update['frequency'], $frequency_options)
   }
   if $update['timeout'] {
-    unless is_integer($update['timeout']) {
-      fail('timeout value for update must be an integer')
-    }
+    assert_type(Integer, $update['timeout'])
   }
   if $update['tries'] {
-    unless is_integer($update['tries']) {
-      fail('tries value for update must be an integer')
-    }
+    assert_type(Integer, $update['tries'])
   }
 
   $_update = merge($::apt::update_defaults, $update)
 
   include ::apt::update
 
-  validate_hash($purge)
   if $purge['sources.list'] {
-    validate_legacy(Boolean, 'validate_bool', $purge['sources.list'])
+    assert_type(Boolean, $purge['sources.list'])
   }
   if $purge['sources.list.d'] {
-    validate_legacy(Boolean, 'validate_bool', $purge['sources.list.d'])
+    assert_type(Boolean, $purge['sources.list.d'])
   }
   if $purge['preferences'] {
-    validate_legacy(Boolean, 'validate_bool', $purge['preferences'])
+    assert_type(Boolean, $purge['preferences'])
   }
   if $purge['preferences.d'] {
-    validate_legacy(Boolean, 'validate_bool', $purge['preferences.d'])
+    assert_type(Boolean, $purge['preferences.d'])
   }
 
   $_purge = merge($::apt::purge_defaults, $purge)
 
-  validate_hash($proxy)
   if $proxy['ensure'] {
     validate_re($proxy['ensure'], ['file', 'present', 'absent'])
   }
   if $proxy['host'] {
-    validate_legacy(String, 'validate_string', $proxy['host'])
+    assert_type(String, $proxy['host'])
   }
   if $proxy['port'] {
-    unless is_integer($proxy['port']) {
-      fail('$proxy port must be an integer')
-    }
+    assert_type(Integer, $proxy['port'])
   }
-  if $proxy['https'] {
-    validate_legacy(Boolean, 'validate_bool', $proxy['https'])
+  if $proxy['https']{
+    assert_type(Boolean, $proxy['https'])
   }
 
   $_proxy = merge($apt::proxy_defaults, $proxy)
-
-  validate_legacy(Hash, 'validate_hash', $confs)
-  validate_legacy(Hash, 'validate_hash', $sources)
-  validate_legacy(Hash, 'validate_hash', $keys)
-  validate_legacy(Hash, 'validate_hash', $settings)
-  validate_legacy(Hash, 'validate_hash', $ppas)
-  validate_legacy(Hash, 'validate_hash', $pins)
 
   $confheadertmp = epp('apt/_conf_header.epp')
   $proxytmp = epp('apt/proxy.epp', {'proxies' => $_proxy})

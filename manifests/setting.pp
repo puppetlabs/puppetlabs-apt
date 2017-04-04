@@ -1,9 +1,9 @@
 define apt::setting (
-  Variant[String, Stdlib::Compat::String, Integer, Stdlib::Compat::Integer] $priority = 50,
-  Optional[Enum['file', 'present', 'absent']] $ensure                                 = file,
-  Optional[Variant[String, Stdlib::Compat::String]] $source                           = undef,
-  Optional[Variant[String, Stdlib::Compat::String]] $content                          = undef,
-  Boolean $notify_update                                                              = true,
+  Variant[String, Integer] $priority                  = 50,
+  Optional[Enum['file', 'present', 'absent']] $ensure = file,
+  Optional[String] $source                            = undef,
+  Optional[String] $content                           = undef,
+  Boolean $notify_update                              = true,
 
 ) {
 
@@ -15,8 +15,6 @@ define apt::setting (
     fail('apt::setting needs either of content or source')
   }
 
-  validate_legacy(Boolean, 'validate_bool', $notify_update)
-
   $title_array = split($title, '-')
   $setting_type = $title_array[0]
   $base_name = join(delete_at($title_array, 0), '-')
@@ -26,14 +24,6 @@ define apt::setting (
   unless is_integer($priority) {
     # need this to allow zero-padded priority.
     validate_re($priority, '^\d+$', 'apt::setting priority must be an integer or a zero-padded integer')
-  }
-
-  if $source {
-    validate_legacy(String, 'validate_string', $source)
-  }
-
-  if $content {
-    validate_legacy(String, 'validate_string', $content)
   }
 
   if ($setting_type == 'list') or ($setting_type == 'pref') {

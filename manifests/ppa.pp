@@ -1,10 +1,10 @@
 # ppa.pp
 define apt::ppa(
-  Variant[String, Stdlib::Compat::String] $ensure                 = 'present',
-  Optional[Variant[String, Stdlib::Compat::String]] $options      = $::apt::ppa_options,
-  Optional[Variant[String, Stdlib::Compat::String]] $release      = $facts['lsbdistcodename'],
-  Optional[Variant[String, Stdlib::Compat::String]] $package_name = $::apt::ppa_package,
-  Boolean $package_manage                                         = false,
+  String $ensure                 = 'present',
+  Optional[String] $options      = $::apt::ppa_options,
+  Optional[String] $release      = $facts['lsbdistcodename'],
+  Optional[String] $package_name = $::apt::ppa_package,
+  Boolean $package_manage        = false,
 ) {
 
   unless $release {

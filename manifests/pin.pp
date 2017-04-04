@@ -2,19 +2,19 @@
 # pin a release in apt, useful for unstable repositories
 
 define apt::pin(
-  Optional[Enum['file', 'present', 'absent']] $ensure                             = present,
-  Optional[Variant[String, Stdlib::Compat::String]] $explanation                  = undef,
-  Variant[Integer,  Stdlib::Compat::Integer] $order                               = 50,
-  Variant[String, Stdlib::Compat::String, Stdlib::Compat::Array, Array] $packages = '*',
-  Variant[Numeric, String, Stdlib::Compat::String] $priority                      = 0,
-  Optional[Variant[String, Stdlib::Compat::String]] $release                      = '', # a=
-  Optional[Variant[String, Stdlib::Compat::String]] $origin                       = '',
-  Optional[Variant[String, Stdlib::Compat::String]] $version                      = '',
-  Optional[Variant[String, Stdlib::Compat::String]] $codename                     = '', # n=
-  Optional[Variant[String, Stdlib::Compat::String]] $release_version              = '', # v=
-  Optional[Variant[String, Stdlib::Compat::String]] $component                    = '', # c=
-  Optional[Variant[String, Stdlib::Compat::String]] $originator                   = '', # o=
-  Optional[Variant[String, Stdlib::Compat::String]] $label                        = '',  # l=
+  Optional[Enum['file', 'present', 'absent']] $ensure = present,
+  Optional[String] $explanation                       = undef,
+  Variant[Integer] $order                             = 50,
+  Variant[String, Array] $packages                    = '*',
+  Variant[Numeric, String] $priority                  = 0,
+  Optional[String] $release                           = '', # a=
+  Optional[String] $origin                            = '',
+  Optional[String] $version                           = '',
+  Optional[String] $codename                          = '', # n=
+  Optional[String] $release_version                   = '', # v=
+  Optional[String] $component                         = '', # c=
+  Optional[String] $originator                        = '', # o=
+  Optional[String] $label                             = '',  # l=
 ) {
 
   if $explanation {

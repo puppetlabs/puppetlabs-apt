@@ -257,7 +257,7 @@ describe 'apt::backports', :type => :class do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /expects a value of type String, Hash,/)
+        }.to raise_error(Puppet::Error, /expects a value of type String or Hash, got Boolean/)
       end
     end
     context 'invalid pin' do
@@ -269,7 +269,7 @@ describe 'apt::backports', :type => :class do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /parameter 'pin' expects a value of type Integer, Pattern/)
+        }.to raise_error(Puppet::Error, /expects a value of type Integer, String, or Hash, got Boolean/)
       end
     end
   end
