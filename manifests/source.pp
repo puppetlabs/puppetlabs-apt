@@ -1,29 +1,25 @@
 # source.pp
 # add an apt source
 define apt::source(
-  Optional[Variant[String, Stdlib::Compat::String]] $location                         = undef,
-  Variant[String, Stdlib::Compat::String] $comment                                    = $name,
-  Variant[String, Stdlib::Compat::String] $ensure                                     = present,
-  Optional[Variant[String, Stdlib::Compat::String]] $release                          = undef,
-  Variant[String, Stdlib::Compat::String] $repos                                      = 'main',
-  Optional[Variant[Hash, Stdlib::Compat::Hash]] $include                              = {},
-  Optional[Variant[String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $key  = undef,
-  $pin                                                                                = undef,
-  Optional[Variant[String, Stdlib::Compat::String]] $architecture                     = undef,
-  Boolean $allow_unsigned                                                             = false,
-  Boolean $notify_update                                                              = true,
-  Optional[Variant[String, Stdlib::Compat::String]] $key_server                       = undef,
-  Optional[Variant[String, Stdlib::Compat::String]] $key_content                      = undef,
-  Optional[Variant[String, Stdlib::Compat::String]] $key_source                       = undef,
-  Optional[Boolean] $include_src                                                      = undef,
-  Optional[Boolean] $include_deb                                                      = undef,
-  $required_packages                                                                  = undef,
-  $trusted_source                                                                     = undef,
+  Optional[String] $location           = undef,
+  String $comment                      = $name,
+  String $ensure                       = present,
+  Optional[String] $release            = undef,
+  String $repos                        = 'main',
+  Optional[Variant[Hash]] $include     = {},
+  Optional[Variant[String, Hash]] $key = undef,
+  $pin                                 = undef,
+  Optional[String] $architecture       = undef,
+  Boolean $allow_unsigned              = false,
+  Boolean $notify_update               = true,
+  Optional[String] $key_server         = undef,
+  Optional[String] $key_content        = undef,
+  Optional[String] $key_source         = undef,
+  Optional[Boolean] $include_src       = undef,
+  Optional[Boolean] $include_deb       = undef,
+  $required_packages                   = undef,
+  $trusted_source                      = undef,
 ) {
-
-  validate_legacy(String, 'validate_string', $architecture, $comment, $location, $repos)
-  validate_legacy(Boolean, 'validate_bool', $allow_unsigned)
-  validate_legacy(Hash, 'validate_hash', $include)
 
   # This is needed for compat with 1.8.x
   include ::apt

@@ -1,26 +1,20 @@
 class apt::backports (
-  Optional[Variant[String, Stdlib::Compat::String]] $location = undef,
-  Optional[Variant[String, Stdlib::Compat::String]] $release = undef,
-  Optional[Variant[String, Stdlib::Compat::String]] $repos = undef,
-  Optional[Variant[String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $key = undef,
-  Optional[Variant[Integer, Stdlib::Compat::Integer, String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $pin  = 200,
+  Optional[String] $location                    = undef,
+  Optional[String] $release                     = undef,
+  Optional[String] $repos                       = undef,
+  Optional[Variant[String, Hash]] $key          = undef,
+  Optional[Variant[Integer, String, Hash]] $pin = 200,
 ){
   if $location {
-    validate_legacy(String, 'validate_string', $location)
     $_location = $location
   }
   if $release {
-    validate_legacy(String, 'validate_string', $release)
     $_release = $release
   }
   if $repos {
-    validate_legacy(String, 'validate_string', $repos)
     $_repos = $repos
   }
   if $key {
-    unless is_hash($key) {
-      validate_legacy(String, 'validate_string', $key)
-    }
     $_key = $key
   }
   if ($facts['lsbdistid'] == 'Debian' or $facts['lsbdistid'] == 'Ubuntu') {

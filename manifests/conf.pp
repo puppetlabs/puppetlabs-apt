@@ -1,8 +1,8 @@
 define apt::conf (
-  Optional[Variant[String, Stdlib::Compat::String]] $content                          = undef,
-  Enum['present', 'absent'] $ensure                                                   = present,
-  Variant[String, Stdlib::Compat::String, Integer, Stdlib::Compat::Integer] $priority = 50,
-  Optional[Boolean] $notify_update                                                    = undef,
+  Optional[String] $content          = undef,
+  Enum['present', 'absent'] $ensure  = present,
+  Variant[String, Integer] $priority = 50,
+  Optional[Boolean] $notify_update   = undef,
 ) {
 
   unless $ensure == 'absent' {

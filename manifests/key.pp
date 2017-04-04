@@ -1,16 +1,16 @@
 # == Define: apt::key
 define apt::key (
-    Variant[String, Stdlib::Compat::String] $id                                         = $title,
-    Enum['present', 'absent'] $ensure                                                   = present,
-    Optional[Variant[String, Stdlib::Compat::String]] $content                          = undef,
-    Optional[Variant[String, Stdlib::Compat::String]] $source                           = undef,
-    Variant[String, Stdlib::Compat::String] $server                                     = $::apt::keyserver,
-    Optional[Variant[String, Stdlib::Compat::String]] $options                          = undef,
-    Optional[Variant[String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $key  = undef,
-    Optional[Variant[String, Stdlib::Compat::String]] $key_content                      = undef,
-    Optional[Variant[String, Stdlib::Compat::String]] $key_source                       = undef,
-    Optional[Variant[String, Stdlib::Compat::String]] $key_server                       = undef,
-    Optional[Variant[String, Stdlib::Compat::String]] $key_options                      = undef,
+    String $id                           = $title,
+    Enum['present', 'absent'] $ensure    = present,
+    Optional[String] $content            = undef,
+    Optional[String] $source             = undef,
+    String $server                       = $::apt::keyserver,
+    Optional[String] $options            = undef,
+    Optional[Variant[String, Hash]] $key = undef,
+    Optional[String] $key_content        = undef,
+    Optional[String] $key_source         = undef,
+    Optional[String] $key_server         = undef,
+    Optional[String] $key_options        = undef,
     ) {
 
   if $key != undef {
@@ -49,11 +49,6 @@ define apt::key (
   }
 
   validate_re($_id, ['\A(0x)?[0-9a-fA-F]{8}\Z', '\A(0x)?[0-9a-fA-F]{16}\Z', '\A(0x)?[0-9a-fA-F]{40}\Z'])
-  validate_re($ensure, ['\A(absent|present)\Z',])
-
-  if $_content {
-    validate_legacy(String, 'validate_string', $_content)
-  }
 
   if $_source {
     validate_re($_source, ['\Ahttps?:\/\/', '\Aftp:\/\/', '\A\/\w+'])
@@ -61,10 +56,6 @@ define apt::key (
 
   if $_server {
     validate_re($_server,['\A((hkp|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$'])
-  }
-
-  if $_options {
-    validate_legacy(String, 'validate_string', $_options)
   }
 
   case $ensure {
