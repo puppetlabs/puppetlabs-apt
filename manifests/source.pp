@@ -12,38 +12,12 @@ define apt::source(
   Optional[String] $architecture       = undef,
   Boolean $allow_unsigned              = false,
   Boolean $notify_update               = true,
-  Optional[String] $key_server         = undef,
-  Optional[String] $key_content        = undef,
-  Optional[String] $key_source         = undef,
-  Optional[Boolean] $include_src       = undef,
-  Optional[Boolean] $include_deb       = undef,
-  $required_packages                   = undef,
-  $trusted_source                      = undef,
 ) {
 
   # This is needed for compat with 1.8.x
   include ::apt
 
   $_before = Apt::Setting["list-${title}"]
-
-  if $required_packages != undef {
-    deprecation('apt $required_packages', '$required_packages is deprecated and will be removed in the next major release, please use package resources instead.')
-    exec { "Required packages: '${required_packages}' for ${name}":
-      command     => "${::apt::provider} -y install ${required_packages}",
-      logoutput   => 'on_failure',
-      refreshonly => true,
-      tries       => 3,
-      try_sleep   => 1,
-      before      => $_before,
-    }
-  }
-
-  if $trusted_source != undef {
-    deprecation('apt $trusted_source', '$trusted_source is deprecated and will be removed in the next major release, please use $allow_unsigned instead.')
-    $_allow_unsigned = $trusted_source
-  } else {
-    $_allow_unsigned = $allow_unsigned
-  }
 
   if ! $release {
     if $facts['lsbdistcodename'] {
@@ -59,36 +33,17 @@ define apt::source(
     fail('cannot create a source entry without specifying a location')
   }
 
-  if $include_src != undef and $include_deb != undef {
-    $_deprecated_include = {
-      'src' => $include_src,
-      'deb' => $include_deb,
-    }
-  } elsif $include_src != undef {
-    $_deprecated_include = { 'src' => $include_src }
-  } elsif $include_deb != undef {
-    $_deprecated_include = { 'deb' => $include_deb }
-  } else {
-    $_deprecated_include = {}
-  }
-
-  $includes = merge($::apt::include_defaults, $_deprecated_include, $include)
-
-  $_deprecated_key = {
-    'key_server'  => $key_server,
-    'key_content' => $key_content,
-    'key_source'  => $key_source,
-  }
+  $includes = merge($::apt::include_defaults, $include)
 
   if $key {
     if is_hash($key) {
       unless $key['id'] {
         fail('key hash must contain at least an id entry')
       }
-      $_key = merge($::apt::source_key_defaults, $_deprecated_key, $key)
+      $_key = merge($::apt::source_key_defaults, $key)
     } else {
       validate_legacy(String, 'validate_string', $key)
-      $_key = merge( { 'id' => $key }, $_deprecated_key)
+      $_key = { 'id' => $key }
     }
   }
 
@@ -98,7 +53,7 @@ define apt::source(
     'comment'        => $comment,
     'includes'       => $includes,
     'architecture'   => $architecture,
-    'allow_unsigned' => $_allow_unsigned,
+    'allow_unsigned' => $allow_unsigned,
     'location'       => $location,
     'release'        => $_release,
     'repos'          => $repos,
@@ -132,16 +87,13 @@ define apt::source(
   if $key and ($ensure == 'present') {
     if is_hash($_key) {
       apt::key { "Add key: ${$_key['id']} from Apt::Source ${title}":
-        ensure      => present,
-        id          => $_key['id'],
-        server      => $_key['server'],
-        content     => $_key['content'],
-        source      => $_key['source'],
-        options     => $_key['options'],
-        key_server  => $_key['key_server'],
-        key_content => $_key['key_content'],
-        key_source  => $_key['key_source'],
-        before      => $_before,
+        ensure  => present,
+        id      => $_key['id'],
+        server  => $_key['server'],
+        content => $_key['content'],
+        source  => $_key['source'],
+        options => $_key['options'],
+        before  => $_before,
       }
     }
   }

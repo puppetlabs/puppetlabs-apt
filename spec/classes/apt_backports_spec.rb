@@ -221,7 +221,7 @@ describe 'apt::backports', :type => :class do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /expects a String value/)
+        }.to raise_error(Puppet::Error, /a value of type Undef or String, got Boolean/)
       end
     end
     context 'invalid release' do
@@ -233,7 +233,7 @@ describe 'apt::backports', :type => :class do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /expects a String value/)
+        }.to raise_error(Puppet::Error, /a value of type Undef or String, got Boolean/)
       end
     end
     context 'invalid repos' do
@@ -245,7 +245,7 @@ describe 'apt::backports', :type => :class do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /expects a String value/)
+        }.to raise_error(Puppet::Error, /a value of type Undef or String, got Boolean/)
       end
     end
     context 'invalid key' do
@@ -257,7 +257,7 @@ describe 'apt::backports', :type => :class do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /expects a value of type String or Hash, got Boolean/)
+        }.to raise_error(Puppet::Error, /expects a value of type Undef, String, or Hash, got Boolean/)
       end
     end
     context 'invalid pin' do
@@ -269,7 +269,7 @@ describe 'apt::backports', :type => :class do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /expects a value of type Integer, String, or Hash, got Boolean/)
+        }.to raise_error(Puppet::Error, /Undef, Integer, String, or Hash, got Boolean/)
       end
     end
   end

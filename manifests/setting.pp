@@ -1,5 +1,5 @@
 define apt::setting (
-  Variant[String, Integer] $priority                  = 50,
+  Variant[String, Integer, Array] $priority           = 50,
   Optional[Enum['file', 'present', 'absent']] $ensure = file,
   Optional[String] $source                            = undef,
   Optional[String] $content                           = undef,

@@ -78,7 +78,7 @@ describe 'apt::pin', :type => :define do
       it do
         expect {
           subject.call
-        }.to raise_error(Puppet::Error, /expects a value of type Integer/)
+        }.to raise_error(Puppet::Error, /expects an Integer value, got String/)
       end
     end
 
