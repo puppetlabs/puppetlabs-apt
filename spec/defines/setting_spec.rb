@@ -106,7 +106,7 @@ describe 'apt::setting' do
     context 'with priority=1.2' do
       let(:params) { default_params.merge({ :priority => 1.2 }) }
       if Puppet::Util::Package.versioncmp(Puppet.version, '4.0') >= 0 || ENV["FUTURE_PARSER"] == 'yes'
-        it { is_expected.to compile.and_raise_error(/parameter 'priority' expects a value of type Integer, String, Pattern, or Array, got Float/) }
+        it { is_expected.to compile.and_raise_error(/expects a value of type String, Integer, or Array, got Float/) }
       else
         it { is_expected.to compile.and_raise_error(/priority must be an integer or a zero-padded integer/) }
       end
