@@ -1,4 +1,4 @@
-class apt::update {
+class apt::update{
   #TODO: to catch if $::apt_update_last_success has the value of -1 here. If we
   #opt to do this, a info/warn would likely be all you'd need likely to happen
   #on the first run, but if it's not run in awhile something is likely borked

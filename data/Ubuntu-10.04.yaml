@@ -1,0 +1,4 @@
+---
+#Lucid
+apt::ppa_options: ~
+apt::ppa_package: 'python-software-properties'

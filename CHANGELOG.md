@@ -1,3 +1,20 @@
+## Supported Release 3.0.0 and 4.0.0
+###Summary
+
+This release adds new Puppet 4 features: data in modules, EPP templates, the $facts hash, and data types. This release is fully backwards compatible to existing Puppet 4 configurations and provides you with deprecation warnings for every argument that will not work as expected with the final 4.0.0 release. See the stdlib docs here for an in-depth discussion of this: https://github.com/puppetlabs/puppetlabs-stdlib#validate_legacy
+
+If you want to learn more about the new features used or you wish to upgrade a module yourself, have a look at the NTP: A Puppet 4 language update blog post.
+
+If you're still running Puppet 3, remain on the latest puppetlabs-apt 2.x release for now, and see the documentation to upgrade to Puppet 4.
+
+Changes
+
+Data in modules: Moves all distribution and OS-dependent defaults into YAML files in data/, alleviating the need for a params class. Note that while this feature is currently still classed as experimental, the final implementation will support the changes here.
+EPP templating: Uses the Puppet language as a base for templates to create simpler and safer templates. No need for Ruby anymore!
+The $facts hash: Makes facts visibly distinct from other variables for more readable and maintainable code. This helps eliminate confusion if you use a local variable whose name happens to match that of a common fact.
+Data types for validation: Helps you find and replace deprecated code in existing validate functions with stricter, more readable data type notation. First upgrade to the 3.0.0 release of this module, and address all deprecation warnings before upgrading to the final 4.0.0 release. Please see the stdlib docs for an in-depth discussion of this process.
+
+
 ## Supported Release 2.3.0
 ### Summary
 A release containing many bugfixes with additional features.

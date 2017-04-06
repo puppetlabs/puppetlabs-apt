@@ -1,12 +1,12 @@
 define apt::setting (
-  $priority      = 50,
-  $ensure        = file,
-  $source        = undef,
-  $content       = undef,
-  $notify_update = true,
+  Variant[String, Stdlib::Compat::String, Integer, Stdlib::Compat::Integer, Array, Stdlib::Compat::Array] $priority = 50,
+  Optional[Enum['file', 'present', 'absent']] $ensure                                                               = file,
+  Optional[Variant[String, Stdlib::Compat::String]] $source                                                         = undef,
+  Optional[Variant[String, Stdlib::Compat::String]] $content                                                        = undef,
+  Optional[Boolean] $notify_update                                                                                  = true,
+
 ) {
 
-  include 'apt::params'
   if $content and $source {
     fail('apt::setting cannot have both content and source')
   }
@@ -15,8 +15,9 @@ define apt::setting (
     fail('apt::setting needs either of content or source')
   }
 
-  validate_re($ensure,  ['file', 'present', 'absent'])
-  validate_bool($notify_update)
+  if $notify_update {
+    validate_legacy(Boolean, 'validate_bool', $notify_update)
+  }
 
   $title_array = split($title, '-')
   $setting_type = $title_array[0]
@@ -30,11 +31,11 @@ define apt::setting (
   }
 
   if $source {
-    validate_string($source)
+    validate_legacy(String, 'validate_string', $source)
   }
 
   if $content {
-    validate_string($content)
+    validate_legacy(String, 'validate_string', $content)
   }
 
   if ($setting_type == 'list') or ($setting_type == 'pref') {
@@ -43,8 +44,8 @@ define apt::setting (
     $_priority = $priority
   }
 
-  $_path = $::apt::params::config_files[$setting_type]['path']
-  $_ext  = $::apt::params::config_files[$setting_type]['ext']
+  $_path = $::apt::config_files[$setting_type]['path']
+  $_ext  = $::apt::config_files[$setting_type]['ext']
 
   if $notify_update {
     $_notify = Class['apt::update']

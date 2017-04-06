@@ -1,0 +1,5 @@
+<%- | Hash $proxies | -%>
+Acquire::http::proxy "http://<%= $proxies['host'] %>:<%= $proxies['port'] %>/";
+<%- if $proxies['https'] { %>
+Acquire::https::proxy "https://<%= $proxies['host'] %>:<%= $proxies['port'] %>/";
+<%- } -%>

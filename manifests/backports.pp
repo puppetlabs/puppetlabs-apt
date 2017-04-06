@@ -1,34 +1,34 @@
 class apt::backports (
-  $location = undef,
-  $release  = undef,
-  $repos    = undef,
-  $key      = undef,
-  $pin      = 200,
+  Optional[Variant[String, Stdlib::Compat::String]] $location = undef,
+  Optional[Variant[String, Stdlib::Compat::String]] $release = undef,
+  Optional[Variant[String, Stdlib::Compat::String]] $repos = undef,
+  Optional[Variant[String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $key = undef,
+  Optional[Variant[Integer, Stdlib::Compat::Integer, String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $pin  = 200,
 ){
   if $location {
-    validate_string($location)
+    validate_legacy(String, 'validate_string', $location)
     $_location = $location
   }
   if $release {
-    validate_string($release)
+    validate_legacy(String, 'validate_string', $release)
     $_release = $release
   }
   if $repos {
-    validate_string($repos)
+    validate_legacy(String, 'validate_string', $repos)
     $_repos = $repos
   }
   if $key {
     unless is_hash($key) {
-      validate_string($key)
+      validate_legacy(String, 'validate_string', $key)
     }
     $_key = $key
   }
-  if ($::apt::xfacts['lsbdistid'] == 'debian' or $::apt::xfacts['lsbdistid'] == 'ubuntu') {
+  if ($facts['lsbdistid'] == 'Debian' or $facts['lsbdistid'] == 'Ubuntu') {
     unless $location {
       $_location = $::apt::backports['location']
     }
     unless $release {
-      $_release = "${::apt::xfacts['lsbdistcodename']}-backports"
+      $_release = "${facts['lsbdistcodename']}-backports"
     }
     unless $repos {
       $_repos = $::apt::backports['repos']

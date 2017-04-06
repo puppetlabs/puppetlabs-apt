@@ -1,17 +1,17 @@
 # == Define: apt::key
 define apt::key (
-  $id          = $title,
-  $ensure      = present,
-  $content     = undef,
-  $source      = undef,
-  $server      = $::apt::keyserver,
-  $options     = undef,
-  $key         = undef,
-  $key_content = undef,
-  $key_source  = undef,
-  $key_server  = undef,
-  $key_options = undef,
-) {
+    Variant[String, Stdlib::Compat::String] $id                                         = $title,
+    Enum['present', 'absent'] $ensure                                                   = present,
+    Optional[Variant[String, Stdlib::Compat::String]] $content                          = undef,
+    Optional[Variant[String, Stdlib::Compat::String]] $source                           = undef,
+    Variant[String, Stdlib::Compat::String] $server                                     = $::apt::keyserver,
+    Optional[Variant[String, Stdlib::Compat::String]] $options                          = undef,
+    Optional[Variant[String, Stdlib::Compat::String, Hash, Stdlib::Compat::Hash]] $key  = undef,
+    Optional[Variant[String, Stdlib::Compat::String]] $key_content                      = undef,
+    Optional[Variant[String, Stdlib::Compat::String]] $key_source                       = undef,
+    Optional[Variant[String, Stdlib::Compat::String]] $key_server                       = undef,
+    Optional[Variant[String, Stdlib::Compat::String]] $key_options                      = undef,
+    ) {
 
   if $key != undef {
     deprecation('apt $key', '$key is deprecated and will be removed in the next major release. Please use $id instead.')
@@ -52,7 +52,7 @@ define apt::key (
   validate_re($ensure, ['\A(absent|present)\Z',])
 
   if $_content {
-    validate_string($_content)
+    validate_legacy(String, 'validate_string', $_content)
   }
 
   if $_source {
@@ -64,7 +64,7 @@ define apt::key (
   }
 
   if $_options {
-    validate_string($_options)
+    validate_legacy(String, 'validate_string', $_options)
   }
 
   case $ensure {
@@ -81,8 +81,7 @@ define apt::key (
           content => $_content,
           server  => $_server,
           options => $_options,
-        }
-        -> anchor { "apt_key ${_id} present": }
+        } -> anchor { "apt_key ${_id} present": }
       }
     }
 
@@ -99,8 +98,7 @@ define apt::key (
           content => $_content,
           server  => $_server,
           options => $_options,
-        }
-        -> anchor { "apt_key ${_id} absent": }
+        } -> anchor { "apt_key ${_id} absent": }
       }
     }
 
