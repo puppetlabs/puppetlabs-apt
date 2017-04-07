@@ -313,8 +313,7 @@ Manages backports.
 
 * `location`: Specifies an Apt repository containing the backports to manage. Valid options: a string containing a URL. Defaults:
 
-  * Debian (squeeze): 'http://httpredir.debian.org/debian-backports'
-  * Debian (other): 'http://httpredir.debian.org/debian'
+  * Debian: 'http://deb.debian.org/debian'
   * Ubuntu: 'http://archive.ubuntu.com/ubuntu'
 
 * `pin`: *Optional.* Specifies a pin priority for the backports. Valid options: a number or string to be passed to the `id` parameter of the `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters. Default: '200'.
