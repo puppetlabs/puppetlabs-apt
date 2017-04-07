@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-apt",
-  "version": "2.4.0",
+  "version": "4.0.0",
   "author": "Puppet Labs",
   "summary": "Provides an interface for managing Apt source, key, and definitions with Puppet",
   "license": "Apache-2.0",
@@ -8,8 +8,9 @@
   "project_page": "https://github.com/puppetlabs/puppetlabs-apt",
   "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
   "dependencies": [
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.13.0 < 5.0.0"}
+    {"name":"puppetlabs/stdlib","version_requirement":">= 4.16.0 < 5.0.0"}
   ],
+  "data_provider": "hiera",
   "operatingsystem_support": [
     {
       "operatingsystem": "Debian",
@@ -32,7 +33,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 3.0.0 < 5.0.0"
+      "version_requirement": ">= 4.0.0 < 5.0.0"
     }
   ]
 }

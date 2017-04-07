@@ -33,8 +33,8 @@ describe 'apt class' do
       class { 'apt':
         update => {
           'frequency' => 'always',
-          'timeout'   => '400',
-          'tries'     => '3',
+          'timeout'   => 400,
+          'tries'     => 3,
         },
         purge => {
           'sources.list'   => true,
