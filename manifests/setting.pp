@@ -24,11 +24,6 @@ define apt::setting (
 
   validate_re($setting_type, ['\Aconf\z', '\Apref\z', '\Alist\z'], "apt::setting resource name/title must start with either 'conf-', 'pref-' or 'list-'")
 
-  unless is_integer($priority) {
-    # need this to allow zero-padded priority.
-    validate_re($priority, '^\d+$', 'apt::setting priority must be an integer or a zero-padded integer')
-  }
-
   if $source {
     validate_string($source)
   }
@@ -38,8 +33,13 @@ define apt::setting (
   }
 
   if ($setting_type == 'list') or ($setting_type == 'pref') {
-    $_priority = ''
+    $_priority = undef
   } else {
+    unless is_integer($priority) {
+      # need this to allow zero-padded priority.
+      validate_re($priority, '^\d+$', 'apt::setting priority must be an integer or a zero-padded integer')
+    }
+
     $_priority = $priority
   }
 
