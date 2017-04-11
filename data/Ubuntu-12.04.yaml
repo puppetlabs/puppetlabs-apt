@@ -1,0 +1,4 @@
+---
+#Precise
+apt::ppa_options: '-y'
+apt::ppa_package: 'python-software-properties'

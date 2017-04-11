@@ -2,23 +2,20 @@
 # pin a release in apt, useful for unstable repositories
 
 define apt::pin(
-  $ensure          = present,
-  $explanation     = undef,
-  $order           = 50,
-  $packages        = '*',
-  $priority        = 0,
-  $release         = '', # a=
-  $origin          = '',
-  $version         = '',
-  $codename        = '', # n=
-  $release_version = '', # v=
-  $component       = '', # c=
-  $originator      = '', # o=
-  $label           = ''  # l=
+  Optional[Enum['file', 'present', 'absent']] $ensure = present,
+  Optional[String] $explanation                       = undef,
+  Variant[Integer] $order                             = 50,
+  Variant[String, Array] $packages                    = '*',
+  Variant[Numeric, String] $priority                  = 0,
+  Optional[String] $release                           = '', # a=
+  Optional[String] $origin                            = '',
+  Optional[String] $version                           = '',
+  Optional[String] $codename                          = '', # n=
+  Optional[String] $release_version                   = '', # v=
+  Optional[String] $component                         = '', # c=
+  Optional[String] $originator                        = '', # o=
+  Optional[String] $label                             = '',  # l=
 ) {
-  if $order and !is_integer($order) {
-    fail('Only integers are allowed in the apt::pin order param')
-  }
 
   if $explanation {
     $_explanation = $explanation
@@ -36,7 +33,8 @@ define apt::pin(
     $release_version,
     $component,
     $originator,
-    $label]
+    $label    ,
+  ]
   $pin_release = join($pin_release_array, '')
 
   # Read the manpage 'apt_preferences(5)', especially the chapter
@@ -71,10 +69,28 @@ define apt::pin(
   # be silently ignored.
   $file_name = regsubst($title, '[^0-9a-z\-_\.]', '_', 'IG')
 
+  $headertmp = epp('apt/_header.epp')
+
+  $pinpreftmp = epp('apt/pin.pref.epp', {
+      'name'            => $name,
+      'pin_release'     => $pin_release,
+      'release'         => $release,
+      'codename'        => $codename,
+      'release_version' => $release_version,
+      'component'       => $component,
+      'originator'      => $originator,
+      'label'           => $label,
+      'version'         => $version,
+      'origin'          => $origin,
+      'explanation'     => $_explanation,
+      'packages_string' => $packages_string,
+      'priority'        => $priority,
+  })
+
   apt::setting { "pref-${file_name}":
     ensure        => $ensure,
     priority      => $order,
-    content       => template('apt/_header.erb', 'apt/pin.pref.erb'),
+    content       => "${headertmp}${pinpreftmp}",
     notify_update => false,
   }
 }

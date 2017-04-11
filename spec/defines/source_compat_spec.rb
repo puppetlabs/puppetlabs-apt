@@ -19,8 +19,7 @@ describe 'apt::source', :type => :define do
 
     let :params do
       {
-        'include_deb' => false,
-        'include_src' => true,
+        'include' => { 'deb' => false, 'src' => true },
         'location'    => 'http://debian.mirror.iweb.ca/debian/',
       }
     end
@@ -44,15 +43,11 @@ describe 'apt::source', :type => :define do
         'location'          => 'http://debian.mirror.iweb.ca/debian/',
         'release'           => 'sid',
         'repos'             => 'testing',
-        'include_src'       => false,
-        'required_packages' => 'vim',
+        'include'           => { 'src' => false },
         'key'               => GPG_KEY_ID,
-        'key_server'        => 'pgp.mit.edu',
-        'key_content'       => 'GPG key content',
-        'key_source'        => 'http://apt.puppetlabs.com/pubkey.gpg',
         'pin'               => '10',
         'architecture'      => 'x86_64',
-        'trusted_source'    => true,
+        'allow_unsigned' => true,
       }
     end
 
@@ -66,26 +61,14 @@ describe 'apt::source', :type => :define do
     })
     }
 
-    it { is_expected.to contain_exec("Required packages: 'vim' for my_source").that_comes_before('Apt::Setting[list-my_source]').with({
-      'command'     => '/usr/bin/apt-get -y install vim',
-      'logoutput'   => 'on_failure',
-      'refreshonly' => true,
-      'tries'       => '3',
-      'try_sleep'   => '1',
-    })
-    }
-
     it { is_expected.to contain_apt__key("Add key: #{GPG_KEY_ID} from Apt::Source my_source").that_comes_before('Apt::Setting[list-my_source]').with({
       'ensure' => 'present',
       'id'  => GPG_KEY_ID,
-      'key_server' => 'pgp.mit.edu',
-      'key_content' => 'GPG key content',
-      'key_source' => 'http://apt.puppetlabs.com/pubkey.gpg',
     })
     }
   end
 
-  context 'trusted_source true' do
+  context 'allow_unsigned true' do
     let :facts do
       {
         :lsbdistid       => 'Debian',
@@ -96,9 +79,9 @@ describe 'apt::source', :type => :define do
     end
     let :params do
       {
-        'include_src'    => false,
+        'include'        => {'src' => false},
         'location'       => 'http://debian.mirror.iweb.ca/debian/',
-        'trusted_source' => true,
+        'allow_unsigned' => true,
       }
     end
 

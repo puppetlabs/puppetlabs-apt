@@ -1,7 +1,12 @@
 require 'spec_helper'
 describe 'apt' do
-  let(:facts) { { :lsbdistid => 'Debian', :osfamily => 'Debian', :lsbdistcodename => 'wheezy', :puppetversion   => Puppet.version} }
-
+  let(:facts) do
+  { :lsbdistid       => 'Debian',
+    :osfamily        => 'Debian',
+    :lsbdistcodename => 'wheezy',
+    :puppetversion   => Puppet.version,
+  }
+  end
   context 'defaults' do
     it { is_expected.to contain_file('sources.list').that_notifies('Class[Apt::Update]').only_with({
       :ensure  => 'file',
@@ -137,9 +142,11 @@ describe 'apt' do
 
   context 'with sources defined on valid osfamily' do
     let :facts do
-      { :osfamily        => 'Debian',
+      { :os => { :family => 'Debian', :name => 'Ubuntu', :release => { :major => '12', :full => '12.04' }},
+        :osfamily        => 'Debian',
         :lsbdistcodename => 'precise',
-        :lsbdistid       => 'Debian',
+        :lsbdistid       => 'Ubuntu',
+        :lsbdistrelease  => '12.04',
         :puppetversion   => Puppet.version,
       }
     end
