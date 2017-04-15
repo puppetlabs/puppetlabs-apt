@@ -66,7 +66,7 @@ describe 'apt::pin', :type => :define do
     {
       :params => {
         :packages        => 'apache',
-        :priority        => '1',  
+        :priority        => '1',
         :release         => 'stable',
         :codename        => 'wheezy',
         :release_version => '3.0',
@@ -75,6 +75,12 @@ describe 'apt::pin', :type => :define do
         :label           => 'Debian'
       },
       :content => "# my_pin\nExplanation: : my_pin\nPackage: apache\nPin: release a=stable, n=wheezy, v=3.0, c=main, o=Debian, l=Debian\nPin-Priority: 1\n"
+    },
+    {
+      :params => {
+        :packages        => ['apache', 'ntop'],
+      },
+      :content => "# my_pin\nExplanation: : my_pin\nPackage: apache ntop\nPin: release a=my_pin\nPin-Priority: 0\n"
     },
   ].each do |param_set|
     describe "when #{param_set == {} ? "using default" : "specifying"} define parameters" do

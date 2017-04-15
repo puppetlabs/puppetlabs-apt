@@ -91,6 +91,26 @@ describe 'apt::pin define', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfa
         it { should contain 'Pin: release a=vim-puppet' }
       end
     end
+
+    context 'array' do
+      it 'should work with no errors' do
+        pp = <<-EOS
+        include apt
+        apt::pin { 'array':
+          ensure   => present,
+          packages => ['apache', 'ntop'],
+        }
+        EOS
+
+        apply_manifest(pp, :catch_failures => true)
+      end
+
+      describe file('/etc/apt/preferences.d/array.pref') do
+        it { should be_file }
+        it { should contain 'Package: apache ntop' }
+        it { should contain 'Pin: release a=array' }
+      end
+    end
   end
 
   context 'release' do

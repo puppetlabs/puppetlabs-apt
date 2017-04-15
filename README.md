@@ -111,6 +111,10 @@ Note you can also specifying more complex pins using distribution properties.
       label           => 'Debian'
     }
 
+If you wish to pin a number of packages you may specify the packages as a space
+delimited string using the `packages` attribute or pass in an array of package
+names.
+
 ### apt::ppa
 
 Adds a ppa repository using `add-apt-repository`.

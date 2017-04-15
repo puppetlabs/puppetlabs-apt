@@ -37,7 +37,13 @@ define apt::pin(
   # Read the manpage 'apt_preferences(5)', especially the chapter
   # 'Thea Effect of APT Preferences' to understand the following logic
   # and the difference between specific and general form
-  if $packages != '*' { # specific form
+  if is_array($packages) {
+    $packages_string = join($packages, ' ')
+  } else {
+    $packages_string = $packages
+  }
+
+  if $packages_string != '*' { # specific form
 
     if ( $pin_release != '' and ( $origin != '' or $version != '' )) or
       ( $origin != '' and ( $pin_release != '' or $version != '' )) or

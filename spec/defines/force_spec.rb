@@ -11,7 +11,7 @@ describe 'apt::force', :type => :define do
 
   let :default_params do
     {
-      :release => 'testing',
+      :release => false,
       :version => false
     }
   end
@@ -20,18 +20,18 @@ describe 'apt::force', :type => :define do
     let :params do
       default_params
     end
-    it { should contain_exec("/usr/bin/apt-get -y -t #{params[:release]} install #{title}").with(
-      :unless => "/usr/bin/test \$(/usr/bin/apt-cache policy -t #{params[:release]} #{title} | /bin/grep -E 'Installed|Candidate' | /usr/bin/uniq -s 14 | /usr/bin/wc -l) -eq 1",
+    it { should contain_exec("/usr/bin/apt-get -y  install #{title}").with(
+      :unless  => "/usr/bin/dpkg -s #{title} | grep -q 'Status: install'",
       :timeout => '300'
     ) }
   end
 
-  describe "when specifying false release parameter" do
+  describe "when specifying release parameter" do
     let :params do
-      default_params.merge(:release => false)
+      default_params.merge(:release => 'testing')
     end
-    it { should contain_exec("/usr/bin/apt-get -y  install #{title}").with(
-      :unless  => "/usr/bin/dpkg -s #{title} | grep -q 'Status: install'"
+    it { should contain_exec("/usr/bin/apt-get -y -t #{params[:release]} install #{title}").with(
+      :unless => "/usr/bin/test \$(/usr/bin/apt-cache policy -t #{params[:release]} #{title} | /bin/grep -E 'Installed|Candidate' | /usr/bin/uniq -s 14 | /usr/bin/wc -l) -eq 1"
     ) }
   end
 
@@ -39,20 +39,20 @@ describe 'apt::force', :type => :define do
     let :params do
       default_params.merge(:version => '1')
     end
-    it { should contain_exec("/usr/bin/apt-get -y -t #{params[:release]} install #{title}=#{params[:version]}").with(
-      :unless => "/usr/bin/apt-cache policy -t #{params[:release]} #{title} | /bin/grep -q 'Installed: #{params[:version]}'"
+    it { should contain_exec("/usr/bin/apt-get -y  install #{title}=#{params[:version]}").with(
+      :unless => "/usr/bin/dpkg -s #{title} | grep -q 'Version: #{params[:version]}'"
     ) }
   end
 
-  describe "when specifying false release and version parameters" do
+  describe "when specifying release and version parameters" do
     let :params do
       default_params.merge(
-        :release => false,
+        :release => 'testing',
         :version => '1'
       )
     end
-    it { should contain_exec("/usr/bin/apt-get -y  install #{title}=1").with(
-      :unless => "/usr/bin/dpkg -s #{title} | grep -q 'Version: #{params[:version]}'"
+    it { should contain_exec("/usr/bin/apt-get -y -t #{params[:release]} install #{title}=1").with(
+      :unless => "/usr/bin/apt-cache policy -t #{params[:release]} #{title} | /bin/grep -q 'Installed: #{params[:version]}'"
     ) }
   end
 end
