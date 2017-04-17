@@ -154,6 +154,8 @@ apt::source { 'puppetlabs':
 ```
 
 ### Configure Apt from Hiera
+The apt class will automatically look for a hiera data value called apt::sources and there is 
+thus no need to call create_resources. Doing so will cause a duplicate resource declaration.
 
 Instead of specifying your sources directly as resources, you can instead just
 include the `apt` class, which will pick up the values automatically from
