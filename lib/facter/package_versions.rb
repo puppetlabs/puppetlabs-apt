@@ -3,18 +3,20 @@
 require 'facter'
 
 Facter.add(:package_versions) do
-  package_hash = {}
+  setcode do
+    package_hash = {}
 
-  dpkg_out = Facter::Util::Resolution.exec("dpkg -l").split("\n")
+    dpkg_out = Facter::Util::Resolution.exec("dpkg -l").split("\n")
 
-  # get rid of the headings
-  dpkg_out.shift(5)
+    # get rid of the headings
+    dpkg_out.shift(5)
 
-  dpkg_out.each do | line |
-    l = line.split
-    package_hash[l[1]] = l[2]
+    dpkg_out.each do | line |
+      l = line.split
+      package_hash[l[1]] = l[2]
+    end
+
+    package_hash
   end
-
-  package_hash
 
 end
