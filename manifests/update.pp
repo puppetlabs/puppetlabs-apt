@@ -58,4 +58,6 @@ class apt::update {
     tries       => $::apt::_update['tries'],
     try_sleep   => 1
   }
+  
+  Exec['apt_update'] -> Package <| title != ["python-software-properties", "software-properties-common"] |>
 }
