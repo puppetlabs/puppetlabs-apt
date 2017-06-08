@@ -58,4 +58,9 @@ class apt::update {
     tries       => $::apt::_update['tries'],
     try_sleep   => 1
   }
+  
+  Package <| tags != ['apt'] |> {
+    require += Exec['apt_update'],
+  }
+
 }
