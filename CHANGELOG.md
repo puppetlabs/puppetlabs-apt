@@ -70,12 +70,12 @@ A release containing many bugfixes with additional features.
 - Replaced `-s` with `-f` in ppa rspec tests - After the repository is added, the "${::apt::sources_list_d}/${sources_list_d_filename}" file is created as an empty file. The unless condition of Exec["add-apt-repository-${name}"] calls test -s, which returns 1 if the file is empty. Because the file is empty, the unless condition is never true and the repository is added on every execution. This change replaces the -s test condition with -f, which is true if the file exists or false otherwise.
 - Limit non-strict parsing to pre-3.5.0 only - Puppet 3.5.0 introduced strict variables and the module handles strict variables by using the defined() function. This does not work on prior versions of puppet so we now gate based on that version. Puppet 4 series has a new setting `strict` that may be set to enforce strict variables while `strict_variables` remains unset (see PUP-6358) which causes the conditional in manifests/params.pp to erroniously use non-strict 3.5-era parsing and fail. This new conditional corrects the cases such that strict variable behavior happens on versions 3.5.0 and later.
 
-##Supported Release 2.2.2
-###Summary
+## Supported Release 2.2.2
+### Summary
 
 Several bug fixes and the addition of support updates to Debian 8 and Ubuntu Wily.
 
-####Bugfixes
+#### Bugfixes
 - Small fixes to descriptions within the readme and the addition of some examples.
 - Updates to run on Ubuntu Wily.
 - Fixed apt_key tempfile race condition.
@@ -89,92 +89,92 @@ Several bug fixes and the addition of support updates to Debian 8 and Ubuntu Wil
 - Look for correct sources.list.d file for apt::ppa.
 - Debian 8 support addiiton to metadata.
 
-##Supported Release 2.2.1
-###Summary
+## Supported Release 2.2.1
+### Summary
 
 Small release for support of newer PE versions. This increments the version of PE in the metadata.json file.
 
-##2015-09-29 - Supported Release 2.2.0
-###Summary
+## 2015-09-29 - Supported Release 2.2.0
+### Summary
 
 This release includes a few bugfixes.
 
-####Features
+#### Features
 - Adds an `ensure` parameter for user control of proxy presence.
 - Adds ability to set `notify_update` to `apt::conf` (MODULES-2269).
 - Apt pins no longer trigger an `apt-get update` run.
 - Adds support for creating pins from main class.
 
-####Bugfixes
+#### Bugfixes
 - Updates to use the official Debian mirrors.
 - Fixes path to `preferences` and `preferences.d`
 - Fixes pinning for backports (MODULES-2446).
 - Fixes the name/extension of the preferences files.
 
-##2015-07-28 - Supported Release 2.1.1
-###Summary
+## 2015-07-28 - Supported Release 2.1.1
+### Summary
 
 This release includes a few bugfixes.
 
-####Bugfixes
+#### Bugfixes
 - Fix incorrect use of anchoring (MODULES-2190)
 - Use correct comment type for apt.conf files
 - Test fixes
 - Documentation fixes
 
-##2015-06-16 - Supported Release 2.1.0
-###Summary
+## 2015-06-16 - Supported Release 2.1.0
+### Summary
 
 This release largely makes `apt::key` and `apt::source` API-compatible with the 1.8.x versions for ease in upgrading, and also addresses some compatibility issues with older versions of Puppet.
 
-####Features
+#### Features
 - Add API compatibility to `apt::key` and `apt::source`
 - Added `apt_reboot_required` fact
 
-####Bugfixes
+#### Bugfixes
 - Fix compatibility with Puppet versions 3.0-3.4
 - Work around future parser bug PUP-4133
 
-##2015-04-28 - Supported Release 2.0.1
-###Summary
+## 2015-04-28 - Supported Release 2.0.1
+### Summary
 
 This bug fixes a few compatibility issues that came up with the 2.0.0 release, and includes test and documentation updates.
 
-####Bugfixes
+#### Bugfixes
 - Fix incompatibility with keyrings containing multiple keys
 - Fix bugs preventing the module from working with Puppet < 3.5.0
 
-##2015-04-07 - Supported Release 2.0.0
-###Summary
+## 2015-04-07 - Supported Release 2.0.0
+### Summary
 
 This is a major rewrite of the apt module. Many classes and defines were removed, but all existing functionality should still work. Please carefully review documentation before upgrading.
 
-####Backwards-incompatible changes
+#### Backwards-incompatible changes
 
 As this is a major rewrite of the module there are a great number of backwards incompatible changes. Please review this and the updated README carefully before upgrading.
 
-#####`apt_key`
+##### `apt_key`
 - `keyserver_options` parameter renamed to `options`
 
-#####`apt::backports`
+##### `apt::backports`
 - This no longer works out of the box on Linux Mint. If using this on mint, you must specify the `location`, `release`, `repos`, and `key` parameters. [Example](examples/backports.pp)
 
-#####`apt::builddep`
+##### `apt::builddep`
 - This define was removed. Functionality can be matched passing 'build-dep' to `install_options` in the package resource. [Example](examples/builddep.pp)
 
-#####`apt::debian::testing`
+##### `apt::debian::testing`
 - This class was removed. Manually add an `apt::source` instead. [Example](examples/debian_testing.pp)
 
-#####`apt::debian::unstable`
+##### `apt::debian::unstable`
 - This class was removed. Manually add an `apt::source` instead. [Example](examples/debian_unstable.pp)
 
-#####`apt::force`
+##### `apt::force`
 - This define was removed. Functionallity can be matched by setting `install_options` in the package resource. See [here](examples/force.pp) for how to set the options.
 
-#####`apt::hold`
+##### `apt::hold`
 - This define was removed. Simply use an `apt::pin` with `priority => 1001` for the same functionality.
 
-#####`apt`
+##### `apt`
 - `always_apt_update` - This parameter was removed. Use `update => { 'frequency' => 'always' }` instead.
 - `apt_update_frequency` - This parameter was removed. Use `update => { 'frequency' => <frequency> }` instead.
 - `disable_keys` - This parameter was removed. See this [example](examples/disable_keys.pp) if you need this functionality.
@@ -187,17 +187,17 @@ As this is a major rewrite of the module there are a great number of backwards i
 - `update_timeout` - This parameter was removed. Use `update => { 'timeout' => <timeout> }` instead.
 - `update_tries` - This parameter was removed. Use `update => { 'tries' => <tries> }` instead.
 
-#####`apt::key`
+##### `apt::key`
 - `key` - This parameter was renamed to `id`.
 - `key_content` - This parameter was renamed to `content`.
 - `key_source` - This parameter was renamed to `source`.
 - `key_server` - This parameter was renamed to `server`.
 - `key_options` - This parameter was renamed to `options`.
 
-#####`apt::release`
+##### `apt::release`
 - This class was removed. See this [example](examples/release.pp) for how to achieve this functionality.
 
-#####`apt::source`
+##### `apt::source`
 - `include_src` - This parameter was removed. Use `include => { 'src' => <bool> }` instead. ***NOTE*** This now defaults to false.
 - `include_deb` - This parameter was removed. Use `include => { 'deb' => <bool> }` instead.
 - `required_packages` - This parameter was removed. Use package resources for these packages if needed.
@@ -207,35 +207,35 @@ As this is a major rewrite of the module there are a great number of backwards i
 - `key_source` - This parameter was removed. Use `key => { 'source' => <source> }` instead.
 - `trusted_source` - This parameter was renamed to `allow_unsigned`.
 
-#####`apt::unattended_upgrades`
+##### `apt::unattended_upgrades`
 - This class was removed and is being republished under the puppet-community namespace. The git repository is available [here](https://github.com/puppet-community/puppet-unattended_upgrades) and it will be published to the forge [here](https://forge.puppetlabs.com/puppet/unattended_upgrades).
 
-####Changes to default behavior
+#### Changes to default behavior
 - By default purge unmanaged files in 'sources.list', 'sources.list.d', 'preferences', and 'preferences.d'.
 - Changed default for `package_manage` in `apt::ppa` to `false`. Set to `true` in a single PPA if you need the package to be managed.
 - `apt::source` will no longer include the `src` entries by default. 
 - `pin` in `apt::source` now defaults to `undef` instead of `false`
 
-####Features
+#### Features
 - Added the ability to pass hashes of `apt::key`s, `apt::ppa`s, and `apt::setting`s to `apt`.
 - Added 'https' key to `proxy` hash to allow disabling `https_proxy` for the `apt::ppa` environment.
 - Added `apt::setting` define to abstract away configuration.
 - Added the ability to pass hashes to `pin` and `key` in `apt::backports` and `apt::source`.
 
-####Bugfixes
+#### Bugfixes
 - Fixes for strict variables.
 
-##2015-03-17 - Supported Release 1.8.0
-###Summary
+## 2015-03-17 - Supported Release 1.8.0
+### Summary
 
 This is the last planned feature release of the 1.x series of this module. All new features will be evaluated for puppetlabs-apt 2.x.
 
 This release includes many important features, including support for full fingerprints, and fixes issues where `apt_key` was not supporting user/password and `apt_has_updates` was not properly parsing the `apt-check` output.
 
-####Changes to default behavior
+#### Changes to default behavior
 - The apt module will now throw warnings if you don't use full fingerprints for `apt_key`s
 
-####Features
+#### Features
 - Use gpg to check keys to work around https://bugs.launchpad.net/ubuntu/+source/gnupg2/+bug/1409117 (MODULES-1675)
 - Add 'oldstable' to the default update origins for wheezy
 - Add utopic, vivid, and cumulus compatibility
@@ -249,7 +249,7 @@ This release includes many important features, including support for full finger
   - `legacy_origin`
 - Separate `apt::pin` from `apt::backports` to allow pin by release instead of origin
 
-####Bugfixes
+#### Bugfixes
 - Cleanup lint and future parser issues
 - Fix to support username and passwords again for `apt_key` (MODULES-1119)
 - Fix issue where `apt::force` `$install_check` didn't work with non-English locales (MODULES-1231)
@@ -259,12 +259,12 @@ This release includes many important features, including support for full finger
 - Fix inconsistent headers across files (MODULES-1200)
 - Clean up formatting for 50unattended-upgrades.erb
 
-##2014-10-28 - Supported Release 1.7.0
-###Summary
+## 2014-10-28 - Supported Release 1.7.0
+### Summary
 
 This release includes several new features, documentation and test improvements, and a few bug fixes.
 
-####Features
+#### Features
 - Updated unit and acceptance tests
 - Update module to work with Linux Mint
 - Documentation updates
@@ -277,52 +277,52 @@ This release includes several new features, documentation and test improvements,
 - Added `apt_update_last_success` fact
 - Refactored facts for performance improvements
 
-####Bugfixes
+#### Bugfixes
 - Update apt::builddep to require Exec['apt_update'] instead of notifying it
 - Clean up lint errors
 
-##2014-08-20 - Supported Release 1.6.0
-###Summary
+## 2014-08-20 - Supported Release 1.6.0
+### Summary
 
-####Features
+#### Features
 - Allow URL or domain name for key_server parameter
 - Allow custom comment for sources list
 - Enable auto-update for Debian squeeze LTS
 - Add facts showing available updates
 - Test refactoring
 
-####Bugfixes
+#### Bugfixes
 - Allow dashes in URL or domain for key_server parameter
 
-##2014-08-13 - Supported Release 1.5.3
-###Summary
+## 2014-08-13 - Supported Release 1.5.3
+### Summary
 
 This is a bugfix releases.  It addresses a bad regex, failures with unicode
 characters, and issues with the $proxy_host handling in apt::ppa.
 
-####Features
+#### Features
 - Synced files from Modulesync
 
-####Bugfixes
+#### Bugfixes
 - Fix regex to follow APT requirements in apt::pin
 - Fix for unicode characters
 - Fix inconsistent $proxy_host handling in apt and apt::ppa
 - Fix typo in README
 - Fix broken acceptance tests
 
-##2014-07-15 - Supported Release 1.5.2
-###Summary
+## 2014-07-15 - Supported Release 1.5.2
+### Summary
 
 This release merely updates metadata.json so the module can be uninstalled and
 upgraded via the puppet module command.
 
-##2014-07-10 - Supported Release 1.5.1
-###Summary
+## 2014-07-10 - Supported Release 1.5.1
+### Summary
 
 This release has added tests to ensure graceful failure on OSX.
 
-##2014-06-04 - Release 1.5.0
-###Summary
+## 2014-06-04 - Release 1.5.0
+### Summary
 
 This release adds support for Ubuntu 14.04.  It also includes many new features 
 and important bugfixes.  One huge change is that apt::key was replaced with
@@ -331,7 +331,7 @@ your system.
 
 Special thanks to daenney, our intrepid unofficial apt maintainer!
 
-####Features
+#### Features
 - Add support for Ubuntu Trusty!
 - Add apt::hold define
 - Generate valid *.pref files in apt::pin
@@ -341,36 +341,36 @@ Special thanks to daenney, our intrepid unofficial apt maintainer!
 - apt::key rewritten to use apt_key type
 - Add support for update_tries to apt::update
 
-####Bugfixes
+#### Bugfixes
 - Typo fixes
 - Fix unattended upgrades
 - Removed bogus line when using purge_preferences
 - Fix apt::force to upgrade allow packages to be upgraded to the pacakge from the specified release
 
-##2014-03-04 - Supported Release 1.4.2
-###Summary
+## 2014-03-04 - Supported Release 1.4.2
+### Summary
 
 This is a supported release. This release tidies up 1.4.1 and re-enables
 support for Ubuntu 10.04
 
-####Features
+#### Features
 
-####Bugfixes
+#### Bugfixes
 - Fix apt:ppa to include the -y Ubuntu 10.04 requires.
 - Documentation changes.
 - Test fixups.
 
-####Known Bugs
+#### Known Bugs
 
 * No known issues.
 
 
 
-##2014-02-13 1.4.1
-###Summary
+## 2014-02-13 1.4.1
+### Summary
 This is a bugfix release.
 
-####Bugfixes
+#### Bugfixes
 - Fix apt::force unable to upgrade packages from releases other than its original
 - Removed a few refeneces to aptitude instead of apt-get for portability
 - Removed call to getparam() due to stdlib dependency
@@ -379,21 +379,21 @@ This is a bugfix release.
 - Use root to exec in apt::ppa
 - Updated tests and converted acceptance tests to beaker
 
-##2013-10-08 - Release 1.4.0
+## 2013-10-08 - Release 1.4.0
 
-###Summary
+### Summary
 
 Minor bugfix and allow the timeout to be adjusted.
 
-####Features
+#### Features
 - Add an `updates_timeout` to apt::params
 
-####Bugfixes
+#### Bugfixes
 - Ensure apt::ppa can read a ppa removed by hand.
 
 
-##2013-10-08 - Release 1.3.0
-###Summary
+## 2013-10-08 - Release 1.3.0
+### Summary
 
 This major feature in this release is the new apt::unattended_upgrades class,
 allowing you to handle Ubuntu's unattended feature.  This allows you to select
@@ -403,21 +403,21 @@ involvement.
 In addition we extend our Wheezy support, add proxy support to apt:ppa and do
 various cleanups and tweaks.
 
-####Features
+#### Features
 - Add apt::unattended_upgrades support for Ubuntu.
 - Add wheezy backports support.
 - Use the geoDNS http.debian.net instead of the main debian ftp server.
 - Add `options` parameter to apt::ppa in order to pass options to apt-add-repository command.
 - Add proxy support for apt::ppa (uses proxy_host and proxy_port from apt).
 
-####Bugfixes
+#### Bugfixes
 - Fix regsubst() calls to quote single letters (for future parser).
 - Fix lint warnings and other misc cleanup.
 
 
-##2013-07-03 - Release 1.2.0
+## 2013-07-03 - Release 1.2.0
 
-####Features
+#### Features
 - Add geppetto `.project` natures
 - Add GH auto-release
 - Add `apt::key::key_options` parameter
@@ -429,14 +429,14 @@ various cleanups and tweaks.
   - `apt::pin::label`
 - Add source architecture support to `apt::source::architecture`
 
-####Bugfixes
+#### Bugfixes
 - Use apt-get instead of aptitude in apt::force
 - Update default backports location
 - Add dependency for required packages before apt-get update
 
 
-##2013-06-02 - Release 1.1.1
-###Summary
+## 2013-06-02 - Release 1.1.1
+### Summary
 
 This is a bug fix release that resolves a number of issues:
 
@@ -470,14 +470,14 @@ Thanks to all the community contributors below that made this patch possible.
 
 
 ## Release 1.1.0
-###Summary
+### Summary
 
 This release includes Ubuntu 12.10 (Quantal) support for PPAs.
 
 ---
 
-##2012-05-25 - Puppet Labs <info@puppetlabs.com> - Release 0.0.4
-###Summary
+## 2012-05-25 - Puppet Labs <info@puppetlabs.com> - Release 0.0.4
+### Summary
 
  * Fix ppa list filename when there is a period in the PPA name
  * Add .pref extension to apt preferences files
@@ -485,8 +485,8 @@ This release includes Ubuntu 12.10 (Quantal) support for PPAs.
  * Extend pin support
 
 
-##2012-05-04 - Puppet Labs <info@puppetlabs.com> - Release 0.0.3
-###Summary
+## 2012-05-04 - Puppet Labs <info@puppetlabs.com> - Release 0.0.3
+### Summary
  
  * only invoke apt-get update once
  * only install python-software-properties if a ppa is added
@@ -499,8 +499,8 @@ This release includes Ubuntu 12.10 (Quantal) support for PPAs.
  * add support to pin release
 
 
-##2012-03-26 - Puppet Labs <info@puppetlabs.com> - Release 0.0.2
-###Summary
+## 2012-03-26 - Puppet Labs <info@puppetlabs.com> - Release 0.0.2
+### Summary
 
 * 41cedbb (#13261) Add real examples to smoke tests.
 * d159a78 (#13261) Add key.pp smoke test
@@ -514,8 +514,8 @@ This release includes Ubuntu 12.10 (Quantal) support for PPAs.
 * b9607a4 Convert apt::key to use anchors
 
 
-##2012-03-07 - Puppet Labs <info@puppetlabs.com> - Release 0.0.1
-###Summary
+## 2012-03-07 - Puppet Labs <info@puppetlabs.com> - Release 0.0.1
+### Summary
 
 * d4fec56 Modify apt::source release parameter test
 * 1132a07 (#12917) Add contributors to README
