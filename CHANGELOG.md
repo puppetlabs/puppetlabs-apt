@@ -13,7 +13,7 @@ This release removes Data in Modules due to current compatibility issues and rei
 
 
 ## Supported Release 3.0.0 and 4.0.0
-###Summary
+### Summary
 
 This release adds new Puppet 4 features: data in modules, EPP templates, the $facts hash, and data types. This release is fully backwards compatible to existing Puppet 4 configurations and provides you with deprecation warnings for every argument that will not work as expected with the final 4.0.0 release. See the stdlib docs here for an in-depth discussion of this: https://github.com/puppetlabs/puppetlabs-stdlib#validate_legacy
 
