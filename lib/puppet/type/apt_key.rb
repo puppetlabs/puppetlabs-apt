@@ -1,7 +1,5 @@
 require 'pathname'
-
 Puppet::Type.newtype(:apt_key) do
-
   @doc = <<-EOS
     This type provides Puppet with the capabilities to manage GPG keys needed
     by apt to perform package validation. Apt has it's own GPG keyring that can
@@ -20,25 +18,25 @@ Puppet::Type.newtype(:apt_key) do
   ensurable
 
   validate do
-    if self[:content] and self[:source]
-      fail('The properties content and source are mutually exclusive.')
+    if self[:content] && self[:source]
+      raise('The properties content and source are mutually exclusive.')
     end
-    if self[:id].length < 40 
+    if self[:id].length < 40
       warning('The id should be a full fingerprint (40 characters), see README.')
-    end 
+    end
   end
 
-  newparam(:id, :namevar => true) do
+  newparam(:id, namevar: true) do
     desc 'The ID of the key you want to manage.'
     # GPG key ID's should be either 32-bit (short) or 64-bit (long) key ID's
     # and may start with the optional 0x, or they can be 40-digit key fingerprints
-    newvalues(/\A(0x)?[0-9a-fA-F]{8}\Z/, /\A(0x)?[0-9a-fA-F]{16}\Z/, /\A(0x)?[0-9a-fA-F]{40}\Z/)
+    newvalues(%r{\A(0x)?[0-9a-fA-F]{8}\Z}, %r{\A(0x)?[0-9a-fA-F]{16}\Z}, %r{\A(0x)?[0-9a-fA-F]{40}\Z})
     munge do |value|
-      if value.start_with?('0x')
-        id = value.partition('0x').last.upcase
-      else
-        id = value.upcase
-      end
+      id = if value.start_with?('0x')
+             value.partition('0x').last.upcase
+           else
+             value.upcase
+           end
       id
     end
   end
@@ -49,20 +47,18 @@ Puppet::Type.newtype(:apt_key) do
 
   newparam(:source) do
     desc 'Location of a GPG key file, /path/to/file, ftp://, http:// or https://'
-    newvalues(/\Ahttps?:\/\//, /\Aftp:\/\//, /\A\/\w+/)
+    newvalues(%r{\Ahttps?://}, %r{\Aftp://}, %r{\A/\w+})
   end
 
   autorequire(:file) do
-    if self[:source] and Pathname.new(self[:source]).absolute?
-      self[:source]
-    end
+    self[:source] if self[:source] && Pathname.new(self[:source]).absolute?
   end
 
   newparam(:server) do
     desc 'The key server to fetch the key from based on the ID. It can either be a domain name or url.'
     defaultto :'keyserver.ubuntu.com'
 
-    newvalues(/\A((hkp|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$/)
+    newvalues(%r{\A((hkp|http|https)://)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$})
   end
 
   newparam(:options) do

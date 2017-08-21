@@ -838,7 +838,7 @@ FPfZDNCu/TXoqyJk7434jJrcHgPryzrHFBLfEmc=
         EOS
 
         apply_manifest(pp, :expect_failures => true) do |r|
-          expect(r.stderr).to match(/do not match/)
+          expect(r.stderr).to match(/don't match/)
         end
       end
     end
