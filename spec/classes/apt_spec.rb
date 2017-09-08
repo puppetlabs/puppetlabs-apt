@@ -72,8 +72,8 @@ describe 'apt' do
         :priority => '01',
       }).with_content(
         /Acquire::http::proxy "http:\/\/localhost:8080\/";/
-      ).without_content(
-        /Acquire::https::proxy/
+      ).with_content(
+        /Acquire::https::proxy "DIRECT";/
       )}
     end
 
@@ -83,8 +83,8 @@ describe 'apt' do
         :priority => '01',
       }).with_content(
         /Acquire::http::proxy "http:\/\/localhost:8180\/";/
-      ).without_content(
-        /Acquire::https::proxy/
+      ).with_content(
+        /Acquire::https::proxy "DIRECT";/
       )}
     end
 
