@@ -263,6 +263,8 @@ apt::source { "archive.ubuntu.com-${lsbdistcodename}-backports":
 
 * `apt_reboot_required`: Determines if a reboot is necessary after updates have been installed.
 
+* `apt_security_package_updates`: The names of all installed packages with available security updates. In Facter 2.0 and later this data is formatted as an array; in earlier versions it is a comma-delimited string.
+
 #### Class: `apt`
 
 Main class, includes all other classes.
