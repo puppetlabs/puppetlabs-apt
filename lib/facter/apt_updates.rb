@@ -10,7 +10,6 @@ Facter.add('apt_has_updates') do
         package = line.gsub(%r{^Inst\s([^\s]+)\s.*}, '\1').strip
         apt_package_updates[0].push(package)
         security_matches = [
-          %r{ Debian[^\s]+-updates[, ]},
           %r{ Debian-Security:},
           %r{ Ubuntu[^\s]+-security[, ]},
           %r{ gNewSense[^\s]+-security[, ]},
