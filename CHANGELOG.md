@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 This release is a rollup of new features and fixes.
 
 #### Added
-- Install `apt-transport-https` if using Debian 8, 9 or Ubuntu 14.04, 16.04.
+- Install `apt-transport-https` if using Debian 7, 8, 9 or Ubuntu 14.04, 16.04.
 - Adds a boolean option `direct` to proxy settings to bypass `https_proxy` if not set.
 - Adds facter facts for `dist-upgrade` apt updates.
 

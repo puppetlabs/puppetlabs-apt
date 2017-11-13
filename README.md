@@ -3,11 +3,11 @@
 #### Table of Contents
 
 
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with apt](#setup)
+1. [Module Description - What the module does and why it is useful](#module-description)
+1. [Setup - The basics of getting started with apt](#setup)
     * [What apt affects](#what-apt-affects)
     * [Beginning with apt](#beginning-with-apt)
-4. [Usage - Configuration options and additional functionality](#usage)
+1. [Usage - Configuration options and additional functionality](#usage)
     * [Add GPG keys](#add-gpg-keys)
     * [Prioritize backports](#prioritize-backports)
     * [Update the list of packages](#update-the-list-of-packages)
@@ -15,14 +15,14 @@
     * [Add a Personal Package Archive repository](#add-a-personal-package-archive-repository)
     * [Configure Apt from Hiera](#configure-apt-from-hiera)
     * [Replace the default sources.list file](#replace-the-default-sourceslist-file)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+1. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
     * [Classes](#classes)
     * [Defined Types](#defined-types)
     * [Types](#types)
     * [Facts](#facts)
     * [Tasks](#tasks)
-6. [Limitations - OS compatibility, etc.](#limitations)
-7. [Development - Guide for contributing to the module](#development)
+1. [Limitations - OS compatibility, etc.](#limitations)
+1. [Development - Guide for contributing to the module](#development)
 
 ## Module Description
 
