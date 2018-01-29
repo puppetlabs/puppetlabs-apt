@@ -13,7 +13,7 @@ Facter.add(:package_versions) do
 
     dpkg_out.each do | line |
       l = line.split
-      package_hash[l[1]] = l[2]
+      package_hash[l[1].chomp(':amd64')] = l[2]
     end
 
     package_hash
