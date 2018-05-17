@@ -104,7 +104,7 @@ class apt::params {
           $ppa_options        = '-y'
           $ppa_package        = 'python-software-properties'
         }
-        '14.04', '14.10', '15.04', '15.10', '16.04': {
+        '14.04', '14.10', '15.04', '15.10', '16.04', '18.04': {
           $ppa_options        = '-y'
           $ppa_package        = 'software-properties-common'
         }
