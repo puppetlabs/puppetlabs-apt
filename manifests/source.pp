@@ -35,7 +35,7 @@ define apt::source(
   if $ensure == 'present' {
     if ! $location {
       fail('cannot create a source entry without specifying a location')
-    } elsif $_release in $_transport_https_releases {
+    } elsif $_release in $_transport_https_releases or $facts['lsbdistcodename'] in $_transport_https_releases {
       $method = split($location, '[:\/]+')[0]
       if $method == 'https' {
         ensure_packages('apt-transport-https')
