@@ -7,14 +7,14 @@ define apt::pin(
   Variant[Integer] $order                             = 50,
   Variant[String, Array] $packages                    = '*',
   Variant[Numeric, String] $priority                  = 0,
-  Optional[String] $release                           = '', # a=
+  Optional[String] $release                           = undef, # a=
   Optional[String] $origin                            = '',
   Optional[String] $version                           = '',
-  Optional[String] $codename                          = '', # n=
-  Optional[String] $release_version                   = '', # v=
-  Optional[String] $component                         = '', # c=
-  Optional[String] $originator                        = '', # o=
-  Optional[String] $label                             = '',  # l=
+  Optional[String] $codename                          = undef, # n=
+  Optional[String] $release_version                   = undef, # v=
+  Optional[String] $component                         = undef, # c=
+  Optional[String] $originator                        = undef, # o=
+  Optional[String] $label                             = undef, # l=
 ) {
 
   if $explanation {
