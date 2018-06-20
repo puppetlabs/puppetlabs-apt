@@ -40,6 +40,11 @@ end
 RSpec.configure do |c|
   File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
+  # dirmngr needs installed on Debian 9 machines to allow the tests to run
+  if fact('osfamily') == 'Debian' && fact('operatingsystemmajrelease') == '9'
+    shell('yes | sudo apt-get update && yes | sudo apt-get install dirmngr')
+  end
+
   # Readable test descriptions
   c.formatter = :documentation
 

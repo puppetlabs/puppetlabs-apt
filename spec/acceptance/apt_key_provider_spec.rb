@@ -593,7 +593,7 @@ describe 'apt_key' do
   end
 
   describe 'ensure =>' do
-    context 'when absent' do
+    context 'when absent', unless: (fact('operatingsystem') == 'Debian' && fact('operatingsystemmajrelease') == '8') do
       it 'is removed' do
         # Install the key first (retry because key pool may timeout)
         install_key(CENTOS_GPG_KEY_FINGERPRINT)
