@@ -7,14 +7,14 @@ define apt::pin(
   Variant[Integer] $order                             = 50,
   Variant[String, Array] $packages                    = '*',
   Variant[Numeric, String] $priority                  = 0,
-  Optional[String] $release                           = '', # a=
-  Optional[String] $origin                            = '',
-  Optional[String] $version                           = '',
-  Optional[String] $codename                          = '', # n=
-  Optional[String] $release_version                   = '', # v=
-  Optional[String] $component                         = '', # c=
-  Optional[String] $originator                        = '', # o=
-  Optional[String] $label                             = '',  # l=
+  Optional[String] $release                           = undef, # a=
+  Optional[String] $origin                            = undef,
+  Optional[String] $version                           = undef,
+  Optional[String] $codename                          = undef, # n=
+  Optional[String] $release_version                   = undef, # v=
+  Optional[String] $component                         = undef, # c=
+  Optional[String] $originator                        = undef, # o=
+  Optional[String] $label                             = undef, # l=
 ) {
 
   if $explanation {
@@ -47,15 +47,15 @@ define apt::pin(
   }
 
   if $packages_string != '*' { # specific form
-    if ( $pin_release != '' and ( $origin != '' or $version != '' )) or
-      ( $version != '' and ( $pin_release != '' or $origin != '' )) {
+    if ( $pin_release and ( $origin or $version )) or
+      ( $version and ( $pin_release or $origin )) {
       fail('parameters release, origin, and version are mutually exclusive')
     }
   } else { # general form
-    if $version != '' {
+    if $version {
       fail('parameter version cannot be used in general form')
     }
-    if ( $pin_release != '' and $origin != '' ) {
+    if ( $pin_release and $origin ) {
       fail('parameters release and origin are mutually exclusive')
     }
   }
