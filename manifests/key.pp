@@ -20,7 +20,7 @@ define apt::key (
   }
 
   if $server {
-    assert_type(Pattern[/\A((hkp|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$/], $server)
+    assert_type(Pattern[/\A((hkp|http|https|hkps):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$/], $server)
   }
 
   case $ensure {

@@ -8,7 +8,8 @@ everything_everything_pp = <<-MANIFEST
           'repos'    => 'main',
           'key'      => {
             'id'     => '6F6B15509CF8E59E6E469F327F438280EF8D349F',
-            'server' => 'pool.sks-keyservers.net',
+	    'server' => 'hkps://hkps.pool.sks-keyservers.net',
+            'options' => 'ca-cert-file=/tmp/sks-keyservers.netCA.pem',
           },
         },
       }

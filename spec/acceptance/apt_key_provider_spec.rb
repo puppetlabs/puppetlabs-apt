@@ -27,7 +27,8 @@ end
 
 def install_key(key)
   retry_on_error_matching do
-    shell("apt-key adv --keyserver hkps.pool.sks-keyservers.net --recv-keys #{key}")
+    shell("wget -O /tmp/sks-keyservers.netCA.pem https://sks-keyservers.net/sks-keyservers.netCA.pem && apt-key adv --keyserver hkps://hkps.pool.sks-keyservers.net \
+             --keyserver-options ca-cert-file=/tmp/sks-keyservers.netCA.pem  --recv-keys #{key}")
   end
 end
 
@@ -382,9 +383,10 @@ bogus_key_pp = <<-MANIFEST
 
 hkps_pool_pp = <<-MANIFEST
         apt_key { 'puppetlabs':
-          id     => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
-          ensure => 'present',
-          server => 'hkps.pool.sks-keyservers.net',
+          id      => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
+          ensure  => 'present',
+          server  => 'hkps://hkps.pool.sks-keyservers.net',
+          options => 'ca-cert-file=/tmp/sks-keyservers.netCA.pem',
         }
   MANIFEST
 
@@ -392,7 +394,7 @@ hkp_pool_pp = <<-MANIFEST
         apt_key { 'puppetlabs':
           id     => '#{PUPPETLABS_GPG_KEY_FINGERPRINT}',
           ensure => 'present',
-          server => 'hkp://hkps.pool.sks-keyservers.net:80',
+          server => 'hkp://hkps.pool.sks-keyservers.net',
         }
   MANIFEST
 
@@ -665,7 +667,7 @@ describe 'apt_key' do
       end
     end
 
-    context 'with hkp://hkps.pool.sks-keyservers.net:80' do
+    context 'with hkps://hkps.pool.sks-keyservers.net' do
       it 'works' do
         retry_on_error_matching do
           apply_manifest(hkp_pool_pp, catch_failures: true)
@@ -679,7 +681,7 @@ describe 'apt_key' do
     context 'with nonexistant.key.server' do
       it 'fails' do
         apply_manifest(nonexistant_key_server_pp, expect_failures: true) do |r|
-          expect(r.stderr).to match(%r{(Host not found|Couldn't resolve host|No name)})
+          expect(r.stderr).to match(%r{(Host not found|Couldn't resolve host|No name|Could not resolve host)})
         end
       end
     end

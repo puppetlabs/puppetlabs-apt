@@ -333,6 +333,18 @@ All parameters are optional unless specified.
 
   * `direct`: Specifies whether or not to use a 'DIRECT' https proxy if http proxy is used but https is not. Valid options: `true` and `false`. Default: `false`.
 
+  * `repo_host`: Specifies whether to enable http(s) proxies only for specified debian repos. Valid options: `Array`
+  Configure Apt Proxy from Hiera
+```yaml
+apt::proxy:
+  host: itproxy-dev.example.org
+  port: 3128
+  https: true
+  'repo_host':
+    - archive.cloudera.com
+    - apt.puppetlabs.com
+```
+
 * `purge`: Specifies whether to purge any existing settings that aren't managed by Puppet. Valid options: a hash made up from the following keys:
 
   * `sources.list`: Specifies whether to purge any unmanaged entries from `sources.list`. Valid options: `true` and `false`. Default: `false`.

@@ -83,6 +83,9 @@ class apt (
   if $proxy['direct']{
     assert_type(Boolean, $proxy['direct'])
   }
+  if $proxy['repo_host'] {
+    assert_type(Array, $proxy['repo_host'])
+  }
 
   $_proxy = merge($apt::proxy_defaults, $proxy)
 

@@ -18,7 +18,7 @@ describe Puppet::Type.type(:apt_key) do
     end
 
     it 'keyserver is default' do
-      expect(resource[:server]).to eq :'keyserver.ubuntu.com'
+      expect(resource[:server]).to eq :'hkps://keyserver.ubuntu.com'
     end
 
     it 'source is not set' do

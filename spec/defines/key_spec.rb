@@ -5,7 +5,7 @@ GPG_KEY_ID = '6F6B15509CF8E59E6E469F327F438280EF8D349F'.freeze
 title_key_example = { id: GPG_KEY_ID,
                       ensure: 'present',
                       source: nil,
-                      server: 'keyserver.ubuntu.com',
+                      server: 'hkps://keyserver.ubuntu.com',
                       content: nil,
                       options: nil }
 
@@ -13,7 +13,7 @@ def default_apt_key_example(title)
   { id: title,
     ensure: 'present',
     source: nil,
-    server: 'keyserver.ubuntu.com',
+    server: 'hkps://keyserver.ubuntu.com',
     content: nil,
     options: nil }
 end
@@ -31,7 +31,7 @@ def absent_apt_key(title)
   { id: title,
     ensure: 'absent',
     source: nil,
-    server: 'keyserver.ubuntu.com',
+    server: 'hkps://keyserver.ubuntu.com',
     content: nil,
     keyserver: nil }
 end

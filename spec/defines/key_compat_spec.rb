@@ -13,7 +13,7 @@ def apt_key_example(title)
   { id: title,
     ensure: 'present',
     source: nil,
-    server: 'keyserver.ubuntu.com',
+    server: 'hkps://keyserver.ubuntu.com',
     content: nil,
     keyserver_options: nil }
 end
@@ -44,7 +44,7 @@ describe 'apt::key', type: :define do
         is_expected.to contain_apt_key(title).with(id: title,
                                                    ensure: 'present',
                                                    source: nil,
-                                                   server: 'keyserver.ubuntu.com',
+                                                   server: 'hkps://keyserver.ubuntu.com',
                                                    content: nil)
       }
       it 'contains the apt_key present anchor' do
@@ -67,7 +67,7 @@ describe 'apt::key', type: :define do
         is_expected.to contain_apt_key(title).with(id: GPG_KEY_ID,
                                                    ensure: 'present',
                                                    source: nil,
-                                                   server: 'keyserver.ubuntu.com',
+                                                   server: 'hkps://keyserver.ubuntu.com',
                                                    content: nil)
       end
       it 'contains the apt_key present anchor' do
@@ -86,7 +86,7 @@ describe 'apt::key', type: :define do
         is_expected.to contain_apt_key(title).with(id: title,
                                                    ensure: 'absent',
                                                    source: nil,
-                                                   server: 'keyserver.ubuntu.com',
+                                                   server: 'hkps://keyserver.ubuntu.com',
                                                    content: nil)
       end
       it 'contains the apt_key absent anchor' do

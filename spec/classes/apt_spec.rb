@@ -153,6 +153,18 @@ describe 'apt' do
                                                                priority: '01')
       }
     end
+
+    context 'when host=localhost and port=8180 and repo_host=example.com' do
+      let(:params) { { proxy: { 'host' => 'localhost', 'port' => 8180, 'repo_host' => ['example.com'] } } }
+
+      it {
+        is_expected.to contain_apt__setting('conf-proxy').with(priority: '01').with_content(
+          %r{Acquire::http::proxy::\[example.com\] "http://localhost:8180/";},
+        ).without_content(
+          %r{Acquire::https::proxy},
+        )
+      }
+    end
   end
   context 'with lots of non-defaults' do
     let :params do
