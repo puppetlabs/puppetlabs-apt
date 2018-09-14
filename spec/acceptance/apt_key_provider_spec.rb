@@ -716,22 +716,6 @@ describe 'apt_key' do
           expect(r.stderr).to match(%r{could not resolve})
         end
       end
-
-      it 'fails with a socket error - i18n' do
-        hosts.each do |host|
-          on(host, "sed -i \"96i FastGettext.locale='ja'\" /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet.rb")
-          change_locale_on(host, 'ja_JP.utf-8')
-        end
-
-        apply_manifest(socket_error_pp, expect_failures: true) do |r|
-          expect(r.stderr).to match(%r{ƈǿŭŀḓ ƞǿŧ řḗşǿŀṽḗ})
-        end
-
-        hosts.each do |host|
-          on(host, 'sed -i "96d" /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet.rb')
-          change_locale_on(host, 'en_US')
-        end
-      end
     end
 
     # disabled when running in travis, security issues prevent FTP
@@ -757,22 +741,6 @@ describe 'apt_key' do
           expect(r.stderr).to match(%r{could not resolve})
         end
       end
-
-      it 'fails with a socket error - i18n' do
-        hosts.each do |host|
-          on(host, "sed -i \"96i FastGettext.locale='ja'\" /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet.rb")
-          change_locale_on(host, 'ja_JP.utf-8')
-        end
-
-        apply_manifest(ftp_socket_error_pp, expect_failures: true) do |r|
-          expect(r.stderr).to match(%r{ƈǿŭŀḓ ƞǿŧ řḗşǿŀṽḗ})
-        end
-
-        hosts.each do |host|
-          on(host, 'sed -i "96d" /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet.rb')
-          change_locale_on(host, 'en_US')
-        end
-      end
     end
 
     context 'with https://' do
@@ -795,22 +763,6 @@ describe 'apt_key' do
       it 'fails with a socket error' do
         apply_manifest(https_socket_error_pp, expect_failures: true) do |r|
           expect(r.stderr).to match(%r{could not resolve})
-        end
-      end
-
-      it 'fails with a socket error - i18n' do
-        hosts.each do |host|
-          on(host, "sed -i \"96i FastGettext.locale='ja'\" /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet.rb")
-          change_locale_on(host, 'ja_JP.utf-8')
-        end
-
-        apply_manifest(https_socket_error_pp, expect_failures: true) do |r|
-          expect(r.stderr).to match(%r{ƈǿŭŀḓ ƞǿŧ řḗşǿŀṽḗ})
-        end
-
-        hosts.each do |host|
-          on(host, 'sed -i "96d" /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet.rb')
-          change_locale_on(host, 'en_US')
         end
       end
     end
