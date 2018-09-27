@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.1.0](https://github.com/puppetlabs/puppetlabs-apt/tree/6.1.0) (2018-09-27)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/6.0.0...6.1.0)
+
+### Added
+
+- pdksync - \(FM-7392\) - Puppet 6 Testing Changes [\#800](https://github.com/puppetlabs/puppetlabs-apt/pull/800) ([pmcmaw](https://github.com/pmcmaw))
+- pdksync - \(MODULES-6805\) metadata.json shows support for puppet 6 [\#798](https://github.com/puppetlabs/puppetlabs-apt/pull/798) ([tphoney](https://github.com/tphoney))
+- \(MODULES-3307\) - Auto update expired keys [\#795](https://github.com/puppetlabs/puppetlabs-apt/pull/795) ([eimlav](https://github.com/eimlav))
+- \(FM-7316\) - Implementation of the i18n process [\#789](https://github.com/puppetlabs/puppetlabs-apt/pull/789) ([david22swan](https://github.com/david22swan))
+- Introduce an Apt::Proxy type to validate the hash [\#773](https://github.com/puppetlabs/puppetlabs-apt/pull/773) ([ekohl](https://github.com/ekohl))
+
+### Fixed
+
+- \(MODULES-6408\) - Fix dirmngr install failing [\#801](https://github.com/puppetlabs/puppetlabs-apt/pull/801) ([eimlav](https://github.com/eimlav))
+- \(MODULES-1630\) - Expanding source list fix to cover all needed versions [\#788](https://github.com/puppetlabs/puppetlabs-apt/pull/788) ([david22swan](https://github.com/david22swan))
+
 ## [6.0.0](https://github.com/puppetlabs/puppetlabs-apt/tree/6.0.0) (2018-08-24)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/5.0.1...6.0.0)
