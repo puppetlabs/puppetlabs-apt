@@ -794,6 +794,17 @@ describe 'apt_key' do
       end
     end
 
+    context 'with hkps://keyserver.ubuntu.com' do
+      it 'works' do
+        retry_on_error_matching do
+          apply_manifest(hkp_ubuntu_pp, catch_failures: true)
+        end
+
+        apply_manifest(hkp_ubuntu_pp, catch_changes: true)
+        shell(PUPPETLABS_KEY_CHECK_COMMAND)
+      end
+    end
+
     context 'with nonexistant.key.server' do
       it 'fails' do
         apply_manifest(nonexistant_key_server_pp, expect_failures: true) do |r|
