@@ -478,6 +478,14 @@ hkp_pool_pp = <<-MANIFEST
         }
   MANIFEST
 
+hkps_ubuntu_pp = <<-MANIFEST
+        apt_key { 'puppetlabs':
+          id     => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
+          ensure => 'present',
+	  server => 'hkps://keyserver.ubuntu.com',
+        }
+  MANIFEST
+
 nonexistant_key_server_pp = <<-MANIFEST
         apt_key { 'puppetlabs':
           id     => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
@@ -782,6 +790,17 @@ describe 'apt_key' do
         end
 
         apply_manifest(hkp_pool_pp, catch_changes: true)
+        shell(PUPPETLABS_KEY_CHECK_COMMAND)
+      end
+    end
+
+    context 'with hkps://keyserver.ubuntu.com' do
+      it 'works' do
+        retry_on_error_matching do
+          apply_manifest(hkp_ubuntu_pp, catch_failures: true)
+        end
+
+        apply_manifest(hkp_ubuntu_pp, catch_changes: true)
         shell(PUPPETLABS_KEY_CHECK_COMMAND)
       end
     end
