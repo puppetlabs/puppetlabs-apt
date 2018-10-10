@@ -33,12 +33,12 @@
 #   Passes additional options to `apt-key adv --keyserver-options`.
 #
 define apt::key (
-  Pattern[/\A(0x)?[0-9a-fA-F]{8}\Z/, /\A(0x)?[0-9a-fA-F]{16}\Z/, /\A(0x)?[0-9a-fA-F]{40}\Z/] $id = $title,
-  Enum['present', 'absent', 'refreshed'] $ensure                                                 = present,
-  Optional[String] $content                                                                      = undef,
-  Optional[Pattern[/\Ahttps?:\/\//, /\Aftp:\/\//, /\A\/\w+/]] $source                            = undef,
-  Pattern[/\A((hkp|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$/] $server  = $::apt::keyserver,
-  Optional[String] $options                                                                      = undef,
+  Pattern[/\A(0x)?[0-9a-fA-F]{8}\Z/, /\A(0x)?[0-9a-fA-F]{16}\Z/, /\A(0x)?[0-9a-fA-F]{40}\Z/] $id     = $title,
+  Enum['present', 'absent', 'refreshed'] $ensure                                                     = present,
+  Optional[String] $content                                                                          = undef,
+  Optional[Pattern[/\Ahttps?:\/\//, /\Aftp:\/\//, /\A\/\w+/]] $source                                = undef,
+  Pattern[/\A((hkp|hkps|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$/] $server = $::apt::keyserver,
+  Optional[String] $options                                                                          = undef,
   ) {
 
   case $ensure {

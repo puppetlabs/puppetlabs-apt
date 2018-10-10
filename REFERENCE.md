@@ -65,8 +65,8 @@ Default value: $apt::params::provider
 
 Data type: `String`
 
-Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
-hkp://).
+Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://,
+hkp:// or hkps://).
 
 Default value: $apt::params::keyserver
 
@@ -481,10 +481,10 @@ Default value: `undef`
 
 ##### `server`
 
-Data type: `Pattern[/\A((hkp|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$/]`
+Data type: `Pattern[/\A((hkp|hkps|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?$/]`
 
-Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
-hkp://).
+Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://,
+hkp:// or hkps://).
 
 Default value: $::apt::keyserver
 
