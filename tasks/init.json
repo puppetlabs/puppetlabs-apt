@@ -4,7 +4,7 @@
   "parameters": {
     "action": {
       "description": "Action to perform ",
-      "type": "Enum[update, upgrade]"
+      "type": "Enum[update, upgrade, dist-upgrade, autoremove]"
     }
   }
 }
