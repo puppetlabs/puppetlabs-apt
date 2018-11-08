@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.2.0](https://github.com/puppetlabs/puppetlabs-apt/tree/6.2.0) (2018-11-08)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/6.1.1...6.2.0)
+
+### Added
+
+- \(MODULES-8081\): add support for hkps:// protocol in apt::key [\#815](https://github.com/puppetlabs/puppetlabs-apt/pull/815) ([simondeziel](https://github.com/simondeziel))
+
+### Fixed
+
+- \(maint\) - Update Link to REFERENCE.md [\#811](https://github.com/puppetlabs/puppetlabs-apt/pull/811) ([pmcmaw](https://github.com/pmcmaw))
+
 ## [6.1.1](https://github.com/puppetlabs/puppetlabs-apt/tree/6.1.1) (2018-10-01)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/6.1.0...6.1.1)
