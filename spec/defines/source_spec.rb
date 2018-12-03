@@ -11,31 +11,24 @@ describe 'apt::source' do
     'my_source'
   end
 
+  let :facts do
+    {
+      os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
+      lsbdistid: 'Debian',
+      lsbdistcodename: 'jessie',
+      operatingsystem: 'Debian',
+      osfamily: 'Debian',
+      puppetversion: Puppet.version,
+    }
+  end
+
   context 'with defaults' do
     context 'without location' do
-      let :facts do
-        {
-          os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          osfamily: 'Debian',
-          lsbdistcodename: 'jessie',
-          puppetversion: Puppet.version,
-        }
-      end
-
       it do
         is_expected.to raise_error(Puppet::Error, %r{source entry without specifying a location})
       end
     end
     context 'with location' do
-      let :facts do
-        {
-          os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          lsbdistid: 'Debian',
-          lsbdistcodename: 'jessie',
-          osfamily: 'Debian',
-          puppetversion: Puppet.version,
-        }
-      end
       let(:params) { { location: 'hello.there' } }
 
       it {
@@ -46,18 +39,6 @@ describe 'apt::source' do
   end
 
   describe 'no defaults' do
-    let :facts do
-      {
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'Debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'Debian',
-        operatingsystem: 'Debian',
-        lsbdistrelease: '8.0',
-        puppetversion: Puppet.version,
-      }
-    end
-
     context 'with complex pin' do
       let :params do
         {
@@ -153,15 +134,6 @@ describe 'apt::source' do
   end
 
   context 'with allow_unsigned true' do
-    let :facts do
-      {
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'Debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'Debian',
-        puppetversion: Puppet.version,
-      }
-    end
     let :params do
       {
         location: 'hello.there',
@@ -175,15 +147,6 @@ describe 'apt::source' do
   end
 
   context 'with a https location, install apt-transport-https' do
-    let :facts do
-      {
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'Debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'Debian',
-        puppetversion: Puppet.version,
-      }
-    end
     let :params do
       {
         location: 'HTTPS://foo.bar',
@@ -243,14 +206,7 @@ describe 'apt::source' do
 
   context 'with architecture fact and unset architecture parameter' do
     let :facts do
-      {
-        architecture: 'amd64',
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'Debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'Debian',
-        puppetversion: Puppet.version,
-      }
+      super().merge(architecture: 'amd64')
     end
     let :params do
       {
@@ -265,15 +221,6 @@ describe 'apt::source' do
   end
 
   context 'with include_src => true' do
-    let :facts do
-      {
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'Debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'Debian',
-        puppetversion: Puppet.version,
-      }
-    end
     let :params do
       {
         location: 'hello.there',
@@ -287,15 +234,6 @@ describe 'apt::source' do
   end
 
   context 'with include deb => false' do
-    let :facts do
-      {
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'debian',
-        puppetversion: Puppet.version,
-      }
-    end
     let :params do
       {
         include: { 'deb' => false },
@@ -310,15 +248,6 @@ describe 'apt::source' do
   end
 
   context 'with include src => true and include deb => false' do
-    let :facts do
-      {
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'debian',
-        puppetversion: Puppet.version,
-      }
-    end
     let :params do
       {
         include: { 'deb' => false, 'src' => true },
@@ -333,15 +262,6 @@ describe 'apt::source' do
   end
 
   context 'with ensure => absent' do
-    let :facts do
-      {
-        os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-        lsbdistid: 'Debian',
-        lsbdistcodename: 'jessie',
-        osfamily: 'Debian',
-        puppetversion: Puppet.version,
-      }
-    end
     let :params do
       {
         ensure: 'absent',
@@ -358,7 +278,6 @@ describe 'apt::source' do
       let :facts do
         {
           os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          lsbdistid: 'Debian',
           osfamily: 'Debian',
           puppetversion: Puppet.version,
         }
@@ -371,29 +290,12 @@ describe 'apt::source' do
     end
 
     context 'with release is empty string' do
-      let :facts do
-        {
-          os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          lsbdistid: 'Debian',
-          osfamily: 'Debian',
-          puppetversion: Puppet.version,
-        }
-      end
       let(:params) { { location: 'hello.there', release: '' } }
 
       it { is_expected.to contain_apt__setting('list-my_source').with_content(%r{hello\.there  main}) }
     end
 
     context 'with invalid pin' do
-      let :facts do
-        {
-          os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          lsbdistid: 'Debian',
-          lsbdistcodename: 'jessie',
-          osfamily: 'Debian',
-          puppetversion: Puppet.version,
-        }
-      end
       let :params do
         {
           location: 'hello.there',
@@ -407,15 +309,6 @@ describe 'apt::source' do
     end
 
     context 'with notify_update = undef (default)' do
-      let :facts do
-        {
-          os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          lsbdistid: 'Debian',
-          lsbdistcodename: 'jessie',
-          osfamily: 'Debian',
-          puppetversion: Puppet.version,
-        }
-      end
       let :params do
         {
           location: 'hello.there',
@@ -426,15 +319,6 @@ describe 'apt::source' do
     end
 
     context 'with notify_update = true' do
-      let :facts do
-        {
-          os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          lsbdistid: 'Debian',
-          lsbdistcodename: 'jessie',
-          osfamily: 'Debian',
-          puppetversion: Puppet.version,
-        }
-      end
       let :params do
         {
           location: 'hello.there',
@@ -446,15 +330,6 @@ describe 'apt::source' do
     end
 
     context 'with notify_update = false' do
-      let :facts do
-        {
-          os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
-          lsbdistid: 'Debian',
-          lsbdistcodename: 'jessie',
-          osfamily: 'Debian',
-          puppetversion: Puppet.version,
-        }
-      end
       let :params do
         {
           location: 'hello.there',
