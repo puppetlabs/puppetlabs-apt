@@ -87,6 +87,9 @@
 #   https://manpages.debian.org/testing/apt/apt_auth.conf.5.en.html for details. If specified each hash must contain the keys machine, login and 
 #   password and no others.
 #
+# @param auth_conf_owner
+#   The owner of the file /etc/apt/auth.conf. Default: '_apt' or 'root' on old releases.
+#
 # @param root
 #   Specifies root directory of Apt executable.
 #
@@ -129,6 +132,7 @@ class apt (
   Hash $settings                = $apt::params::settings,
   Array[Apt::Auth_conf_entry]
     $auth_conf_entries          = $apt::params::auth_conf_entries,
+  String $auth_conf_owner       = $apt::params::auth_conf_owner,
   String $root                  = $apt::params::root,
   String $sources_list          = $apt::params::sources_list,
   String $sources_list_d        = $apt::params::sources_list_d,
@@ -278,7 +282,7 @@ class apt (
 
   file { '/etc/apt/auth.conf':
     ensure  => $auth_conf_ensure,
-    owner   => 'root',
+    owner   => $auth_conf_owner,
     group   => 'root',
     mode    => '0600',
     content => "${confheadertmp}${auth_conf_tmp}",
