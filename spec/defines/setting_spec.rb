@@ -4,7 +4,7 @@ describe 'apt::setting' do
   let(:pre_condition) { 'class { "apt": }' }
   let :facts do
     {
-      os: { distro: { codename: 'wheezy' }, family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
+      os: { distro: { codename: 'jessie' }, family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
       lsbdistrelease: '8.0',
       lsbdistcodename: 'jessie',
       operatingsystem: 'Debian',

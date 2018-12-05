@@ -38,7 +38,7 @@ describe 'apt' do
       os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
       lsbdistid: 'Debian',
       osfamily: 'Debian',
-      lsbdistcodename: 'wheezy',
+      lsbdistcodename: 'jessie',
       puppetversion: Puppet.version,
     }
   end
@@ -281,7 +281,7 @@ machine apt.example.com login aptlogin password supersecret
         os: { family: 'Debian', name: 'Ubuntu', release: { major: '16', full: '16.04' } },
         osfamily: 'Debian',
         lsbdistcodename: 'xenial',
-        lsbdistid: 'Debian',
+        lsbdistid: 'Ubuntu',
         puppetversion: Puppet.version,
       }
     end
@@ -311,7 +311,7 @@ machine apt.example.com login aptlogin password supersecret
         os: { family: 'Debian', name: 'Ubuntu', release: { major: '16', full: '16.04' } },
         osfamily: 'Debian',
         lsbdistcodename: 'xenial',
-        lsbdistid: 'Debian',
+        lsbdistid: 'Ubuntu',
         puppetversion: Puppet.version,
       }
     end
@@ -341,7 +341,7 @@ machine apt.example.com login aptlogin password supersecret
         os: { family: 'Debian', name: 'Ubuntu', release: { major: '16', full: '16.04' } },
         osfamily: 'Debian',
         lsbdistcodename: 'xenial',
-        lsbdistid: 'ubuntu',
+        lsbdistid: 'Ubuntu',
         lsbdistrelease: '16.04',
         puppetversion: Puppet.version,
       }
@@ -363,7 +363,7 @@ machine apt.example.com login aptlogin password supersecret
         os: { family: 'Debian', name: 'Ubuntu', release: { major: '16', full: '16.04' } },
         osfamily: 'Debian',
         lsbdistcodename: 'xenial',
-        lsbdistid: 'Debian',
+        lsbdistid: 'Ubuntu',
         puppetversion: Puppet.version,
       }
     end
@@ -384,7 +384,7 @@ machine apt.example.com login aptlogin password supersecret
         os: { family: 'Debian', name: 'Ubuntu', release: { major: '16', full: '16.04' } },
         osfamily: 'Debian',
         lsbdistcodename: 'xenial',
-        lsbdistid: 'Debian',
+        lsbdistid: 'Ubuntu',
         puppetversion: Puppet.version,
       }
     end
