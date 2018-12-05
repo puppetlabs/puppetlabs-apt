@@ -13,7 +13,6 @@ describe 'apt::source', type: :define do
       lsbdistid: 'Debian',
       lsbdistcodename: 'jessie',
       osfamily: 'Debian',
-      puppetversion: Puppet.version,
     }
   end
 
@@ -106,7 +105,6 @@ describe 'apt::source', type: :define do
         {
           os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
           osfamily: 'Debian',
-          puppetversion: Puppet.version,
         }
       end
 

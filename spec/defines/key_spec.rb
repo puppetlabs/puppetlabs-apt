@@ -48,7 +48,6 @@ describe 'apt::key' do
       lsbdistid: 'Debian',
       osfamily: 'Debian',
       lsbdistcodename: 'jessie',
-      puppetversion: Puppet.version,
     }
   end
 

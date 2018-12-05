@@ -10,7 +10,6 @@ describe 'apt::setting' do
       operatingsystem: 'Debian',
       osfamily: 'Debian',
       lsbdistid: 'Debian',
-      puppetversion: Puppet.version,
     }
   end
   let(:title) { 'conf-teddybear' }
@@ -81,7 +80,6 @@ describe 'apt::setting' do
         lsbdistid: 'Debian',
         osfamily: 'Debian',
         lsbdistcodename: 'jessie',
-        puppetversion: Puppet.version,
       }
     end
     let(:title) { 'conf-teddybear' }
@@ -121,11 +119,7 @@ describe 'apt::setting' do
     context 'with priority=1.2' do
       let(:params) { default_params.merge(priority: 1.2) }
 
-      if Puppet::Util::Package.versioncmp(Puppet.version, '4.0') >= 0 || ENV['FUTURE_PARSER'] == 'yes'
-        it { is_expected.to compile.and_raise_error(%r{expects a value of type}) }
-      else
-        it { is_expected.to compile.and_raise_error(%r{priority must be an integer or a zero-padded integer}) }
-      end
+      it { is_expected.to compile.and_raise_error(%r{expects a value of type}) }
     end
   end
 

@@ -11,7 +11,6 @@ describe 'apt::backports', type: :class do
           lsbdistid: 'Debian',
           osfamily: 'Debian',
           lsbdistcodename: 'jessie',
-          puppetversion: Puppet.version,
         }
       end
 
@@ -31,7 +30,6 @@ describe 'apt::backports', type: :class do
           osfamily: 'Debian',
           lsbdistcodename: 'xenial',
           lsbdistrelease: '16.04',
-          puppetversion: Puppet.version,
         }
       end
 
@@ -51,7 +49,6 @@ describe 'apt::backports', type: :class do
           osfamily: 'Debian',
           lsbdistcodename: 'xenial',
           lsbdistrelease: '16.04',
-          puppetversion: Puppet.version,
         }
       end
       let(:params) do
@@ -80,7 +77,6 @@ describe 'apt::backports', type: :class do
           osfamily: 'Debian',
           lsbdistcodename: 'xenial',
           lsbdistrelease: '16.04',
-          puppetversion: Puppet.version,
         }
       end
       let(:params) do
@@ -107,7 +103,6 @@ describe 'apt::backports', type: :class do
         lsbdistid: 'linuxmint',
         osfamily: 'Debian',
         lsbdistcodename: 'qiana',
-        puppetversion: Puppet.version,
       }
     end
 
@@ -190,7 +185,6 @@ describe 'apt::backports', type: :class do
         osfamily: 'Debian',
         lsbdistcodename: 'xenial',
         lsbdistrelease: '16.04',
-        puppetversion: Puppet.version,
       }
     end
 

@@ -18,7 +18,6 @@ describe 'apt::source' do
       lsbdistcodename: 'jessie',
       operatingsystem: 'Debian',
       osfamily: 'Debian',
-      puppetversion: Puppet.version,
     }
   end
 
@@ -166,7 +165,6 @@ describe 'apt::source' do
         lsbdistid: 'Debian',
         lsbdistcodename: 'buster',
         osfamily: 'Debian',
-        puppetversion: Puppet.version,
       }
     end
     let :params do
@@ -188,7 +186,6 @@ describe 'apt::source' do
         lsbdistid: 'Debian',
         lsbdistcodename: 'wheezy',
         osfamily: 'Debian',
-        puppetversion: Puppet.version,
       }
     end
     let :params do
@@ -279,7 +276,6 @@ describe 'apt::source' do
         {
           os: { family: 'Debian', name: 'Debian', release: { major: '8', full: '8.0' } },
           osfamily: 'Debian',
-          puppetversion: Puppet.version,
         }
       end
       let(:params) { { location: 'hello.there' } }

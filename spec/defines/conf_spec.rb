@@ -9,7 +9,6 @@ describe 'apt::conf', type: :define do
       lsbdistid: 'Debian',
       osfamily: 'Debian',
       lsbdistcodename: 'jessie',
-      puppetversion: Puppet.version,
     }
   end
   let :title do
