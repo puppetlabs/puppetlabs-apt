@@ -17,7 +17,6 @@ describe 'apt::source', type: :define do
   end
 
   context 'with mostly defaults' do
-
     let :params do
       {
         'include' => { 'deb' => false, 'src' => true },
