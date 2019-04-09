@@ -134,6 +134,12 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
         else
           user_pass = parsed_value.userinfo.split(':')
           parsed_value.userinfo = ''
+          unless user_pass.nil?
+            # URI unescape the username and password in case they had any special
+            # characters that required escaping
+            user_pass[0] = URI.unescape(user_pass[0])
+            user_pass[1] = URI.unescape(user_pass[1])
+          end
           key = open(parsed_value, http_basic_authentication: user_pass).read
         end
       rescue OpenURI::HTTPError, Net::FTPPermError => e
