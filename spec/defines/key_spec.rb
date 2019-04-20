@@ -131,7 +131,6 @@ describe 'apt::key' do
         is_expected.to contain_anchor("apt_key #{title} present")
       end
     end
-
     context 'when domain with dash' do
       let(:params) do
         {
@@ -167,6 +166,62 @@ describe 'apt::key' do
       it 'contains the apt_key' do
         is_expected.to contain_apt_key(title).with(id: title,
                                                    server: 'hkp://pgp.mit.edu:80')
+      end
+    end
+  end
+
+  describe 'dirmngr dependency' do
+    let :pre_condition do
+      'class { "apt": }'
+    end
+
+    let(:facts) do
+      {
+        os: { family: 'Debian', name: 'Debian', release: { major: '9', full: '9.8' } },
+        lsbdistid: 'Debian',
+        osfamily: 'Debian',
+        lsbdistcodename: 'stretch',
+      }
+    end
+
+    let :title do
+      GPG_KEY_ID
+    end
+
+    context 'no content or source' do
+      let :params do
+        {
+          content: nil,
+          source: nil,
+        }
+      end
+
+      it 'depends on dirmngr' do
+        is_expected.to contain_package('dirmngr')
+      end
+    end
+
+    context 'with content' do
+      let :params do
+        {
+          content: 'test',
+        }
+      end
+
+      it 'does not depend on dirmngr' do
+        is_expected.not_to contain_package('dirmngr')
+      end
+    end
+
+    context 'with source' do
+      let :params do
+        {
+          source: 'http://test',
+        }
+      end
+
+      it 'does not depend on dirmngr' do
+        is_expected.not_to contain_package('dirmngr')
       end
     end
   end

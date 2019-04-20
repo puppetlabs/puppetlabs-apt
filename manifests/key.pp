@@ -1,6 +1,6 @@
-# @summary Manages the GPG keys that Apt uses to authenticate packages. 
+# @summary Manages the GPG keys that Apt uses to authenticate packages.
 #
-# @note 
+# @note
 #   The apt::key defined type makes use of the apt_key type, but includes extra functionality to help prevent duplicate keys.
 #
 # @example Declare Apt key for apt.puppetlabs.com source
@@ -11,7 +11,7 @@
 #   }
 #
 # @param id
-#   Specifies a GPG key to authenticate Apt package signatures. Valid options: a string containing a key ID (8 or 16 hexadecimal 
+#   Specifies a GPG key to authenticate Apt package signatures. Valid options: a string containing a key ID (8 or 16 hexadecimal
 #   characters, optionally prefixed with "0x") or a full key fingerprint (40 hexadecimal characters).
 #
 # @param ensure
@@ -22,7 +22,7 @@
 #   Supplies the entire GPG key. Useful in case the key can't be fetched from a remote location and using a file resource is inconvenient.
 #
 # @param source
-#   Specifies the location of an existing GPG key file to copy. Valid options: a string containing a URL (ftp://, http://, or https://) or 
+#   Specifies the location of an existing GPG key file to copy. Valid options: a string containing a URL (ftp://, http://, or https://) or
 #   an absolute path.
 #
 # @param server
@@ -65,13 +65,13 @@ define apt::key (
 
         case $facts['os']['name'] {
           'Debian': {
-            if versioncmp($facts['os']['release']['major'], '9') >= 0 {
+            if !($source or $content) and (versioncmp($facts['os']['release']['major'], '9')) >= 0 {
               ensure_packages(['dirmngr'])
               Apt::Key<| title == $title |>
             }
           }
           'Ubuntu': {
-            if versioncmp($facts['os']['release']['full'], '17.04') >= 0 {
+            if !($source or $content) and (versioncmp($facts['os']['release']['full'], '17.04')) >= 0 {
               ensure_packages(['dirmngr'])
               Apt::Key<| title == $title |>
             }
