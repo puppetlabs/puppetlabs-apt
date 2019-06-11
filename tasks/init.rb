@@ -7,7 +7,7 @@ def apt_get(action)
   cmd = ['apt-get', action]
   cmd << '-y' if ['upgrade', 'dist-upgrade', 'autoremove'].include?(action)
   stdout, stderr, status = Open3.capture3(*cmd)
-  raise Puppet::Error, stderr if status != 0 # rubocop:disable GetText/DecorateFunctionMessage
+  raise Puppet::Error, stderr if status != 0 
   { status: stdout.strip }
 end
 
