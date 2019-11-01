@@ -32,6 +32,7 @@
       services: docker
       stage: acceptance
       sudo: required
+      stage: acceptance
     -
       bundler_args:
       dist: trusty
@@ -46,6 +47,7 @@
         - bundle exec rake litmus:acceptance:parallel
       services: docker
       sudo: required
+      stage: acceptance
 
 appveyor.yml:
   delete: true
