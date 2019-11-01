@@ -55,6 +55,7 @@ matrix:
       rvm: 2.5.3
       script: ["bundle exec rake litmus:acceptance:parallel"]
       services: docker
+      stage: acceptance
       sudo: required
 branches:
   only:
