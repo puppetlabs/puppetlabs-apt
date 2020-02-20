@@ -485,6 +485,14 @@ http_works_userinfo_pp = <<-MANIFEST
         }
   MANIFEST
 
+http_works_special_character_userinfo_pp = <<-MANIFEST
+        apt_key { 'puppetlabs':
+          id     => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
+          ensure => 'present',
+          source => 'http://dummyus$r:dummypassword@#{PUPPETLABS_APT_URL}/#{PUPPETLABS_GPG_KEY_FILE}',
+        }
+  MANIFEST
+
 four_oh_four_pp = <<-MANIFEST
         apt_key { 'puppetlabs':
           id     => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
@@ -547,6 +555,14 @@ https_userinfo_pp = <<-MANIFEST
           id     => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
           ensure => 'present',
           source => 'https://dummyuser:dummypassword@#{PUPPETLABS_APT_URL}/#{PUPPETLABS_GPG_KEY_FILE}',
+        }
+  MANIFEST
+
+https_special_character_userinfo_pp = <<-MANIFEST
+        apt_key { 'puppetlabs':
+          id     => '#{PUPPETLABS_GPG_KEY_LONG_ID}',
+          ensure => 'present',
+          source => 'https://dummyuser@google.co.uk:dummypassword@#{PUPPETLABS_APT_URL}/#{PUPPETLABS_GPG_KEY_FILE}',
         }
   MANIFEST
 
@@ -756,6 +772,11 @@ describe 'apt_key' do
         run_shell(PUPPETLABS_KEY_CHECK_COMMAND)
       end
 
+      it 'works with special character userinfo' do
+        apply_manifest_twice(http_works_special_character_userinfo_pp)
+        run_shell(PUPPETLABS_KEY_CHECK_COMMAND)
+      end
+
       it 'fails with a 404' do
         apply_manifest(four_oh_four_pp, expect_failures: true) do |r|
           expect(r.stderr).to match(%r{404 Not Found})
@@ -806,6 +827,11 @@ describe 'apt_key' do
 
       it 'works with userinfo' do
         apply_manifest_twice(https_userinfo_pp)
+        run_shell(PUPPETLABS_KEY_CHECK_COMMAND)
+      end
+
+      it 'works with special character userinfo' do
+        apply_manifest_twice(https_special_character_userinfo_pp)
         run_shell(PUPPETLABS_KEY_CHECK_COMMAND)
       end
 
