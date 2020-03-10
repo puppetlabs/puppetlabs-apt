@@ -24,6 +24,7 @@ define apt::setting (
   Optional[Enum['file', 'present', 'absent']] $ensure = file,
   Optional[String] $source                            = undef,
   Optional[String] $content                           = undef,
+  Optional[String] $file_permission                   = '0644',
   Boolean $notify_update                              = true,
 ) {
 
@@ -69,7 +70,7 @@ define apt::setting (
     ensure  => $ensure,
     owner   => 'root',
     group   => 'root',
-    mode    => '0444',
+    mode    => $file_permission,
     content => $content,
     source  => $source,
     notify  => $_notify,

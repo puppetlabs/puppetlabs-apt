@@ -81,6 +81,17 @@ class apt::params {
     'src' => false,
   }
 
+  $file_permissions = {
+    'settings'       => '0644',
+    'sources.list'   => '0644',
+    'sources.list.d' => '0644',
+    'preferences'    => '0644',
+    'preferences.d'  => '0644',
+    'apt.conf.d'     => '0644',
+    'auth.conf'      => '0600',
+  }
+
+
   case $facts['os']['name']{
     'Debian': {
           $backports = {
