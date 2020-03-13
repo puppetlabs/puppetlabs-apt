@@ -26,23 +26,27 @@ def get_updates(upgrade_option)
       end
     end
   end
-
-  setcode do
-    if !apt_updates.nil? && apt_updates.length == 2
-      apt_updates != [[], []]
-    end
-  end
   apt_updates
 end
 
 Facter.add('apt_has_updates') do
   confine osfamily: 'Debian'
-  apt_package_updates = get_updates('upgrade')
+  setcode do
+    apt_package_updates = get_updates('upgrade')
+    if !apt_package_updates.nil? && apt_package_updates.length == 2
+      apt_package_updates != [[], []]
+    end
+  end
 end
 
 Facter.add('apt_has_dist_updates') do
   confine osfamily: 'Debian'
-  apt_dist_updates = get_updates('dist-upgrade')
+  setcode do
+    apt_dist_updates = get_updates('dist-upgrade')
+    if !apt_dist_updates.nil? && apt_dist_updates.length == 2
+      apt_dist_updates != [[], []]
+    end
+  end
 end
 
 Facter.add('apt_package_updates') do
