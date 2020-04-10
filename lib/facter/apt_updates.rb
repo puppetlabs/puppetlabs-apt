@@ -1,6 +1,3 @@
-apt_package_updates = nil
-apt_dist_updates = nil
-
 # Executes the upgrading of packages
 # @param
 #   upgrade_option Type of upgrade passed into apt-get command arguments i.e. 'upgrade' or 'dist-upgrade'
@@ -27,27 +24,35 @@ def get_updates(upgrade_option)
     end
   end
 
-  setcode do
-    if !apt_updates.nil? && apt_updates.length == 2
-      apt_updates != [[], []]
-    end
-  end
   apt_updates
+end
+
+def has_update(updates)
+  if !updates.nil? && updates.length == 2
+    updates != [[], []]
+  end
 end
 
 Facter.add('apt_has_updates') do
   confine osfamily: 'Debian'
-  apt_package_updates = get_updates('upgrade')
+  setcode do
+    apt_package_updates = get_updates('upgrade')
+    has_update(apt_package_updates)
+  end
 end
 
 Facter.add('apt_has_dist_updates') do
   confine osfamily: 'Debian'
-  apt_dist_updates = get_updates('dist-upgrade')
+  setcode do
+    apt_dist_updates = get_updates('dist-upgrade')
+    has_update(apt_dist_updates)
+  end
 end
 
 Facter.add('apt_package_updates') do
   confine apt_has_updates: true
   setcode do
+    apt_package_updates = get_updates('upgrade')
     apt_package_updates[0]
   end
 end
@@ -55,6 +60,7 @@ end
 Facter.add('apt_package_dist_updates') do
   confine apt_has_dist_updates: true
   setcode do
+    apt_dist_updates = get_updates('dist-upgrade')
     apt_dist_updates[0]
   end
 end
@@ -62,6 +68,7 @@ end
 Facter.add('apt_package_security_updates') do
   confine apt_has_updates: true
   setcode do
+    apt_package_updates = get_updates('upgrade')
     apt_package_updates[1]
   end
 end
@@ -69,6 +76,7 @@ end
 Facter.add('apt_package_security_dist_updates') do
   confine apt_has_dist_updates: true
   setcode do
+    apt_dist_updates = get_updates('dist-upgrade')
     apt_dist_updates[1]
   end
 end
@@ -76,6 +84,7 @@ end
 Facter.add('apt_updates') do
   confine apt_has_updates: true
   setcode do
+    apt_package_updates = get_updates('upgrade')
     Integer(apt_package_updates[0].length)
   end
 end
@@ -83,6 +92,7 @@ end
 Facter.add('apt_dist_updates') do
   confine apt_has_dist_updates: true
   setcode do
+    apt_dist_updates = get_updates('dist-upgrade')
     Integer(apt_dist_updates[0].length)
   end
 end
@@ -90,6 +100,7 @@ end
 Facter.add('apt_security_updates') do
   confine apt_has_updates: true
   setcode do
+    apt_package_updates = get_updates('upgrade')
     Integer(apt_package_updates[1].length)
   end
 end
@@ -97,6 +108,7 @@ end
 Facter.add('apt_security_dist_updates') do
   confine apt_has_dist_updates: true
   setcode do
+    apt_dist_updates = get_updates('dist-upgrade')
     Integer(apt_dist_updates[1].length)
   end
 end
