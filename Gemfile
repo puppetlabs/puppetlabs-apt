@@ -1,4 +1,5 @@
 source ENV['GEM_SOURCE'] || 'https://rubygems.org'
+gem 'puppet_litmus', git: 'https://github.com/puppetlabs/puppet_litmus.git', branch: 'master', require: false, platforms: [:ruby, :mswin, :mingw, :x64_mingw] if ENV['PUPPET_GEM_VERSION'].nil? or ENV['PUPPET_GEM_VERSION'] !~ %r{ 5}
 
 def location_for(place_or_version, fake_version = nil)
   git_url_regex = %r{\A(?<url>(https?|git)[:@][^#]*)(#(?<branch>.*))?}
