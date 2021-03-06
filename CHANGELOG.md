@@ -66,10 +66,6 @@ All notable changes to this project will be documented in this file. The format 
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v7.4.0...v7.4.1)
 
-### Fixed
-
-- \(MODULES-10583\) Revert "MODULES-10548: make files readonly" [\#920](https://github.com/puppetlabs/puppetlabs-apt/pull/920) ([carabasdaniel](https://github.com/carabasdaniel))
-
 ## [v7.4.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v7.4.0) (2020-03-03)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v7.3.0...v7.4.0)
@@ -84,7 +80,6 @@ All notable changes to this project will be documented in this file. The format 
 - MODULES-10548: make files readonly [\#906](https://github.com/puppetlabs/puppetlabs-apt/pull/906) ([anarcat](https://github.com/anarcat))
 - MODULES-10543: only consider lsbdistcodename for apt-transport-https [\#905](https://github.com/puppetlabs/puppetlabs-apt/pull/905) ([anarcat](https://github.com/anarcat))
 - MODULES-10543: remove sources.list file on purging [\#904](https://github.com/puppetlabs/puppetlabs-apt/pull/904) ([anarcat](https://github.com/anarcat))
-- MODULES-10063, extend apt::key to support deeplinks [\#892](https://github.com/puppetlabs/puppetlabs-apt/pull/892) ([atarax](https://github.com/atarax))
 - Include apt in apt::backports [\#891](https://github.com/puppetlabs/puppetlabs-apt/pull/891) ([zivis](https://github.com/zivis))
 
 ## [v7.3.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v7.3.0) (2019-12-11)
@@ -97,7 +92,9 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- \(MODULES-10583\) Revert "MODULES-10548: make files readonly" [\#920](https://github.com/puppetlabs/puppetlabs-apt/pull/920) ([carabasdaniel](https://github.com/carabasdaniel))
 - MODULES-10063, extend apt::key to support deeplinks, this time with f… [\#894](https://github.com/puppetlabs/puppetlabs-apt/pull/894) ([atarax](https://github.com/atarax))
+- MODULES-10063, extend apt::key to support deeplinks [\#892](https://github.com/puppetlabs/puppetlabs-apt/pull/892) ([atarax](https://github.com/atarax))
 
 ## [v7.2.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v7.2.0) (2019-10-29)
 
@@ -157,10 +154,6 @@ All notable changes to this project will be documented in this file. The format 
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/6.2.0...6.2.1)
 
-### Fixed
-
-- \(MODULES-8272\) - Revert "Autorequire dirmngr in apt\_key types" [\#825](https://github.com/puppetlabs/puppetlabs-apt/pull/825) ([eimlav](https://github.com/eimlav))
-
 ## [6.2.0](https://github.com/puppetlabs/puppetlabs-apt/tree/6.2.0) (2018-11-19)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/6.1.1...6.2.0)
@@ -171,6 +164,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- \(MODULES-8272\) - Revert "Autorequire dirmngr in apt\_key types" [\#825](https://github.com/puppetlabs/puppetlabs-apt/pull/825) ([eimlav](https://github.com/eimlav))
 - Apt-key fixes to properly work on Debian 9 [\#822](https://github.com/puppetlabs/puppetlabs-apt/pull/822) ([ekohl](https://github.com/ekohl))
 - \(maint\) - Update Link to REFERENCE.md [\#811](https://github.com/puppetlabs/puppetlabs-apt/pull/811) ([pmcmaw](https://github.com/pmcmaw))
 
