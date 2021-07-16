@@ -154,6 +154,38 @@ describe 'apt::source' do
     }
   end
 
+  context 'with keyring set' do
+    let :params do
+      {
+        location: 'hello.there',
+        keyring: '/usr/share/keyrings/foo-archive-keyring.gpg',
+      }
+    end
+
+    it {
+      is_expected.to contain_apt__setting('list-my_source')
+        .with(ensure: 'present')
+        .with_content(%r{# my_source\ndeb \[signed-by=/usr/share/keyrings/foo-archive-keyring.gpg\] hello.there jessie main\n})
+    }
+  end
+
+  context 'with keyring, architecture and allow_unsigned set' do
+    let :params do
+      {
+        location: 'hello.there',
+        architecture: 'amd64',
+        allow_unsigned: true,
+        keyring: '/usr/share/keyrings/foo-archive-keyring.gpg',
+      }
+    end
+
+    it {
+      is_expected.to contain_apt__setting('list-my_source')
+        .with(ensure: 'present')
+        .with_content(%r{# my_source\ndeb \[arch=amd64 trusted=yes signed-by=/usr/share/keyrings/foo-archive-keyring.gpg\] hello.there jessie main\n})
+    }
+  end
+
   context 'with a https location, install apt-transport-https' do
     let :params do
       {

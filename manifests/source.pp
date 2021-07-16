@@ -39,6 +39,10 @@
 #   defined type, or a hash of `parameter => value` pairs to be passed to `apt::key`'s `id`, `server`, `content`, `source`, and/or
 #   `options` parameters.
 #
+# @param keyring
+#   Absolute path to a file containing the PGP keyring used to sign this repository. Value is used to set signed-by on the source entry.
+#   See https://wiki.debian.org/DebianRepository/UseThirdParty for details.
+#
 # @param pin
 #   Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `id` parameter of the
 #   `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
@@ -62,6 +66,7 @@ define apt::source(
   String $repos                                 = 'main',
   Optional[Variant[Hash]] $include              = {},
   Optional[Variant[String, Hash]] $key          = undef,
+  Optional[Stdlib::AbsolutePath] $keyring       = undef,
   Optional[Variant[Hash, Numeric, String]] $pin = undef,
   Optional[String] $architecture                = undef,
   Boolean $allow_unsigned                       = false,
@@ -103,6 +108,10 @@ define apt::source(
 
   $includes = merge($::apt::include_defaults, $include)
 
+  if $key and $keyring {
+    fail("parameters key and keyring are mutualy exclusive")
+  }
+
   if $key {
     if $key =~ Hash {
       unless $key['id'] {
@@ -119,8 +128,11 @@ define apt::source(
   $sourcelist = epp('apt/source.list.epp', {
     'comment'          => $comment,
     'includes'         => $includes,
-    'opt_architecture' => $architecture,
-    'allow_unsigned'   => $allow_unsigned,
+    'options'          => delete_undef_values({
+      'arch'      => $architecture,
+      'trusted'   => $allow_unsigned ? {true => "yes", false => undef},
+      'signed-by' => $keyring,
+    }),
     'location'         => $_location,
     'release'          => $_release,
     'repos'            => $repos,
