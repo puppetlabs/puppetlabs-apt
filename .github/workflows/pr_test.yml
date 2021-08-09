@@ -127,7 +127,7 @@ jobs:
 
     - name: Provision test environment
       run: |
-        if [[ "${{ matrix.platforms.image }}" == "litmusiamge/debian:11" ]]; then
+        if [[ "${{ matrix.platforms.image }}" == "litmusimage/debian:11" ]]; then
           apt-get install libseccomp-dev
         fi
         buildevents cmd $TRACE_ID $STEP_ID 'rake litmus:provision ${{ matrix.platforms.image }}' -- bundle exec rake 'litmus:provision[${{matrix.platforms.provider}},${{ matrix.platforms.image }}]'
