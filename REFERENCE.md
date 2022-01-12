@@ -935,6 +935,7 @@ The following parameters are available in the `apt::source` defined type:
 * [`pin`](#pin)
 * [`architecture`](#architecture)
 * [`allow_unsigned`](#allow_unsigned)
+* [`allow_insecure`](#allow_insecure)
 * [`notify_update`](#notify_update)
 
 ##### <a name="location"></a>`location`
@@ -1033,6 +1034,16 @@ Default value: ``undef``
 Data type: `Boolean`
 
 Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked.
+
+Default value: ``false``
+
+##### <a name="allow_insecure"></a>`allow_insecure`
+
+Data type: `Boolean`
+
+Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked.
+Unlike the `allow_unsigned` (trusted=yes) option, this should throw a warning that the interaction is insecure.  
+See [this comment](https://unix.stackexchange.com/a/480550) for a brief discussion of the difference and why this option might be preferable to `allow_unsigned`.
 
 Default value: ``false``
 

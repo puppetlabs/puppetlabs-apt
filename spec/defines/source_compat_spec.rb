@@ -71,6 +71,18 @@ describe 'apt::source', type: :define do
     }
   end
 
+  context 'when allow_insecure true' do
+    let :params do
+      {
+        'include'        => { 'src' => false },
+        'location'       => 'http://debian.mirror.iweb.ca/debian/',
+        'allow_insecure' => true,
+      }
+    end
+
+    it { is_expected.to contain_apt__setting('list-my_source').with_content(%r{# my_source\ndeb \[allow-insecure=yes\] http://debian.mirror.iweb.ca/debian/ jessie main\n}) }
+  end
+
   context 'when allow_unsigned true' do
     let :params do
       {

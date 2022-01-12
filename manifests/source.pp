@@ -70,6 +70,7 @@ define apt::source(
   Optional[Variant[Hash, Numeric, String]] $pin = undef,
   Optional[String] $architecture                = undef,
   Boolean $allow_unsigned                       = false,
+  Boolean $allow_insecure                       = false,
   Boolean $notify_update                        = true,
 ) {
 
@@ -129,9 +130,10 @@ define apt::source(
     'comment'          => $comment,
     'includes'         => $includes,
     'options'          => delete_undef_values({
-      'arch'      => $architecture,
-      'trusted'   => $allow_unsigned ? {true => "yes", false => undef},
-      'signed-by' => $keyring,
+      'arch'           => $architecture,
+      'trusted'        => $allow_unsigned ? {true => "yes", false => undef},
+      'allow-insecure' => $allow_insecure ? {true => "yes", false => undef},
+      'signed-by'      => $keyring,
     }),
     'location'         => $_location,
     'release'          => $_release,

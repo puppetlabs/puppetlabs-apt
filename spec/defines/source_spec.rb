@@ -145,6 +145,19 @@ describe 'apt::source' do
     end
   end
 
+  context 'with allow_insecure true' do
+    let :params do
+      {
+        location: 'hello.there',
+        allow_insecure: true,
+      }
+    end
+
+    it {
+      is_expected.to contain_apt__setting('list-my_source').with(ensure: 'present').with_content(%r{# my_source\ndeb \[allow-insecure=yes\] hello.there jessie main\n})
+    }
+  end
+
   context 'with allow_unsigned true' do
     let :params do
       {
