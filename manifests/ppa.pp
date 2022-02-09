@@ -55,7 +55,8 @@ define apt::ppa(
 
   $sources_list_d_filename  = "${dash_filename_no_specialchars}-${release}.list"
 
-  if versioncmp($facts['os']['release']['full'], '15.10') >= 0 {
+  if versioncmp($facts['os']['release']['full'], '15.10') >= 0 and
+    versioncmp($facts['os']['release']['full'], '21.04') < 0 {
     $trusted_gpg_d_filename = "${underscore_filename_no_specialchars}.gpg"
   } else {
     $trusted_gpg_d_filename = "${dash_filename_no_specialchars}.gpg"

@@ -1,8 +1,8 @@
 <%- | String $comment, Hash $includes, Hash $options, $location, $release, String $repos | -%>
 # <%= $comment %>
 <%- if $includes['deb'] { -%>
-deb <% if !$options.empty() { -%>[<%=  $options.map |$key, $value| { "${key}=${value}" }.join(" ") %>] <% } -%> <%= $location %> <%= $release %> <%= $repos %>
+deb <% if !$options.empty() { -%>[<%=  $options.map |$key, $value| { if !$value.empty() { "${key}=${value}" } }.join(" ") %>] <% } -%> <%= $location %> <%= $release %> <%= $repos %>
 <%- } -%>
 <%- if $includes['src'] { -%>
-deb-src <% if !$options.empty() { -%>[<%=  $options.map |$key, $value| { "${key}=${value}" }.join(" ") %>] <% } -%> <%= $location %> <%= $release %> <%= $repos %>
+deb-src <% if !$options.empty() { -%>[<%=  $options.map |$key, $value| { if !$value.empty() { "${key}=${value}" } }.join(" ") %>] <% } -%> <%= $location %> <%= $release %> <%= $repos %>
 <%- } -%>
