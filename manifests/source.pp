@@ -102,6 +102,7 @@ define apt::source(
     $_transport_https_releases = [ 'wheezy', 'jessie', 'stretch', 'trusty', 'xenial' ]
     if ($facts['os']['distro']['codename'] in $_transport_https_releases) and $_location =~ /(?i:^https:\/\/)/ {
       ensure_packages('apt-transport-https')
+      Package['apt-transport-https'] -> Class['apt::update']
     }
   } else {
     $_location = undef
