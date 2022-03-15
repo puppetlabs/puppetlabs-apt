@@ -79,7 +79,7 @@ define apt::source(
   $_before = Apt::Setting["list-${title}"]
 
   if !$release {
-    if $facts['os']['distro']['codename'] {
+    if fact('os.distro.codename') {
       $_release = $facts['os']['distro']['codename']
     } else {
       fail('os.distro.codename fact not available: release parameter required')
