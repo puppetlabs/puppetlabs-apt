@@ -28,6 +28,12 @@
         "18.04",
         "20.04"
       ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "9"
+      ]
     }
   ],
   "requirements": [
