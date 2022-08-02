@@ -30,6 +30,8 @@ APT is a package manager available on Debian, Ubuntu, and several other operatin
 Debian/Ubuntu (or derivative) you're running, you need to make sure the `lsb-release` package is
 installed. With Puppet 7 the `lsb-release` package is not needed.
 
+This is an example change.
+
 <a id="setup"></a>
 
 ## Setup
