@@ -45,7 +45,7 @@ be manipulated through the `apt-key` command.
 
 ### Tasks
 
-* [`init`](#init): Allows you to perform apt functions
+* [`init`](#init): Allows you to perform apt-get functions
 
 ## Classes
 
@@ -466,7 +466,7 @@ Default value: ``undef``
 
 ##### <a name="pin"></a>`pin`
 
-Data type: `Optional[Variant[Integer, String, Hash]]`
+Data type: `Variant[Integer, String, Hash]`
 
 Specifies a pin priority for the backports. Valid options: a number or string to be passed to the `id` parameter of the `apt::pin` defined
 type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
@@ -475,7 +475,7 @@ Default value: `200`
 
 ##### <a name="include"></a>`include`
 
-Data type: `Optional[Variant[Hash]]`
+Data type: `Variant[Hash]`
 
 Specifies whether to include 'deb' or 'src', or both.
 
@@ -665,7 +665,7 @@ The following parameters are available in the `apt::pin` defined type:
 
 ##### <a name="ensure"></a>`ensure`
 
-Data type: `Optional[Enum['file', 'present', 'absent']]`
+Data type: `Enum['file', 'present', 'absent']`
 
 Specifies whether the pin should exist. Valid options: 'file', 'present', and 'absent'.
 
@@ -869,7 +869,7 @@ Default value: `50`
 
 ##### <a name="ensure"></a>`ensure`
 
-Data type: `Optional[Enum['file', 'present', 'absent']]`
+Data type: `Enum['file', 'present', 'absent']`
 
 Specifies whether the file should exist. Valid options: 'present', 'absent', and 'file'.
 
@@ -935,8 +935,8 @@ The following parameters are available in the `apt::source` defined type:
 * [`pin`](#pin)
 * [`architecture`](#architecture)
 * [`allow_unsigned`](#allow_unsigned)
-* [`notify_update`](#notify_update)
 * [`allow_insecure`](#allow_insecure)
+* [`notify_update`](#notify_update)
 * [`check_valid_until`](#check_valid_until)
 
 ##### <a name="location"></a>`location`
@@ -981,7 +981,7 @@ Default value: `'main'`
 
 ##### <a name="include"></a>`include`
 
-Data type: `Optional[Variant[Hash]]`
+Data type: `Variant[Hash]`
 
 Configures include options. Valid options: a hash of available keys.
 
@@ -1038,14 +1038,6 @@ Specifies whether to authenticate packages from this release, even if the Releas
 
 Default value: ``false``
 
-##### <a name="notify_update"></a>`notify_update`
-
-Data type: `Boolean`
-
-Specifies whether to trigger an `apt-get update` run.
-
-Default value: ``true``
-
 ##### <a name="allow_insecure"></a>`allow_insecure`
 
 Data type: `Boolean`
@@ -1053,6 +1045,14 @@ Data type: `Boolean`
 Specifies whether to allow downloads from insecure repositories.
 
 Default value: ``false``
+
+##### <a name="notify_update"></a>`notify_update`
+
+Data type: `Boolean`
+
+Specifies whether to trigger an `apt-get update` run.
+
+Default value: ``true``
 
 ##### <a name="check_valid_until"></a>`check_valid_until`
 
@@ -1202,7 +1202,7 @@ Specifies whether or not to use a `DIRECT` target to bypass the system default p
 
 ### <a name="init"></a>`init`
 
-Allows you to perform apt functions
+Allows you to perform apt-get functions
 
 **Supports noop?** false
 
@@ -1212,5 +1212,5 @@ Allows you to perform apt functions
 
 Data type: `Enum[update, upgrade, dist-upgrade, autoremove]`
 
-Action to perform 
+Action to perform with apt-get
 
