@@ -38,6 +38,7 @@ jobs:
       with:
         ruby-version: "2.7"
         bundler-cache: true
+        cache-version: 1
 
     - name: Print bundle environment
       if: ${{ github.repository_owner == 'puppetlabs' }}
