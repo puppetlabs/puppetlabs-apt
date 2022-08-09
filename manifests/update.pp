@@ -58,6 +58,7 @@ class apt::update {
   }
   exec { 'apt_update':
     command     => "${::apt::provider} update",
+    environment => $::apt::_update['environment'],
     loglevel    => $::apt::_update['loglevel'],
     logoutput   => 'on_failure',
     refreshonly => $_refresh,

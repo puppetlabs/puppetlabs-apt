@@ -117,6 +117,17 @@ class { 'apt':
 }
 ```
 
+Update command is executed with [exec](https://puppet.com/docs/puppet/7/types/exec.html#exec-attribute-environment) resource and no environment variables are passed to it by default. However there is a way how to configure some via $::apt::update['environment'] argument.
+
+```puppet
+class { 'apt':
+  update => {
+    frequency    => 'daily',
+    environment  => ['HOME=/root'],
+  },
+}
+```
+
 > **NOTE:** Every `Exec['apt_update']` run will generate a corrective change, even if the apt caches are not updated. For example, setting an update frequency of `always` can result in every Puppet run resulting in a corrective change. This is a known issue. For details, see [MODULES-10763](https://tickets.puppetlabs.com/browse/MODULES-10763).
 
 <a id="pin-a-specific-release"></a>
