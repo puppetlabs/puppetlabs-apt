@@ -69,8 +69,11 @@ The following parameters are available in the `apt` class:
 * [`backports`](#backports)
 * [`confs`](#confs)
 * [`update`](#update)
+* [`update_defaults`](#update_defaults)
 * [`purge`](#purge)
+* [`purge_defaults`](#purge_defaults)
 * [`proxy`](#proxy)
+* [`proxy_defaults`](#proxy_defaults)
 * [`sources`](#sources)
 * [`keys`](#keys)
 * [`ppas`](#ppas)
@@ -87,9 +90,6 @@ The following parameters are available in the `apt` class:
 * [`preferences_d`](#preferences_d)
 * [`config_files`](#config_files)
 * [`sources_list_force`](#sources_list_force)
-* [`update_defaults`](#update_defaults)
-* [`purge_defaults`](#purge_defaults)
-* [`proxy_defaults`](#proxy_defaults)
 * [`include_defaults`](#include_defaults)
 * [`apt_conf_d`](#apt_conf_d)
 * [`source_key_defaults`](#source_key_defaults)
@@ -179,6 +179,14 @@ Default: 'reluctantly'.
 
 Default value: `$apt::params::update`
 
+##### <a name="update_defaults"></a>`update_defaults`
+
+Data type: `Hash`
+
+The default update settings that are combined and merged with the passed `update` value
+
+Default value: `$apt::params::update_defaults`
+
 ##### <a name="purge"></a>`purge`
 
 Data type: `Hash`
@@ -194,6 +202,14 @@ Options:
 
 Default value: `$apt::params::purge`
 
+##### <a name="purge_defaults"></a>`purge_defaults`
+
+Data type: `Hash`
+
+The default purge settings that are combined and merged with the passed `purge` value
+
+Default value: `$apt::params::purge_defaults`
+
 ##### <a name="proxy"></a>`proxy`
 
 Data type: `Apt::Proxy`
@@ -201,6 +217,14 @@ Data type: `Apt::Proxy`
 Configures Apt to connect to a proxy server. Valid options: a hash matching the locally defined type apt::proxy.
 
 Default value: `$apt::params::proxy`
+
+##### <a name="proxy_defaults"></a>`proxy_defaults`
+
+Data type: `Hash`
+
+The default proxy settings that are combined and merged with the passed `proxy` value
+
+Default value: `$apt::params::proxy_defaults`
 
 ##### <a name="sources"></a>`sources`
 
@@ -334,30 +358,6 @@ Specifies whether to perform force purge or delete. Default false.
 
 Default value: `$apt::params::sources_list_force`
 
-##### <a name="update_defaults"></a>`update_defaults`
-
-Data type: `Hash`
-
-
-
-Default value: `$apt::params::update_defaults`
-
-##### <a name="purge_defaults"></a>`purge_defaults`
-
-Data type: `Hash`
-
-
-
-Default value: `$apt::params::purge_defaults`
-
-##### <a name="proxy_defaults"></a>`proxy_defaults`
-
-Data type: `Hash`
-
-
-
-Default value: `$apt::params::proxy_defaults`
-
 ##### <a name="include_defaults"></a>`include_defaults`
 
 Data type: `Hash`
@@ -370,7 +370,7 @@ Default value: `$apt::params::include_defaults`
 
 Data type: `String`
 
-
+The path to the file `apt.conf.d`
 
 Default value: `$apt::params::apt_conf_d`
 
@@ -378,7 +378,7 @@ Default value: `$apt::params::apt_conf_d`
 
 Data type: `Hash`
 
-
+The fault `source_key` settings
 
 Default value: `{
     'server'  => $keyserver,
@@ -714,7 +714,7 @@ Data type: `Optional[String]`
 
 Tells APT to prefer packages that support the specified release. Typical values include 'stable', 'testing', and 'unstable'.
 
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="release_version"></a>`release_version`
 
@@ -722,7 +722,7 @@ Data type: `Optional[String]`
 
 Tells APT to prefer packages that support the specified operating system release version (such as Debian release version 7).
 
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="component"></a>`component`
 
@@ -730,7 +730,7 @@ Data type: `Optional[String]`
 
 Names the licensing component associated with the packages in the directory tree of the Release file.
 
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="originator"></a>`originator`
 
@@ -738,7 +738,7 @@ Data type: `Optional[String]`
 
 Names the originator of the packages in the directory tree of the Release file.
 
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="label"></a>`label`
 
@@ -746,31 +746,31 @@ Data type: `Optional[String]`
 
 Names the label of the packages in the directory tree of the Release file.
 
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="origin"></a>`origin`
 
 Data type: `Optional[String]`
 
+The package origin
 
-
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="version"></a>`version`
 
 Data type: `Optional[String]`
 
+The version of the package
 
-
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="codename"></a>`codename`
 
 Data type: `Optional[String]`
 
+The codename of the package
 
-
-Default value: `''`
+Default value: ``undef``
 
 ### <a name="aptppa"></a>`apt::ppa`
 
