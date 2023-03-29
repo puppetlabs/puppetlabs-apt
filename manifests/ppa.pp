@@ -40,7 +40,7 @@ define apt::ppa (
   }
 
   # Validate the resource name
-  if $name !~ /^ppa:([a-zA-Z0-9\-_.]+)\/([a-zA-z0-9\-_\.]+)$/ {
+  if $name !~ /^ppa:([a-zA-Z0-9\-_.]+)\/([a-zA-z0-9\-_\.\+]+)$/ {
     fail("Invalid PPA name: ${name}")
   }
 

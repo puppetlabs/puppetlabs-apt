@@ -49,6 +49,7 @@ describe 'apt::ppa' do
     'ppa:foo/bar1.0',
     'ppa:foo10/bar10',
     'ppa:foo-/bar_',
+    'ppa:foo-/bar+',
   ].each do |value|
     describe 'valid resource names' do
       let :facts do
