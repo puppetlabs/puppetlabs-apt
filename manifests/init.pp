@@ -5,11 +5,11 @@
 # @param provider
 #   Specifies the provider that should be used by apt::update.
 #
-# @param keyserver
+# @param keyserver (deprecated)
 #   Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
 #   hkp://).
 #
-# @param key_options
+# @param key_options (deprecated)
 #   Specifies the default options for apt::key resources.
 #
 # @param ppa_options
@@ -85,8 +85,11 @@
 # @param sources
 #   Creates new `apt::source` resources. Valid options: a hash to be passed to the create_resources function linked above.
 #
-# @param keys
+# @param keys (deprecated)
 #   Creates new `apt::key` resources. Valid options: a hash to be passed to the create_resources function linked above.
+#
+# @param keyrings
+#   Creates new `apt::keyring` resources. Valid options: a hash to be passed to the create_resources function linked above.
 #
 # @param ppas
 #   Creates new `apt::ppa` resources. Valid options: a hash to be passed to the create_resources function linked above.
@@ -139,8 +142,8 @@
 # @param apt_conf_d
 #   The path to the file `apt.conf.d`
 #
-# @param source_key_defaults
-#   The fault `source_key` settings
+# @param source_key_defaults (deprecated)
+#   The default `source_key` settings
 #
 class apt (
   Hash $update_defaults                           = $apt::params::update_defaults,
@@ -159,6 +162,7 @@ class apt (
   Apt::Proxy $proxy                               = $apt::params::proxy,
   Hash $sources                                   = $apt::params::sources,
   Hash $keys                                      = $apt::params::keys,
+  Hash $keyrings                                  = $apt::params::keyrings,
   Hash $ppas                                      = $apt::params::ppas,
   Hash $pins                                      = $apt::params::pins,
   Hash $settings                                  = $apt::params::settings,
@@ -350,6 +354,9 @@ class apt (
   # manage keys if present
   if $keys {
     create_resources('apt::key', $keys)
+  }
+  if $keyrings {
+    create_resources('apt::keyring', $keyrings)
   }
   # manage ppas if present
   if $ppas {
