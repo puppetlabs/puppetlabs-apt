@@ -88,6 +88,9 @@
 # @param keys
 #   Creates new `apt::key` resources. Valid options: a hash to be passed to the create_resources function linked above.
 #
+# @param keyrings
+#   Creates new `apt::keyring` resources. Valid options: a hash to be passed to the create_resources function linked above.
+#
 # @param ppas
 #   Creates new `apt::ppa` resources. Valid options: a hash to be passed to the create_resources function linked above.
 #
@@ -159,6 +162,7 @@ class apt (
   Apt::Proxy $proxy                               = $apt::params::proxy,
   Hash $sources                                   = $apt::params::sources,
   Hash $keys                                      = $apt::params::keys,
+  Hash $keyrings                                  = $apt::params::keyrings,
   Hash $ppas                                      = $apt::params::ppas,
   Hash $pins                                      = $apt::params::pins,
   Hash $settings                                  = $apt::params::settings,
@@ -346,6 +350,10 @@ class apt (
   # manage keys if present
   if $keys {
     create_resources('apt::key', $keys)
+  }
+  # manage keyrings if present
+  if $keyrings {
+    create_resources('apt::keyring', $keyrings)
   }
   # manage ppas if present
   if $ppas {

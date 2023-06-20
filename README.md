@@ -65,6 +65,23 @@ include apt
 <a id="add-gpg-keys"></a>
 
 ### Add GPG keys
+You can fetch GPG keys via HTTP, Puppet URI, or local filesystem. The key must be in binary format for apt to read it properly.
+
+#### Fetch via HTTP
+```puppet
+apt::keyring {'puppetlabs-keyring.gpg':
+  source => 'https://apt.puppetlabs.com/keyring.gpg',
+}
+```
+#### Fetch via Puppet URI
+```puppet
+apt::keyring {'puppetlabs-keyring.gpg':
+  source => 'puppet:///modules/my_module/local_puppetlabs-keyring.gpg',
+}
+```
+Alternatively `apt::key` can be used.
+
+**Warning** `apt::key` is deprecated in the latest Debian and Ubuntu releases. Please use apt::keyring instead.
 
 **Warning:** Using short key IDs presents a serious security issue, potentially leaving you open to collision attacks. We recommend you always use full fingerprints to identify your GPG keys. This module allows short keys, but issues a security warning if you use them.
 
