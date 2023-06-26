@@ -107,7 +107,9 @@ define apt::source (
     # Newer oses, do not need the package for HTTPS transport.
     $_transport_https_releases = ['9']
     if (fact('os.release.major') in $_transport_https_releases) and $_location =~ /(?i:^https:\/\/)/ {
-      stdlib::ensure_packages('apt-transport-https')
+      package { 'apt-transport-https':
+        ensure => 'installed',
+      }
       Package['apt-transport-https'] -> Class['apt::update']
     }
   } else {

@@ -73,7 +73,9 @@ define apt::ppa (
 
   if $ensure == 'present' {
     if $package_manage {
-      stdlib::ensure_packages($package_name)
+      package { $package_manage:
+        ensure => installed,
+      }
       $_require = [File['sources.list.d'], Package[$package_name]]
     } else {
       $_require = File['sources.list.d']
