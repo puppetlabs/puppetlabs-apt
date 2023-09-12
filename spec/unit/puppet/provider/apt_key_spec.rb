@@ -49,8 +49,34 @@ describe Puppet::Type.type(:apt_key).provider(:apt_key) do
       expect(described_class.instances.size).to eq(2)
       expect(described_class.instances[0].name).to eq('630239CC130E1A7FD81A27B140976EAF437D05B5')
       expect(described_class.instances[0].id).to eq('40976EAF437D05B5')
+      expect(described_class.instances[0].expired).to be_falsey
       expect(described_class.instances[1].name).to eq('C5986B4F1257FFA86632CBA746181433FBB75451')
       expect(described_class.instances[1].id).to eq('46181433FBB75451')
+      expect(described_class.instances[1].expired).to be_falsey
+    end
+  end
+
+  context 'with self.instances expired subkeys' do
+    before :each do
+      command_output = <<~OUTPUT
+        Executing: /tmp/apt-key-gpghome.0lru3TZOtF/gpg.1.sh --list-keys --with-colons --fingerprint 0x7721F63BD38B4796
+        tru:t:1:1682141947:0:3:1:5
+        pub:-:4096:1:7721F63BD38B4796:1460440275:::-:::scSC::::::23::0:
+        fpr:::::::::EB4C1BFD4F042F6DDDCCEC917721F63BD38B4796:
+        uid:-::::1460440275::7830FE2652F718E78EEE5881B7FA2CE8E3533BE4::Google Inc. (Linux Packages Signing Authority) <linux-packages-keymaster@google.com>::::::::::0:
+        sub:e:4096:1:1397BC53640DB551:1460440520:1555048520:::::s::::::23:
+        fpr:::::::::3B068FB4789ABE4AEFA3BB491397BC53640DB551:
+        sub:e:4096:1:6494C6D6997C215E:1485225932:1579833932:::::s::::::23:
+        fpr:::::::::3E50F6D3EC278FDEB655C8CA6494C6D6997C215E:
+      OUTPUT
+      allow(described_class).to receive(:apt_key).with(
+        ['adv', '--no-tty', '--list-keys', '--with-colons', '--fingerprint', '--fixed-list-mode'],
+      ).and_return(command_output)
+    end
+
+    it 'returns 1 expired resource' do
+      expect(described_class.instances.size).to eq(1)
+      expect(described_class.instances[0].expired).to be_truthy
     end
   end
 
@@ -174,7 +200,7 @@ describe Puppet::Type.type(:apt_key).provider(:apt_key) do
 
   context 'with key_line_hash function' do
     it 'matches rsa' do
-      expect(described_class.key_line_hash('pub:-:1024:1:40976EAF437D05B5:1095016255:::-:::scESC:', 'fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:')).to include(
+      expect(described_class.key_line_hash('pub:-:1024:1:40976EAF437D05B5:1095016255:::-:::scESC:', ['fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:'])).to include(
         key_expiry: nil,
         key_fingerprint: '630239CC130E1A7FD81A27B140976EAF437D05B5',
         key_long: '40976EAF437D05B5',
@@ -185,7 +211,7 @@ describe Puppet::Type.type(:apt_key).provider(:apt_key) do
     end
 
     it 'matches dsa' do
-      expect(described_class.key_line_hash('pub:-:1024:17:40976EAF437D05B5:1095016255:::-:::scESC:', 'fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:')).to include(
+      expect(described_class.key_line_hash('pub:-:1024:17:40976EAF437D05B5:1095016255:::-:::scESC:', ['fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:'])).to include(
         key_expiry: nil,
         key_fingerprint: '630239CC130E1A7FD81A27B140976EAF437D05B5',
         key_long: '40976EAF437D05B5',
@@ -196,7 +222,7 @@ describe Puppet::Type.type(:apt_key).provider(:apt_key) do
     end
 
     it 'matches ecc' do
-      expect(described_class.key_line_hash('pub:-:1024:18:40976EAF437D05B5:1095016255:::-:::scESC:', 'fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:')).to include(
+      expect(described_class.key_line_hash('pub:-:1024:18:40976EAF437D05B5:1095016255:::-:::scESC:', ['fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:'])).to include(
         key_expiry: nil,
         key_fingerprint: '630239CC130E1A7FD81A27B140976EAF437D05B5',
         key_long: '40976EAF437D05B5',
@@ -207,7 +233,7 @@ describe Puppet::Type.type(:apt_key).provider(:apt_key) do
     end
 
     it 'matches ecdsa' do
-      expect(described_class.key_line_hash('pub:-:1024:19:40976EAF437D05B5:1095016255:::-:::scESC:', 'fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:')).to include(
+      expect(described_class.key_line_hash('pub:-:1024:19:40976EAF437D05B5:1095016255:::-:::scESC:', ['fpr:::::::::630239CC130E1A7FD81A27B140976EAF437D05B5:'])).to include(
         key_expiry: nil,
         key_fingerprint: '630239CC130E1A7FD81A27B140976EAF437D05B5',
         key_long: '40976EAF437D05B5',

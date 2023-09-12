@@ -8,7 +8,7 @@ rescue LoadError
 end
 require 'tempfile'
 
-Puppet::Type.type(:apt_key).provide(:apt_key) do
+Puppet::Type.type(:apt_key).provide(:apt_key) do # rubocop:disable Metrics/BlockLength
   desc 'apt-key provider for apt_key resource'
 
   confine    osfamily: :debian
@@ -16,42 +16,38 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
   commands   apt_key: 'apt-key'
   commands   gpg: '/usr/bin/gpg'
 
-  def self.instances
+  def self.instances # rubocop:disable Metrics/AbcSize
+    key_array = []
+
     cli_args = ['adv', '--no-tty', '--list-keys', '--with-colons', '--fingerprint', '--fixed-list-mode']
 
     key_output = apt_key(cli_args).encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
 
-    pub_line, sub_line, fpr_line = nil
+    pub_line = nil
+    fpr_lines = []
+    sub_lines = []
 
-    key_array = key_output.split("\n").map do |line|
-      if line.start_with?('pub')
-        pub_line = line
-        # reset fpr_line, to skip any previous subkeys which were collected
-        fpr_line = nil
-        sub_line = nil
-      elsif line.start_with?('sub')
-        sub_line = line
-      elsif line.start_with?('fpr')
-        fpr_line = line
+    lines = key_output.split("\n")
+
+    lines.each_index do |i|
+      if lines[i].start_with?('pub')
+        pub_line = lines[i]
+        # starting a new public key, so reset fpr_lines and sub_lines
+        fpr_lines = []
+        sub_lines = []
+      elsif lines[i].start_with?('fpr')
+        fpr_lines << lines[i]
+      elsif lines[i].start_with?('sub')
+        sub_lines << lines[i]
       end
 
-      if sub_line && fpr_line
-        sub_line, fpr_line = nil
-        next
-      end
+      next unless (pub_line && !fpr_lines.empty?) && (!lines[i + 1] || lines[i + 1].start_with?('pub'))
 
-      next unless pub_line && fpr_line
+      line_hash = key_line_hash(pub_line, fpr_lines)
 
-      line_hash = key_line_hash(pub_line, fpr_line)
+      expired = line_hash[:key_expired] || subkeys_all_expired(sub_lines)
 
-      # reset everything
-      pub_line, fpr_line = nil
-
-      expired = false
-
-      expired = Time.now >= line_hash[:key_expiry] if line_hash[:key_expiry]
-
-      new(
+      key_array << new(
         name: line_hash[:key_fingerprint],
         id: line_hash[:key_long],
         fingerprint: line_hash[:key_fingerprint],
@@ -65,7 +61,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
         created: line_hash[:key_created].strftime('%Y-%m-%d'),
       )
     end
-    key_array.compact!
+    key_array
   end
 
   def self.prefetch(resources)
@@ -85,9 +81,18 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
     end
   end
 
-  def self.key_line_hash(pub_line, fpr_line)
+  def self.subkeys_all_expired(sub_lines)
+    return false if sub_lines.empty?
+
+    sub_lines.each do |line|
+      return false if line.split(':')[1] == '-'
+    end
+    true
+  end
+
+  def self.key_line_hash(pub_line, fpr_lines)
     pub_split = pub_line.split(':')
-    fpr_split = fpr_line.split(':')
+    fpr_split = fpr_lines.first.split(':')
 
     fingerprint = fpr_split.last
     return_hash = {
@@ -97,6 +102,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       key_size: pub_split[2],
       key_type: nil,
       key_created: Time.at(pub_split[5].to_i),
+      key_expired: pub_split[1] == 'e',
       key_expiry: pub_split[6].empty? ? nil : Time.at(pub_split[6].to_i)
     }
 

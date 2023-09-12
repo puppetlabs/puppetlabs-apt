@@ -25,7 +25,6 @@ class apt::params {
   $proxy                = {}
   $sources              = {}
   $keys                 = {}
-  $keyrings             = {}
   $ppas                 = {}
   $pins                 = {}
   $settings             = {}

@@ -415,10 +415,11 @@ describe 'apt' do
             super().merge(manage_auth_conf: true)
           end
 
-          auth_conf_content = "// This file is managed by Puppet. DO NOT EDIT.
-machine deb.example.net login foologin password secret
-machine apt.example.com login aptlogin password supersecret
-"
+          auth_conf_content = <<~CONTENT
+            // This file is managed by Puppet. DO NOT EDIT.
+            machine deb.example.net login foologin password secret
+            machine apt.example.com login aptlogin password supersecret
+          CONTENT
 
           it {
             expect(subject).to contain_file('/etc/apt/auth.conf').with(ensure: 'present',

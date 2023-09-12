@@ -130,7 +130,7 @@ describe 'apt::source' do
 
       it {
         expect(subject).to contain_apt__key("Add key: #{id} from Apt::Source my_source").that_comes_before('Apt::Setting[list-my_source]').with(ensure: 'refreshed',
-                                                                                                                                                id: GPG_KEY_ID,
+                                                                                                                                                id: id,
                                                                                                                                                 server: 'pgp.mit.edu',
                                                                                                                                                 content: 'GPG key content',
                                                                                                                                                 source: 'http://apt.puppetlabs.com/pubkey.gpg',

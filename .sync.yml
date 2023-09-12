@@ -5,12 +5,10 @@ appveyor.yml:
   delete: true
 
 Gemfile:
-  optional:
-    ":development":
-    - gem: github_changelog_generator
-      version: '= 1.15.2'
 Rakefile:
   changelog_max_issues: 500
+  extra_disabled_lint_checks:
+    - anchor_resource
 spec/spec_helper.rb:
   mock_with: ":rspec"
   coverage_report: true
@@ -28,7 +26,3 @@ spec/spec_helper.rb:
   unmanaged: false
 .travis.yml:
   delete: true
-changelog_since_tag: '5.0.1'
-Rakefile:
-  extra_disabled_lint_checks:
-    - anchor_resource
