@@ -148,7 +148,7 @@ define apt::source (
     }
 
     # Old keyserver keys handled by apt-key
-    if $key['id'] {
+    if $key or $key['id'] {
       # We do not want to remove keys when the source is absent.
       if ($ensure == 'present') {
         apt::key { "Add key: ${$_key['id']} from Apt::Source ${title}":
@@ -180,6 +180,8 @@ define apt::source (
         $_list_keyring = "/etc/apt/keyrings/${key['name']}.gpg"
       }
     }
+  } else {
+    $_list_keyring = undef
   }
   # Done with keys and keyrings
 
