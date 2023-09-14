@@ -122,7 +122,7 @@ define apt::source (
 
   if $keyring {
     if $key {
-      fail('parameters key and keyring are mutualy exclusive')
+      fail('parameters key and keyring are mutually exclusive')
     } else {
       $_list_keyring = $keyring
     }
@@ -148,7 +148,7 @@ define apt::source (
     }
 
     # Old keyserver keys handled by apt-key
-    if $key or $key['id'] {
+    if $key or ($key =~ Hash and $key['id']) {
       # We do not want to remove keys when the source is absent.
       if ($ensure == 'present') {
         apt::key { "Add key: ${$_key['id']} from Apt::Source ${title}":
@@ -165,13 +165,13 @@ define apt::source (
       $_list_keyring = undef
     }
     # Modern apt keyrings
-    else {
+    elsif $key =~ Hash and $key['name'] {
       apt::keyring { $_key['name']:
-        ensure   => $_key_ensure,
-        content  => $_key['content'],
-        source   => $_key['source'],
-        filename => $_key['filename'],
-        before   => $_before,
+        ensure           => $_key_ensure,
+        content          => $_key['content'],
+        source           => $_key['source'],
+        keyring_filename => $_key['filename'],
+        before           => $_before,
       }
       # TODO replace this block with a reference to the apt::keyring's final filename/full_path
       if $key['filename'] {
@@ -180,10 +180,11 @@ define apt::source (
         $_list_keyring = "/etc/apt/keyrings/${key['name']}.gpg"
       }
     }
-  } else {
-    $_list_keyring = undef
   }
   # Done with keys and keyrings
+  else {
+    $_list_keyring = undef
+  }
 
   $header = epp('apt/_header.epp')
 
