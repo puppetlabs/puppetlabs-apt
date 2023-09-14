@@ -148,7 +148,7 @@ define apt::source (
     }
 
     # Old keyserver keys handled by apt-key
-    if $key or ($key =~ Hash and $key['id']) {
+    if ($_key =~ Hash and $_key['id']) {
       # We do not want to remove keys when the source is absent.
       if ($ensure == 'present') {
         apt::key { "Add key: ${$_key['id']} from Apt::Source ${title}":
@@ -165,7 +165,7 @@ define apt::source (
       $_list_keyring = undef
     }
     # Modern apt keyrings
-    elsif $key =~ Hash and $key['name'] {
+    elsif $_key =~ Hash and $_key['name'] {
       apt::keyring { $_key['name']:
         ensure           => $_key_ensure,
         content          => $_key['content'],
@@ -174,10 +174,10 @@ define apt::source (
         before           => $_before,
       }
       # TODO replace this block with a reference to the apt::keyring's final filename/full_path
-      if $key['filename'] {
-        $_list_keyring = $key['filename']
+      if $_key['filename'] {
+        $_list_keyring = $_key['filename']
       } else {
-        $_list_keyring = "/etc/apt/keyrings/${key['name']}.gpg"
+        $_list_keyring = "/etc/apt/keyrings/${_key['name']}.gpg"
       }
     }
   }
