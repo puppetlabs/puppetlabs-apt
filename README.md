@@ -203,6 +203,20 @@ apt::source { 'puppetlabs':
 }
 ```
 
+### Adding name and source to the key parameter of apt::source, which then manages modern apt gpg keyrings
+
+```puppet
+apt::source { 'puppetlabs':
+  comment  => 'Puppet8',
+  location => 'https://apt.puppetlabs.com/',
+  repos    => 'puppet8',
+  key      => {
+    'name'   => 'puppetlabs',
+    'source' => 'https://apt.puppetlabs.com/keyring.gpg',
+  },
+}
+```
+
 <a id="configure-apt-from-hiera"></a>
 
 ### Configure Apt from Hiera

@@ -10,6 +10,15 @@
 #     },
 #   }
 #
+#@example Download key behaviour to handle modern apt gpg keyrings
+# apt::source { 'puppetlabs':
+#   comment  => 'Puppet8',
+#   key      => {
+#     'name'   => 'puppetlabs',
+#     'source' => 'https://apt.puppetlabs.com/keyring.gpg',
+#   },
+# }
+#
 # @param location
 #   Required, unless ensure is set to 'absent'. Specifies an Apt repository. Valid options: a string containing a repository URL.
 #
