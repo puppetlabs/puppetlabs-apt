@@ -5,11 +5,11 @@
 # @param provider
 #   Specifies the provider that should be used by apt::update.
 #
-# @param keyserver (deprecated)
+# @param keyserver
 #   Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
 #   hkp://).
 #
-# @param key_options (deprecated)
+# @param key_options
 #   Specifies the default options for apt::key resources.
 #
 # @param ppa_options
@@ -85,7 +85,7 @@
 # @param sources
 #   Creates new `apt::source` resources. Valid options: a hash to be passed to the create_resources function linked above.
 #
-# @param keys (deprecated)
+# @param keys
 #   Creates new `apt::key` resources. Valid options: a hash to be passed to the create_resources function linked above.
 #
 # @param keyrings
@@ -142,7 +142,7 @@
 # @param apt_conf_d
 #   The path to the file `apt.conf.d`
 #
-# @param source_key_defaults (deprecated)
+# @param source_key_defaults
 #   The default `source_key` settings
 #
 class apt (

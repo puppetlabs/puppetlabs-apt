@@ -73,12 +73,14 @@ apt::keyring {'puppetlabs-keyring.gpg':
   source => 'https://apt.puppetlabs.com/keyring.gpg',
 }
 ```
+
 #### Fetch via Puppet URI
 ```puppet
 apt::keyring {'puppetlabs-keyring.gpg':
   source => 'puppet:///modules/my_module/local_puppetlabs-keyring.gpg',
 }
 ```
+
 Alternatively `apt::key` can be used.
 
 **Warning** `apt::key` is deprecated in the latest Debian and Ubuntu releases. Please use apt::keyring instead.

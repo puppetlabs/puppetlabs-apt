@@ -141,7 +141,7 @@ define apt::source (
     } else {
       $_key = { 'id' => assert_type(String[1], $key) }
     }
-    if $_key['ensure'] != undef {
+    if $_key['ensure'] {
       $_key_ensure = $_key['ensure']
     } else {
       $_key_ensure = $ensure
