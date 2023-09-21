@@ -14,7 +14,7 @@
 #   Path to the directory where the keyring will be stored.
 #
 # @param keyring_filename
-#   Optional filename for the keyring.
+#   Optional filename for the keyring. It should also contain extension along with the filename.
 #
 # @param keyring_file
 #   File path of the keyring.

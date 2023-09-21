@@ -10,11 +10,13 @@
 #     },
 #   }
 #
-#@example Download key behaviour to handle modern apt gpg keyrings
+#@example Download key behaviour to handle modern apt gpg keyrings. The name parameter in the key hash should be given with
+# extension. Absence of extension will result in file formation with just name and no extension.
 # apt::source { 'puppetlabs':
+#   location => 'http://apt.puppetlabs.com',
 #   comment  => 'Puppet8',
 #   key      => {
-#     'name'   => 'puppetlabs',
+#     'name'   => 'puppetlabs.gpg',
 #     'source' => 'https://apt.puppetlabs.com/keyring.gpg',
 #   },
 # }
@@ -186,7 +188,7 @@ define apt::source (
       if $_key['filename'] {
         $_list_keyring = $_key['filename']
       } else {
-        $_list_keyring = "/etc/apt/keyrings/${_key['name']}.gpg"
+        $_list_keyring = "/etc/apt/keyrings/${_key['name']}"
       }
     }
   }

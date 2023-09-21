@@ -205,13 +205,15 @@ apt::source { 'puppetlabs':
 
 ### Adding name and source to the key parameter of apt::source, which then manages modern apt gpg keyrings
 
+The name parameter of key hash should contain name with extensions (such as puppetlabs.gpg), Absence of extension will result in creation of file with just name and no extension.
+
 ```puppet
 apt::source { 'puppetlabs':
   comment  => 'Puppet8',
   location => 'https://apt.puppetlabs.com/',
   repos    => 'puppet8',
   key      => {
-    'name'   => 'puppetlabs',
+    'name'   => 'puppetlabs.gpg',
     'source' => 'https://apt.puppetlabs.com/keyring.gpg',
   },
 }
