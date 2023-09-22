@@ -65,7 +65,7 @@ include apt
 <a id="add-gpg-keys"></a>
 
 ### Add GPG keys
-You can fetch GPG keys via HTTP, Puppet URI, or local filesystem. The key must be in binary format for apt to read it properly.
+You can fetch GPG keys via HTTP, Puppet URI, or local filesystem. The key can be in GPG binary format, or ASCII armored, but the filename should have the appropriate extension (`.gpg` or `.asc`)
 
 #### Fetch via HTTP
 ```puppet

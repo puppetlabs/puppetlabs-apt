@@ -1,14 +1,18 @@
 # @summary Manage GPG keyrings for apt repositories
 #
-# @example Install the puppetlabs apt source with keyring.
-#     apt::source { 'puppet7-release':
-#       location => 'http://apt.puppetlabs.com',
-#       repos    => 'main',
-#       keyring  => '/etc/apt/keyrings/puppetlabs-keyring.gpg',
+# @example Download the puppetlabs apt keyring
+#   apt::keyring {'puppetlabs-keyring.gpg':
+#     source => 'https://apt.puppetlabs.com/keyring.gpg',
+#   }
+# @example Deploy the apt source and associated keyring file
+#   apt::source { 'puppet8-release':
+#     location => 'http://apt.puppetlabs.com',
+#     repos    => 'puppet8',
+#     key      => {
+#       name   => 'puppetlabs-keyring.gpg',
+#       source => 'https://apt.puppetlabs.com/keyring.gpg'
 #     }
-#     apt::keyring {'puppetlabs-keyring.gpg':
-#       source => 'https://apt.puppetlabs.com/keyring.gpg',
-#     }
+#   }
 #
 # @param keyring_dir
 #   Path to the directory where the keyring will be stored.
