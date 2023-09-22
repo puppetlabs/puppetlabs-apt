@@ -351,11 +351,10 @@ class apt (
   if $keys {
     create_resources('apt::key', $keys)
   }
-  if $keyrings {
-    $keyrings.each |$key, $data| {
-      apt::keyring { $key:
-        * => $data,
-      }
+  # manage keyrings if present
+  $keyrings.each |$key, $data| {
+    apt::keyring { $key:
+      * => $data,
     }
   }
   # manage ppas if present

@@ -137,8 +137,7 @@ define apt::source (
     } else {
       $_list_keyring = $keyring
     }
-  }
-  elsif $key {
+  } elsif $key {
     if $key =~ Hash {
       unless $key['name'] or $key['id'] {
         fail('key hash must contain a key name (for apt::keyring) or an id (for apt::key)')
@@ -191,9 +190,8 @@ define apt::source (
         $_list_keyring = "/etc/apt/keyrings/${_key['name']}"
       }
     }
-  }
-  # Done with keys and keyrings
-  else {
+  } else {
+    # No `key` nor `keyring` provided
     $_list_keyring = undef
   }
 
