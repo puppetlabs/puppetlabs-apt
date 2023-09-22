@@ -143,7 +143,7 @@
 #   The path to the file `apt.conf.d`
 #
 # @param source_key_defaults
-#   The default `source_key` settings
+#   The fault `source_key` settings
 #
 class apt (
   Hash $update_defaults                           = $apt::params::update_defaults,
