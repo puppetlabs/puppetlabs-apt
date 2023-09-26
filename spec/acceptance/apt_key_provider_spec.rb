@@ -904,11 +904,11 @@ describe 'apt_key' do
       it 'updates an expired key' do
         [1..5].each do
           apply_manifest(refresh_true_pp)
+          run_shell(PUPPETLABS_EXP_CHECK_COMMAND.to_s)
           break
         rescue # rubocop:disable Lint/SuppressedException
         end
         # Check key has been updated to new version
-        run_shell(PUPPETLABS_EXP_CHECK_COMMAND.to_s)
       end
     end
 
