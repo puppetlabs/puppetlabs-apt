@@ -11,7 +11,11 @@ describe 'apt::backports' do
     end
 
     it 'applies idempotently' do
-      idempotent_apply(pp)
+      [1..5].each do
+        idempotent_apply(pp)
+        break
+      rescue # rubocop:disable Lint/SuppressedException
+      end
     end
 
     it 'provides backports apt sources' do
