@@ -61,10 +61,12 @@ class apt::update {
   # This ensures that Puppet does not report a change if the
   # update command had no effect. See MODULES-10763 for discussion.
   $apt_update_had_no_effect = epp(
-    'apt/update_had_no_effect.sh.epp',
-    'provider' => $apt::provider,
-    'timeout'  => $apt::_update['timeout'],
-    'tries'    => $apt::_update['tries'],
+    "${module_name}/update_had_no_effect.sh.epp",
+    {
+      'provider' => $apt::provider,
+      'timeout'  => $apt::_update['timeout'],
+      'tries'    => $apt::_update['tries'],
+    }
   )
   exec { 'apt_update':
     command     => "echo ${apt::provider} successfully updated the package cache.",
