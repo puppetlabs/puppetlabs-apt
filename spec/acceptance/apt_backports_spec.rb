@@ -11,7 +11,9 @@ describe 'apt::backports' do
     end
 
     it 'applies idempotently' do
-      idempotent_apply(pp)
+      retry_on_error_matching do
+        idempotent_apply(pp)
+      end
     end
 
     it 'provides backports apt sources' do

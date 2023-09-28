@@ -902,9 +902,11 @@ describe 'apt_key' do
 
     context 'when refresh => true' do
       it 'updates an expired key' do
-        apply_manifest(refresh_true_pp)
-        # Check key has been updated to new version
-        run_shell(PUPPETLABS_EXP_CHECK_COMMAND.to_s)
+        retry_on_error_matching do
+          apply_manifest(refresh_true_pp)
+          # Check key has been updated to new version
+          run_shell(PUPPETLABS_EXP_CHECK_COMMAND.to_s)
+        end
       end
     end
 
