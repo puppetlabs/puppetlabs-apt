@@ -74,7 +74,7 @@ define apt::ppa (
     }
 
     $_proxy = $apt::_proxy
-    if $_proxy['host'] {
+    if $_proxy != undef and $_proxy['host'] {
       if $_proxy['https'] {
         $_proxy_env = ["http_proxy=http://${$_proxy['host']}:${$_proxy['port']}", "https_proxy=https://${$_proxy['host']}:${$_proxy['port']}"]
       } else {
