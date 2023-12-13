@@ -31,6 +31,8 @@ define apt::ppa (
   Optional[String] $package_name        = $apt::ppa_package,
   Boolean $package_manage               = false,
 ) {
+  include apt
+
   unless $release {
     fail('os.distro.codename fact not available: release parameter required')
   }
