@@ -1,0 +1,43 @@
+<% | String $comment,
+  Enum['yes','no'] $enabled,
+  Hash $types,Array[String] $uris,
+  Array[String] $suites,
+  Array[String] $components,
+  Optional[Array] $architectures = undef,
+  Optional[Enum['yes','no']] $allow_insecure = undef,
+  Optional[Enum['yes','no']] $repo_trusted = undef,
+  Optional[Enum['yes','no']] $check_valid_until = undef,
+  Optional[Variant[Array[String], String]] $signed_by = undef,
+  Optional[Hash] $options = undef
+| -%>
+# This file is managed by Puppet. DO NOT EDIT.
+# <%= $comment %>
+Enabled: <%= $enabled %>
+Types:<% if $types['deb'] { %> deb<% } %><% if $types['src'] { %> deb-src<% } %>
+URIs: <% $uris.each | String $uri | { -%> <%= $uri %> <% } %>
+Suites: <% $suites.each | String $suite | { -%> <%= $suite %> <% } %>
+Components: <% $components.each | String $component | { -%> <%= $component %> <% } %>
+<% if $architectures { -%>
+Architectures:<% $architectures.each | String $arch | { %> <%= $arch %><% } %>
+<%- } -%>
+<% if $allow_insecure { -%>
+Allow-Insecure: <%= $allow_insecure %>
+<% } -%>
+<% if $repo_trusted { -%>
+Trusted: <%= $repo_trusted %>
+<% } -%>
+<% if $check_valid_until { -%>
+Check-Valid-Until: <%= $check_valid_until %>
+<% } -%>
+<% if $signed_by { -%>
+Signed-By: <% if type($signed_by) =~ Type[Array] { -%><%- $signed_by.each |String $keyring| { -%><%= $keyring %> <% } %>
+<%- } -%>
+<%- elsif type($signed_by) =~ Type[String] { %>
+ <%= $signed_by -%>
+<%- }} -%>
+<% if $options { -%>
+# Additional Options
+<% $options.each |$key, $value| {-%>
+<%= $key -%>: <%= $value %>
+<% } -%>
+<% } -%>
