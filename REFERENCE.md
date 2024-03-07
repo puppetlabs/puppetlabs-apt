@@ -25,6 +25,7 @@
 * [`apt::ppa`](#apt--ppa): Manages PPA repositories using `add-apt-repository`. Not supported on Debian.
 * [`apt::setting`](#apt--setting): Manages Apt configuration files.
 * [`apt::source`](#apt--source): Manages the Apt sources in /etc/apt/sources.list.d/.
+* [`apt::source_deb822`](#apt--source_deb822): Manage deb822 formatted APT sources under `/etc/apt/sources.list.d`
 
 ### Resource types
 
@@ -1233,6 +1234,156 @@ Data type: `Boolean`
 Specifies whether to check if the package release date is valid.
 
 Default value: `true`
+
+### <a name="apt--source_deb822"></a>`apt::source_deb822`
+
+Manage deb822 formatted APT sources under `/etc/apt/sources.list.d`
+
+#### Examples
+
+##### Manage the Puppetlabs repo
+
+```puppet
+apt::source_deb822 { 'Puppetlabs-puppet':
+  comment    => 'Manage the puppetlabs repo',
+  enabled    => true,
+  types      => ['deb'],
+  uris       => ['http://apt.puppet.com'],
+  suites     => ['jammy'],
+  components => ['puppet8'],
+  signed_by  => ['/etc/apt/keyrings/linuxembl-ebi.gpg'],
+}
+```
+
+##### Ensure absence of a repo
+
+```puppet
+apt::source_deb822 { 'testing123':
+  ensure => 'absent',
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `apt::source_deb822` defined type:
+
+* [`notify_update`](#-apt--source_deb822--notify_update)
+* [`ensure`](#-apt--source_deb822--ensure)
+* [`enabled`](#-apt--source_deb822--enabled)
+* [`comment`](#-apt--source_deb822--comment)
+* [`types`](#-apt--source_deb822--types)
+* [`uris`](#-apt--source_deb822--uris)
+* [`suites`](#-apt--source_deb822--suites)
+* [`components`](#-apt--source_deb822--components)
+* [`architectures`](#-apt--source_deb822--architectures)
+* [`allow_insecure`](#-apt--source_deb822--allow_insecure)
+* [`repo_trusted`](#-apt--source_deb822--repo_trusted)
+* [`check_valid_until`](#-apt--source_deb822--check_valid_until)
+* [`signed_by`](#-apt--source_deb822--signed_by)
+
+##### <a name="-apt--source_deb822--notify_update"></a>`notify_update`
+
+Data type: `Boolean`
+
+Specifies whether to trigger an `apt-get update` run.
+
+Default value: `true`
+
+##### <a name="-apt--source_deb822--ensure"></a>`ensure`
+
+Data type: `Enum['present','absent']`
+
+Specifies whether the Apt source file should exist.
+
+Default value: `'present'`
+
+##### <a name="-apt--source_deb822--enabled"></a>`enabled`
+
+Data type: `Boolean`
+
+Enable or Disable the APT source.
+
+Default value: `true`
+
+##### <a name="-apt--source_deb822--comment"></a>`comment`
+
+Data type: `String`
+
+Provide a comment to the APT source file.
+
+Default value: `$name`
+
+##### <a name="-apt--source_deb822--types"></a>`types`
+
+Data type: `Array[Enum['deb','deb-src'], 1, 2]`
+
+The package types this source manages.
+
+Default value: `['deb']`
+
+##### <a name="-apt--source_deb822--uris"></a>`uris`
+
+Data type: `Optional[Array[String]]`
+
+A list of URIs for the APT source.
+
+Default value: `undef`
+
+##### <a name="-apt--source_deb822--suites"></a>`suites`
+
+Data type: `Optional[Array[String]]`
+
+A list of suites for the APT source ('jammy-updates', 'bookworm', 'stable', etc.).
+
+Default value: `undef`
+
+##### <a name="-apt--source_deb822--components"></a>`components`
+
+Data type: `Optional[Array[String]]`
+
+A list of components for the APT source ('main', 'contrib', 'non-free', etc.).
+
+Default value: `undef`
+
+##### <a name="-apt--source_deb822--architectures"></a>`architectures`
+
+Data type: `Optional[Array[String]]`
+
+A list of supported architectures for the APT source ('amd64', 'i386', etc.).
+
+Default value: `undef`
+
+##### <a name="-apt--source_deb822--allow_insecure"></a>`allow_insecure`
+
+Data type: `Optional[Boolean]`
+
+Specifies whether to allow downloads from insecure repositories.
+
+Default value: `undef`
+
+##### <a name="-apt--source_deb822--repo_trusted"></a>`repo_trusted`
+
+Data type: `Optional[Boolean]`
+
+Consider the APT source trusted, even if authentication checks fail.
+
+Default value: `undef`
+
+##### <a name="-apt--source_deb822--check_valid_until"></a>`check_valid_until`
+
+Data type: `Optional[Boolean]`
+
+Specifies whether to check if the package release date is valid.
+
+Default value: `undef`
+
+##### <a name="-apt--source_deb822--signed_by"></a>`signed_by`
+
+Data type: `Optional[Variant[Array[Stdlib::AbsolutePath],String]]`
+
+Absolute path to a file containing the PGP keyring used to sign this repository.
+
+Default value: `undef`
 
 ## Data types
 
