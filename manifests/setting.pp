@@ -40,7 +40,7 @@ define apt::setting (
   $setting_type = $title_array[0]
   $base_name = join(delete_at($title_array, 0), '-')
 
-  assert_type(Pattern[/\Aconf\z/, /\Apref\z/, /\Alist\z/], $setting_type) |$a, $b| {
+  assert_type(Pattern[/\Aconf\z/, /\Apref\z/, /\Alist\z/, /\Asource\z/], $setting_type) |$a, $b| {
     fail("apt::setting resource name/title must start with either 'conf-', 'pref-' or 'list-'")
   }
 

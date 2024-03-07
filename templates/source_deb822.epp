@@ -1,6 +1,7 @@
 <% | String $comment,
   Enum['yes','no'] $enabled,
-  Hash $types,Array[String] $uris,
+  Array[String] $types,
+  Array[String] $uris,
   Array[String] $suites,
   Array[String] $components,
   Optional[Array] $architectures = undef,
@@ -10,10 +11,9 @@
   Optional[Variant[Array[String], String]] $signed_by = undef,
   Optional[Hash] $options = undef
 | -%>
-# This file is managed by Puppet. DO NOT EDIT.
 # <%= $comment %>
 Enabled: <%= $enabled %>
-Types:<% if $types['deb'] { %> deb<% } %><% if $types['src'] { %> deb-src<% } %>
+Types: <% $types.each |String $type| { -%> <%= $type %> <% } %>
 URIs: <% $uris.each | String $uri | { -%> <%= $uri %> <% } %>
 Suites: <% $suites.each | String $suite | { -%> <%= $suite %> <% } %>
 Components: <% $components.each | String $component | { -%> <%= $component %> <% } %>
@@ -35,9 +35,3 @@ Signed-By: <% if type($signed_by) =~ Type[Array] { -%><%- $signed_by.each |Strin
 <%- elsif type($signed_by) =~ Type[String] { %>
  <%= $signed_by -%>
 <%- }} -%>
-<% if $options { -%>
-# Additional Options
-<% $options.each |$key, $value| {-%>
-<%= $key -%>: <%= $value %>
-<% } -%>
-<% } -%>
