@@ -68,7 +68,7 @@ define apt::keyring (
           command     => "gpg --dearmor ${file} && mv ${file}.gpg ${file}",
           refreshonly => true,
           subscribe   => File[$file],
-          path        => '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin',
+          path        => $facts['path'],
         }
       }
     }
