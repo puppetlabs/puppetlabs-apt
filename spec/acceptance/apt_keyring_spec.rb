@@ -25,4 +25,25 @@ describe 'apt::keyring' do
       end
     end
   end
+
+  context 'when de-armorized a key' do
+    keyring_pp = <<-MANIFEST
+      apt::keyring { 'gitlab-keyring.gpg':
+        source  => 'https://packages.gitlab.com/gpg.key',
+        dearmor => true,
+      }
+    MANIFEST
+
+    it 'applies idempotently' do
+      retry_on_error_matching do
+        idempotent_apply(keyring_pp)
+      end
+    end
+
+    it 'expects file content to be present and correct' do
+      retry_on_error_matching do
+        run_shell("grep '[^[:print:][:blank:]]' /etc/apt/keyrings/gitlab-keyring.gpg")
+      end
+    end
+  end
 end

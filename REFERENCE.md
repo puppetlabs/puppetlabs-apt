@@ -671,6 +671,7 @@ The following parameters are available in the `apt::keyring` defined type:
 * [`source`](#-apt--keyring--source)
 * [`content`](#-apt--keyring--content)
 * [`ensure`](#-apt--keyring--ensure)
+* [`dearmor`](#-apt--keyring--dearmor)
 
 ##### <a name="-apt--keyring--dir"></a>`dir`
 
@@ -719,6 +720,14 @@ Data type: `Enum['present','absent']`
 Ensure presence or absence of the resource.
 
 Default value: `'present'`
+
+##### <a name="-apt--keyring--dearmor"></a>`dearmor`
+
+Data type: `Boolean`
+
+If the downloaded source should be de-armored. Helpful for e.g. PackageCloud keys.
+
+Default value: `false`
 
 ### <a name="apt--mark"></a>`apt::mark`
 

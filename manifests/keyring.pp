@@ -32,6 +32,8 @@
 # @param ensure
 #   Ensure presence or absence of the resource.
 #
+# @param dearmor
+#   If the downloaded source should be de-armored. Helpful for e.g. PackageCloud keys.
 define apt::keyring (
   Stdlib::Absolutepath $dir = '/etc/apt/keyrings',
   String[1] $filename = $name,
@@ -39,6 +41,7 @@ define apt::keyring (
   Optional[Stdlib::Filesource] $source = undef,
   Optional[String[1]] $content = undef,
   Enum['present','absent'] $ensure = 'present',
+  Boolean $dearmor = false,
 ) {
   ensure_resource('file', $dir, { ensure => 'directory', mode => '0755', })
   if $source and $content {
@@ -58,6 +61,15 @@ define apt::keyring (
         group   => 'root',
         source  => $source,
         content => $content,
+      }
+
+      if $dearmor {
+        exec { "dearmor-${name}":
+          command     => "gpg --dearmor ${file} && mv ${file}.gpg ${file}",
+          refreshonly => true,
+          subscribe   => File[$file],
+          path        => '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin',
+        }
       }
     }
     'absent': {
