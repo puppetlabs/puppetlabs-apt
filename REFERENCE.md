@@ -1251,7 +1251,7 @@ apt::source_deb822 { 'Puppetlabs-puppet':
   uris       => ['http://apt.puppet.com'],
   suites     => ['jammy'],
   components => ['puppet8'],
-  signed_by  => ['/etc/apt/keyrings/linuxembl-ebi.gpg'],
+  signed_by  => ['/etc/apt/keyrings/puppetlabs.gpg'],
 }
 ```
 
