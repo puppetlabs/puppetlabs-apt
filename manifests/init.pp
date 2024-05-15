@@ -288,7 +288,7 @@ class apt (
 
   $confheadertmp = epp('apt/_conf_header.epp')
   $proxytmp = epp('apt/proxy.epp', { 'proxies' => $_proxy })
-  $updatestamptmp = epp('apt/15update-stamp.epp')
+  $updatestamptmp = file('apt/15update-stamp')
 
   if $_proxy['ensure'] == 'absent' or $_proxy['host'] {
     apt::setting { 'conf-proxy':
