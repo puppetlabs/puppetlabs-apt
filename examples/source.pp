@@ -16,7 +16,7 @@ apt::source { 'puppetlabs':
 apt::source { 'debian_testing':
   location => 'http://debian.mirror.iweb.ca/debian/',
   release  => 'testing',
-  repos    => 'main contrib non-free',
+  repos    => 'main contrib non-free non-free-firmware',
   key      => {
     id     => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
     server => 'keyserver.ubuntu.com',
@@ -26,7 +26,7 @@ apt::source { 'debian_testing':
 apt::source { 'debian_unstable':
   location => 'http://debian.mirror.iweb.ca/debian/',
   release  => 'unstable',
-  repos    => 'main contrib non-free',
+  repos    => 'main contrib non-free non-free-firmware',
   key      => {
     id     => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
     server => 'keyserver.ubuntu.com',

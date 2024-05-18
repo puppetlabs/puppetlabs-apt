@@ -507,7 +507,7 @@ Data type: `Optional[String[1]]`
 Specifies a component of the Apt repository containing the backports to manage. Used in populating the `sources.list` configuration file.
 Default value for Debian and Ubuntu varies:
 
-- Debian: 'main contrib non-free'
+- Debian: 'main contrib non-free non-free-firmware'
 
 - Ubuntu: 'main universe multiverse restricted'
 
