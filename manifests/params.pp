@@ -44,6 +44,10 @@ class apt::params {
       'path' => $sources_list_d,
       'ext'  => '.list',
     },
+    'source' => {
+      'path' => $sources_list_d,
+      'ext'  => '.sources',
+    },
   }
 
   $update_defaults = {
