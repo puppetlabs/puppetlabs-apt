@@ -32,7 +32,7 @@ describe 'apt::backports', type: :class do
           release: 'bookworm-backports',
           pin: {
             'priority' => 200,
-            'release' => 'bookworm-backports'
+            'codename' => 'bookworm-backports'
           },
           keyring: '/usr/share/keyrings/debian-archive-keyring.gpg',
         )
