@@ -32,7 +32,7 @@ describe 'apt::backports', type: :class do
           release: 'bullseye-backports',
           pin: {
             'priority' => 200,
-            'release' => 'bullseye-backports'
+            'codename' => 'bullseye-backports'
           },
           keyring: '/usr/share/keyrings/debian-archive-keyring.gpg',
         )
