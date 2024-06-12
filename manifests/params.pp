@@ -17,6 +17,7 @@ class apt::params {
   $preferences          = "${root}/preferences"
   $preferences_d        = "${root}/preferences.d"
   $apt_conf_d           = "${root}/apt.conf.d"
+  $auth_conf_d          = "${root}/auth.conf.d"
   $keyserver            = 'keyserver.ubuntu.com'
   $key_options          = undef
   $confs                = {}
@@ -24,6 +25,7 @@ class apt::params {
   $purge                = {}
   $proxy                = {}
   $sources              = {}
+  $auths                = {}
   $keys                 = {}
   $ppas                 = {}
   $pins                 = {}
