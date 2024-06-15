@@ -12,12 +12,12 @@
 #   - Ubuntu: 'http://archive.ubuntu.com/ubuntu'
 #
 # @param release
-#   Specifies a distribution of the Apt repository containing the backports to manage. Used in populating the `source.list` configuration file.
+#   Specifies a distribution of the Apt repository containing the backports to manage. Used in populating the `sources.list` configuration file.
 #   Default: on Debian and Ubuntu, `${fact('os.distro.codename')}-backports`. We recommend keeping this default, except on other operating
 #   systems.
 #
 # @param repos
-#   Specifies a component of the Apt repository containing the backports to manage. Used in populating the `source.list` configuration file.
+#   Specifies a component of the Apt repository containing the backports to manage. Used in populating the `sources.list` configuration file.
 #   Default value for Debian and Ubuntu varies:
 #
 #   - Debian: 'main contrib non-free'
@@ -41,13 +41,13 @@
 #   Specifies whether to include 'deb' or 'src', or both.
 #
 class apt::backports (
-  Optional[String] $location                    = undef,
-  Optional[String] $release                     = undef,
-  Optional[String] $repos                       = undef,
-  Optional[Variant[String, Hash]] $key          = undef,
-  Stdlib::AbsolutePath $keyring                 = "/usr/share/keyrings/${facts['os']['name'].downcase}-archive-keyring.gpg",
-  Variant[Integer, String, Hash] $pin           = 200,
-  Variant[Hash] $include                        = {},
+  Optional[Stdlib::HTTPUrl] $location = undef,
+  Optional[String[1]] $release = undef,
+  Optional[String[1]] $repos = undef,
+  Optional[Variant[String[1], Hash]] $key = undef,
+  Stdlib::AbsolutePath $keyring = "/usr/share/keyrings/${facts['os']['name'].downcase}-archive-keyring.gpg",
+  Variant[Integer, String[1], Hash] $pin = 200,
+  Hash $include = {},
 ) {
   include apt
 

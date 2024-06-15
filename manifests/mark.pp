@@ -1,8 +1,7 @@
 # @summary Manages apt-mark settings
 #
 # @param setting
-#   auto, manual, hold, unhold
-#   specifies the behavior of apt in case of no more dependencies installed
+#   Specifies the behavior of apt in case of no more dependencies installed
 #   https://manpages.debian.org/stable/apt/apt-mark.8.en.html
 #
 define apt::mark (
