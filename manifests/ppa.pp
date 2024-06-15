@@ -1,13 +1,13 @@
 # @summary Manages PPA repositories using `add-apt-repository`. Not supported on Debian.
 #
-# @example Example declaration of an Apt PPA
-#   apt::ppa{ 'ppa:openstack-ppa/bleeding-edge': }
+# @example Declaration of an Apt PPA
+#   apt::ppa { 'ppa:openstack-ppa/bleeding-edge': }
 #
 # @param ensure
-#   Specifies whether the PPA should exist. Valid options: 'present' and 'absent'.
+#   Specifies whether the PPA should exist.
 #
 # @param options
-#   Supplies options to be passed to the `add-apt-repository` command. Default: '-y'.
+#   Supplies options to be passed to the `add-apt-repository` command.
 #
 # @param release
 #   Specifies the operating system of your node. Valid options: a string containing a valid LSB distribution codename.
@@ -18,17 +18,17 @@
 #   Optional if `puppet facts show os.name` returns your correct distribution name.
 #
 # @param package_name
-#   Names the package that provides the `apt-add-repository` command. Default: 'software-properties-common'.
+#   Names the package that provides the `apt-add-repository` command.
 #
 # @param package_manage
 #   Specifies whether Puppet should manage the package that provides `apt-add-repository`.
 #
 define apt::ppa (
-  String $ensure                        = 'present',
-  Optional[Array[String]] $options      = $apt::ppa_options,
-  Optional[String] $release             = fact('os.distro.codename'),
-  Optional[String] $dist                = $facts['os']['name'],
-  Optional[String] $package_name        = $apt::ppa_package,
+  Enum['present', 'absent'] $ensure     = 'present',
+  Optional[Array[String[1]]] $options   = $apt::ppa_options,
+  Optional[String[1]] $release          = fact('os.distro.codename'),
+  Optional[String[1]] $dist             = $facts['os']['name'],
+  Optional[String[1]] $package_name     = $apt::ppa_package,
   Boolean $package_manage               = false,
 ) {
   unless $release {

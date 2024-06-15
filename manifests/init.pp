@@ -174,11 +174,11 @@ class apt (
     'deb' => true,
     'src' => false,
   },
-  String $provider = '/usr/bin/apt-get',
-  String $keyserver = 'keyserver.ubuntu.com',
-  Optional[String] $key_options = undef,
-  Optional[Array[String]] $ppa_options = undef,
-  Optional[String] $ppa_package = undef,
+  Stdlib::Absolutepath $provider = '/usr/bin/apt-get',
+  Stdlib::Host $keyserver = 'keyserver.ubuntu.com',
+  Optional[String[1]] $key_options = undef,
+  Optional[Array[String[1]]] $ppa_options = undef,
+  Optional[String[1]] $ppa_package = undef,
   Optional[Hash] $backports = undef,
   Hash $confs = {},
   Hash $update = {},
@@ -192,14 +192,14 @@ class apt (
   Hash $settings = {},
   Boolean $manage_auth_conf = true,
   Array[Apt::Auth_conf_entry] $auth_conf_entries = [],
-  String $auth_conf_owner = '_apt',
-  String $root = '/etc/apt',
-  String $sources_list = "${root}/sources.list",
-  String $sources_list_d = "${root}/sources.list.d",
-  String $conf_d = "${root}/apt.conf.d",
-  String $preferences = "${root}/preferences",
-  String $preferences_d = "${root}/preferences.d",
-  String $apt_conf_d = "${root}/apt.conf.d",
+  String[1] $auth_conf_owner = '_apt',
+  Stdlib::Absolutepath $root = '/etc/apt',
+  Stdlib::Absolutepath $sources_list = "${root}/sources.list",
+  Stdlib::Absolutepath $sources_list_d = "${root}/sources.list.d",
+  Stdlib::Absolutepath $conf_d = "${root}/apt.conf.d",
+  Stdlib::Absolutepath $preferences = "${root}/preferences",
+  Stdlib::Absolutepath $preferences_d = "${root}/preferences.d",
+  Stdlib::Absolutepath $apt_conf_d = "${root}/apt.conf.d",
   Hash $config_files = {
     'conf'   => {
       'path' => $conf_d,
@@ -288,7 +288,7 @@ class apt (
 
   $confheadertmp = epp('apt/_conf_header.epp')
   $proxytmp = epp('apt/proxy.epp', { 'proxies' => $_proxy })
-  $updatestamptmp = epp('apt/15update-stamp.epp')
+  $updatestamptmp = file('apt/15update-stamp')
 
   if $_proxy['ensure'] == 'absent' or $_proxy['host'] {
     apt::setting { 'conf-proxy':

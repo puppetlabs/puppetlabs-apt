@@ -13,12 +13,12 @@ describe 'apt::backports', type: :class do
             family: 'Debian',
             name: 'Debian',
             release: {
-              full: '11.8',
-              major: '11',
-              minor: '8'
+              full: '12.5',
+              major: '12',
+              minor: '5'
             },
             distro: {
-              codename: 'bullseye',
+              codename: 'bookworm',
               id: 'Debian'
             }
           }
@@ -28,11 +28,11 @@ describe 'apt::backports', type: :class do
       it {
         expect(subject).to contain_apt__source('backports').with(
           location: 'http://deb.debian.org/debian',
-          repos: 'main contrib non-free',
-          release: 'bullseye-backports',
+          repos: 'main contrib non-free non-free-firmware',
+          release: 'bookworm-backports',
           pin: {
             'priority' => 200,
-            'release' => 'bullseye-backports'
+            'release' => 'bookworm-backports'
           },
           keyring: '/usr/share/keyrings/debian-archive-keyring.gpg',
         )

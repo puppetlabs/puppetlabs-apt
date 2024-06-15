@@ -22,7 +22,7 @@
 #   }
 #
 # @param location
-#   Required, unless ensure is set to 'absent'. Specifies an Apt repository. Valid options: a string containing a repository URL.
+#   Required, unless ensure is set to 'absent'. Specifies an Apt repository.
 #
 # @param comment
 #   Supplies a comment for adding to the Apt source file.
@@ -59,7 +59,7 @@
 #   See https://wiki.debian.org/DebianRepository/UseThirdParty for details.
 #
 # @param pin
-#   Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `id` parameter of the
+#   Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
 #   `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
 #
 # @param architecture
@@ -80,20 +80,20 @@
 #   Specifies whether to check if the package release date is valid.
 #
 define apt::source (
-  Optional[String] $location                    = undef,
-  String $comment                               = $name,
-  String $ensure                                = present,
-  Optional[String] $release                     = undef,
-  String $repos                                 = 'main',
-  Variant[Hash] $include                        = {},
-  Optional[Variant[String, Hash]] $key          = undef,
-  Optional[Stdlib::AbsolutePath] $keyring       = undef,
-  Optional[Variant[Hash, Numeric, String]] $pin = undef,
-  Optional[String] $architecture                = undef,
-  Boolean $allow_unsigned                       = false,
-  Boolean $allow_insecure                       = false,
-  Boolean $notify_update                        = true,
-  Boolean $check_valid_until                    = true,
+  Optional[String[1]] $location = undef,
+  String[1] $comment = $name,
+  Enum['present', 'absent'] $ensure = present,
+  Optional[String[0]] $release = undef,
+  String[1] $repos = 'main',
+  Hash $include = {},
+  Optional[Variant[String[1], Hash]] $key = undef,
+  Optional[Stdlib::AbsolutePath] $keyring = undef,
+  Optional[Variant[Hash, Integer, String[1]]] $pin = undef,
+  Optional[String[1]] $architecture = undef,
+  Boolean $allow_unsigned = false,
+  Boolean $allow_insecure = false,
+  Boolean $notify_update = true,
+  Boolean $check_valid_until = true,
 ) {
   include apt
 
