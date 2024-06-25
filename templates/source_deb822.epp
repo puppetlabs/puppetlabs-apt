@@ -29,8 +29,8 @@ Trusted: <%= $repo_trusted %>
 Check-Valid-Until: <%= $check_valid_until %>
 <% } -%>
 <% if $signed_by { -%>
-Signed-By: <% if type($signed_by) =~ Type[Array] { -%><%- $signed_by.each |String $keyring| { -%><%= $keyring %> <% } %>
+Signed-By: <% if type($signed_by) =~ Type[Array] { -%><%- $signed_by.each |String $keyring| { -%><%= $keyring %> <% } -%>
 <%- } -%>
-<%- elsif type($signed_by) =~ Type[String] { %>
+<%- elsif type($signed_by) =~ Type[String] { -%>
  <%= $signed_by -%>
-<%- }} -%>
+<%- }} %>
