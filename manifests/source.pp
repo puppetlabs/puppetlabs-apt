@@ -77,7 +77,7 @@
 #   See https://wiki.debian.org/DebianRepository/UseThirdParty for details.
 #
 # @param signed_by
-#   DEB822: Absolute path to a file containing the PGP keyring used to sign this repository.
+#   DEB822: Either an absolute path to a PGP keyring file used to sign this repository OR a list of key fingerprints to trust.
 #
 # @param pin
 #   Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
@@ -121,7 +121,7 @@ define apt::source (
   Hash $include = {},
   Optional[Variant[String[1], Hash]] $key = undef,
   Optional[Stdlib::AbsolutePath] $keyring = undef,
-  Optional[Array[Stdlib::AbsolutePath]] $signed_by = undef, # deb822
+  Optional[Variant[Stdlib::AbsolutePath,Array[String]]] $signed_by = undef, # deb822
   Optional[Variant[Hash, Integer, String[1]]] $pin = undef,
   Optional[String[1]] $architecture = undef,
   Optional[Array[String]] $architectures = undef, # deb822

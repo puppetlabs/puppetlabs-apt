@@ -40,8 +40,8 @@ define apt::setting (
   $setting_type = $title_array[0]
   $base_name = join(delete_at($title_array, 0), '-')
 
-  assert_type(Pattern[/\Aconf\z/, /\Apref\z/, /\Alist\z/, /\Asource\z/], $setting_type) |$a, $b| {
-    fail("apt::setting resource name/title must start with either 'conf-', 'pref-' or 'list-'")
+  assert_type(Pattern[/\Aconf\z/, /\Apref\z/, /\Alist\z/, /\Asources\z/], $setting_type) |$a, $b| {
+    fail("apt::setting resource name/title must start with either 'conf-', 'pref-', 'list-', or 'sources-'")
   }
 
   if $priority !~ Integer {
@@ -51,7 +51,7 @@ define apt::setting (
     }
   }
 
-  if ($setting_type == 'list') or ($setting_type == 'pref') or ($setting_type == 'source') {
+  if ($setting_type == 'list') or ($setting_type == 'pref') or ($setting_type == 'sources') {
     $_priority = ''
   } else {
     $_priority = $priority

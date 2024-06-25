@@ -8,7 +8,7 @@
   Optional[Enum['yes','no']] $allow_insecure = undef,
   Optional[Enum['yes','no']] $repo_trusted = undef,
   Optional[Enum['yes','no']] $check_valid_until = undef,
-  Optional[Variant[Array[String], String]] $signed_by = undef,
+  Optional[Variant[Stdlib::AbsolutePath,Array[String]]] $signed_by = undef,
 | -%>
 # <%= $comment %>
 Enabled: <%= $enabled %>

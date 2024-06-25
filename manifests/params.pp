@@ -44,7 +44,7 @@ class apt::params {
       'path' => $sources_list_d,
       'ext'  => '.list',
     },
-    'source' => {
+    'sources' => {
       'path' => $sources_list_d,
       'ext'  => '.sources',
     },
