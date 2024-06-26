@@ -117,7 +117,7 @@ define apt::source (
   Optional[String[0]] $release = undef,
   Optional[Array[String]] $suites = undef, # deb822
   String[1] $repos = 'main',
-  Optional[Array[String]] $components = split($repos, /,/), # deb822
+  Optional[Array[String]] $components = undef, # deb822
   Hash $include = {},
   Optional[Variant[String[1], Hash]] $key = undef,
   Optional[Stdlib::AbsolutePath] $keyring = undef,
