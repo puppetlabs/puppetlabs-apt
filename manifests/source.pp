@@ -21,6 +21,15 @@
 #     },
 #   }
 #
+# @example Install the puppetlabs apt source (deb822 format)
+#   apt::source { 'puppetlabs':
+#     source_format => 'deb822'
+#     uris          => ['http://apt.puppetlabs.com'],
+#     suites        => [$facts['os']['distro']['codename']],
+#     components    => ['puppet8'],
+#     signed_by     => '/etc/apt/keyrings/puppetlabs.gpg',
+#   }
+#
 # @param source_format
 #   The file format to use for the apt source. See https://wiki.debian.org/SourcesList
 #

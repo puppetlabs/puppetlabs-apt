@@ -25,7 +25,6 @@
 * [`apt::ppa`](#apt--ppa): Manages PPA repositories using `add-apt-repository`. Not supported on Debian.
 * [`apt::setting`](#apt--setting): Manages Apt configuration files.
 * [`apt::source`](#apt--source): Manages the Apt sources in /etc/apt/sources.list.d/.
-* [`apt::source_deb822`](#apt--source_deb822): Manage deb822 formatted APT sources under `/etc/apt/sources.list.d`
 
 ### Resource types
 
@@ -1089,24 +1088,53 @@ apt::source { 'puppetlabs':
 }
 ```
 
+##### Install the puppetlabs apt source (deb822 format)
+
+```puppet
+apt::source { 'puppetlabs':
+  source_format => 'deb822'
+  uris          => ['http://apt.puppetlabs.com'],
+  suites        => [$facts['os']['distro']['codename']],
+  components    => ['puppet8'],
+  signed_by     => '/etc/apt/keyrings/puppetlabs.gpg',
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `apt::source` defined type:
 
+* [`source_format`](#-apt--source--source_format)
 * [`location`](#-apt--source--location)
+* [`types`](#-apt--source--types)
+* [`uris`](#-apt--source--uris)
+* [`enabled`](#-apt--source--enabled)
 * [`comment`](#-apt--source--comment)
 * [`ensure`](#-apt--source--ensure)
 * [`release`](#-apt--source--release)
+* [`suites`](#-apt--source--suites)
 * [`repos`](#-apt--source--repos)
+* [`components`](#-apt--source--components)
 * [`include`](#-apt--source--include)
 * [`key`](#-apt--source--key)
 * [`keyring`](#-apt--source--keyring)
+* [`signed_by`](#-apt--source--signed_by)
 * [`pin`](#-apt--source--pin)
 * [`architecture`](#-apt--source--architecture)
+* [`architectures`](#-apt--source--architectures)
 * [`allow_unsigned`](#-apt--source--allow_unsigned)
+* [`repo_trusted`](#-apt--source--repo_trusted)
 * [`allow_insecure`](#-apt--source--allow_insecure)
 * [`notify_update`](#-apt--source--notify_update)
 * [`check_valid_until`](#-apt--source--check_valid_until)
+
+##### <a name="-apt--source--source_format"></a>`source_format`
+
+Data type: `Enum['legacy', 'deb822']`
+
+The file format to use for the apt source. See https://wiki.debian.org/SourcesList
+
+Default value: `'legacy'`
 
 ##### <a name="-apt--source--location"></a>`location`
 
@@ -1115,6 +1143,30 @@ Data type: `Optional[String[1]]`
 Required, unless ensure is set to 'absent'. Specifies an Apt repository.
 
 Default value: `undef`
+
+##### <a name="-apt--source--types"></a>`types`
+
+Data type: `Array[Enum['deb','deb-src'], 1, 2]`
+
+DEB822: The package types this source manages.
+
+Default value: `['deb']`
+
+##### <a name="-apt--source--uris"></a>`uris`
+
+Data type: `Optional[Array[String]]`
+
+DEB822: A list of URIs for the APT source.
+
+Default value: `undef`
+
+##### <a name="-apt--source--enabled"></a>`enabled`
+
+Data type: `Boolean`
+
+DEB822: Enable or Disable the APT source.
+
+Default value: `true`
 
 ##### <a name="-apt--source--comment"></a>`comment`
 
@@ -1140,6 +1192,14 @@ Specifies a distribution of the Apt repository.
 
 Default value: `undef`
 
+##### <a name="-apt--source--suites"></a>`suites`
+
+Data type: `Optional[Array[String]]`
+
+DEB822: A list of suites for the APT source ('jammy-updates', 'bookworm', 'stable', etc.).
+
+Default value: `undef`
+
 ##### <a name="-apt--source--repos"></a>`repos`
 
 Data type: `String[1]`
@@ -1147,6 +1207,14 @@ Data type: `String[1]`
 Specifies a component of the Apt repository.
 
 Default value: `'main'`
+
+##### <a name="-apt--source--components"></a>`components`
+
+Data type: `Optional[Array[String]]`
+
+DEB822: A list of components for the APT source ('main', 'contrib', 'non-free', etc.).
+
+Default value: `undef`
 
 ##### <a name="-apt--source--include"></a>`include`
 
@@ -1184,6 +1252,14 @@ See https://wiki.debian.org/DebianRepository/UseThirdParty for details.
 
 Default value: `undef`
 
+##### <a name="-apt--source--signed_by"></a>`signed_by`
+
+Data type: `Optional[Variant[Stdlib::AbsolutePath,Array[String]]]`
+
+DEB822: Either an absolute path to a PGP keyring file used to sign this repository OR a list of key fingerprints to trust.
+
+Default value: `undef`
+
 ##### <a name="-apt--source--pin"></a>`pin`
 
 Data type: `Optional[Variant[Hash, Integer, String[1]]]`
@@ -1203,21 +1279,37 @@ separated by commas (e.g., 'i386' or 'i386,alpha,powerpc').
 
 Default value: `undef`
 
+##### <a name="-apt--source--architectures"></a>`architectures`
+
+Data type: `Optional[Array[String]]`
+
+DEB822: A list of supported architectures for the APT source ('amd64', 'i386', etc.).
+
+Default value: `undef`
+
 ##### <a name="-apt--source--allow_unsigned"></a>`allow_unsigned`
 
-Data type: `Boolean`
+Data type: `Optional[Boolean]`
 
 Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked.
 
-Default value: `false`
+Default value: `undef`
+
+##### <a name="-apt--source--repo_trusted"></a>`repo_trusted`
+
+Data type: `Optional[Boolean]`
+
+DEB822: Consider the APT source trusted, even if authentication checks fail.
+
+Default value: `undef`
 
 ##### <a name="-apt--source--allow_insecure"></a>`allow_insecure`
 
-Data type: `Boolean`
+Data type: `Optional[Boolean]`
 
 Specifies whether to allow downloads from insecure repositories.
 
-Default value: `false`
+Default value: `undef`
 
 ##### <a name="-apt--source--notify_update"></a>`notify_update`
 
@@ -1229,159 +1321,9 @@ Default value: `true`
 
 ##### <a name="-apt--source--check_valid_until"></a>`check_valid_until`
 
-Data type: `Boolean`
-
-Specifies whether to check if the package release date is valid.
-
-Default value: `true`
-
-### <a name="apt--source_deb822"></a>`apt::source_deb822`
-
-Manage deb822 formatted APT sources under `/etc/apt/sources.list.d`
-
-#### Examples
-
-##### Manage the Puppetlabs repo
-
-```puppet
-apt::source_deb822 { 'Puppetlabs-puppet':
-  comment    => 'Manage the puppetlabs repo',
-  enabled    => true,
-  types      => ['deb'],
-  uris       => ['http://apt.puppet.com'],
-  suites     => ['jammy'],
-  components => ['puppet8'],
-  signed_by  => ['/etc/apt/keyrings/puppetlabs.gpg'],
-}
-```
-
-##### Ensure absence of a repo
-
-```puppet
-apt::source_deb822 { 'testing123':
-  ensure => 'absent',
-}
-```
-
-#### Parameters
-
-The following parameters are available in the `apt::source_deb822` defined type:
-
-* [`notify_update`](#-apt--source_deb822--notify_update)
-* [`ensure`](#-apt--source_deb822--ensure)
-* [`enabled`](#-apt--source_deb822--enabled)
-* [`comment`](#-apt--source_deb822--comment)
-* [`types`](#-apt--source_deb822--types)
-* [`uris`](#-apt--source_deb822--uris)
-* [`suites`](#-apt--source_deb822--suites)
-* [`components`](#-apt--source_deb822--components)
-* [`architectures`](#-apt--source_deb822--architectures)
-* [`allow_insecure`](#-apt--source_deb822--allow_insecure)
-* [`repo_trusted`](#-apt--source_deb822--repo_trusted)
-* [`check_valid_until`](#-apt--source_deb822--check_valid_until)
-* [`signed_by`](#-apt--source_deb822--signed_by)
-
-##### <a name="-apt--source_deb822--notify_update"></a>`notify_update`
-
-Data type: `Boolean`
-
-Specifies whether to trigger an `apt-get update` run.
-
-Default value: `true`
-
-##### <a name="-apt--source_deb822--ensure"></a>`ensure`
-
-Data type: `Enum['present','absent']`
-
-Specifies whether the Apt source file should exist.
-
-Default value: `'present'`
-
-##### <a name="-apt--source_deb822--enabled"></a>`enabled`
-
-Data type: `Boolean`
-
-Enable or Disable the APT source.
-
-Default value: `true`
-
-##### <a name="-apt--source_deb822--comment"></a>`comment`
-
-Data type: `String`
-
-Provide a comment to the APT source file.
-
-Default value: `$name`
-
-##### <a name="-apt--source_deb822--types"></a>`types`
-
-Data type: `Array[Enum['deb','deb-src'], 1, 2]`
-
-The package types this source manages.
-
-Default value: `['deb']`
-
-##### <a name="-apt--source_deb822--uris"></a>`uris`
-
-Data type: `Optional[Array[String]]`
-
-A list of URIs for the APT source.
-
-Default value: `undef`
-
-##### <a name="-apt--source_deb822--suites"></a>`suites`
-
-Data type: `Optional[Array[String]]`
-
-A list of suites for the APT source ('jammy-updates', 'bookworm', 'stable', etc.).
-
-Default value: `undef`
-
-##### <a name="-apt--source_deb822--components"></a>`components`
-
-Data type: `Optional[Array[String]]`
-
-A list of components for the APT source ('main', 'contrib', 'non-free', etc.).
-
-Default value: `undef`
-
-##### <a name="-apt--source_deb822--architectures"></a>`architectures`
-
-Data type: `Optional[Array[String]]`
-
-A list of supported architectures for the APT source ('amd64', 'i386', etc.).
-
-Default value: `undef`
-
-##### <a name="-apt--source_deb822--allow_insecure"></a>`allow_insecure`
-
-Data type: `Optional[Boolean]`
-
-Specifies whether to allow downloads from insecure repositories.
-
-Default value: `undef`
-
-##### <a name="-apt--source_deb822--repo_trusted"></a>`repo_trusted`
-
-Data type: `Optional[Boolean]`
-
-Consider the APT source trusted, even if authentication checks fail.
-
-Default value: `undef`
-
-##### <a name="-apt--source_deb822--check_valid_until"></a>`check_valid_until`
-
 Data type: `Optional[Boolean]`
 
 Specifies whether to check if the package release date is valid.
-
-Default value: `undef`
-
-##### <a name="-apt--source_deb822--signed_by"></a>`signed_by`
-
-Data type: `Optional[Variant[Array[Stdlib::AbsolutePath],String]]`
-
-Absolute path to a file containing the PGP keyring used to sign this repository.
 
 Default value: `undef`
 
