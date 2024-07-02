@@ -287,8 +287,17 @@ define apt::source (
       }
     }
     'deb822': {
-      if ($pin) {
+      if $pin {
         fail('apt::source::pin parameter is not supported with deb822 format')
+      }
+      if !$uris {
+        fail('You must specify a list of URIs for the apt::source resource')
+      }
+      if !$suites {
+        fail('You must specify a list of suites for the apt::source resource')
+      }
+      if !$components {
+        fail('You must specify a list of components for the apt::source resource')
       }
       $_file_suffix = 'sources'
       case $ensure {
