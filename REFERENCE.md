@@ -1092,7 +1092,7 @@ apt::source { 'puppetlabs':
 
 ```puppet
 apt::source { 'puppetlabs':
-  source_format => 'deb822'
+  source_format => 'sources'
   uris          => ['http://apt.puppetlabs.com'],
   suites        => [$facts['os']['distro']['codename']],
   components    => ['puppet8'],
@@ -1130,11 +1130,11 @@ The following parameters are available in the `apt::source` defined type:
 
 ##### <a name="-apt--source--source_format"></a>`source_format`
 
-Data type: `Enum['legacy', 'deb822']`
+Data type: `Enum['list', 'sources']`
 
 The file format to use for the apt source. See https://wiki.debian.org/SourcesList
 
-Default value: `'legacy'`
+Default value: `'list'`
 
 ##### <a name="-apt--source--location"></a>`location`
 

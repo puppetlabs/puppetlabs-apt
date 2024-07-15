@@ -23,7 +23,7 @@
 #
 # @example Install the puppetlabs apt source (deb822 format)
 #   apt::source { 'puppetlabs':
-#     source_format => 'deb822'
+#     source_format => 'sources'
 #     uris          => ['http://apt.puppetlabs.com'],
 #     suites        => [$facts['os']['distro']['codename']],
 #     components    => ['puppet8'],
@@ -116,7 +116,7 @@
 #   Specifies whether to check if the package release date is valid.
 #
 define apt::source (
-  Enum['legacy', 'deb822'] $source_format = 'legacy',
+  Enum['list', 'sources'] $source_format = 'list',
   Array[Enum['deb','deb-src'], 1, 2] $types = ['deb'],
   Optional[String[1]] $location = undef,
   String[1] $comment = $name,
@@ -145,8 +145,8 @@ define apt::source (
   $_before = Apt::Setting["list-${title}"]
 
   case $source_format {
-    'legacy': {
-      $_file_suffix = 'list'
+    'list': {
+      $_file_suffix = $source_format
 
       if !$release {
         if fact('os.distro.codename') {
@@ -295,7 +295,7 @@ define apt::source (
         }
       }
     }
-    'deb822': {
+    'sources': {
       if $pin {
         fail('apt::source::pin parameter is not supported with deb822 format')
       }
@@ -308,7 +308,7 @@ define apt::source (
       if !$components {
         fail('You must specify a list of components for the apt::source resource')
       }
-      $_file_suffix = 'sources'
+      $_file_suffix = $source_format
       case $ensure {
         'present': {
           $header = epp('apt/_header.epp')
