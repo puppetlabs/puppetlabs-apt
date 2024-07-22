@@ -5,7 +5,7 @@ Facter.add(:apt_sources) do
   confine osfamily: 'Debian'
   setcode do
     sources = ['sources.list']
-    Dir.glob('/etc/apt/sources.list.d/*.list').each do |file|
+    Dir.glob('/etc/apt/sources.list.d/*.{list,sources}').each do |file|
       sources.push(File.basename(file))
     end
     sources
