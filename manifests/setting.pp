@@ -1,30 +1,30 @@
 # @summary Manages Apt configuration files.
 #
-# @see https://docs.puppetlabs.com/references/latest/type.html#file-attributes for more information on source and content parameters
+# @see https://www.puppet.com/docs/puppet/latest/types/file.html#file-attributes for more information on source and content parameters
 #
 # @param priority
 #   Determines the order in which Apt processes the configuration file. Files with higher priority numbers are loaded first.
 #
 # @param ensure
-#   Specifies whether the file should exist. Valid options: 'present', 'absent', and 'file'.
+#   Specifies whether the file should exist.
 #
 # @param source
-#   Required, unless `content` is set. Specifies a source file to supply the content of the configuration file. Cannot be used in combination 
+#   Required, unless `content` is set. Specifies a source file to supply the content of the configuration file. Cannot be used in combination
 #   with `content`. Valid options: see link above for Puppet's native file type source attribute.
 #
 # @param content
-#   Required, unless `source` is set. Directly supplies content for the configuration file. Cannot be used in combination with `source`. Valid 
+#   Required, unless `source` is set. Directly supplies content for the configuration file. Cannot be used in combination with `source`. Valid
 #   options: see link above for Puppet's native file type content attribute.
 #
 # @param notify_update
 #   Specifies whether to trigger an `apt-get update` run.
 #
 define apt::setting (
-  Variant[String, Integer, Array] $priority           = 50,
-  Enum['file', 'present', 'absent'] $ensure           = file,
-  Optional[String] $source                            = undef,
-  Optional[String] $content                           = undef,
-  Boolean $notify_update                              = true,
+  Variant[String[1], Integer[0]] $priority = 50,
+  Enum['file', 'present', 'absent'] $ensure = file,
+  Optional[String[1]] $source = undef,
+  Optional[String[1]] $content = undef,
+  Boolean $notify_update = true,
 ) {
   if $content and $source {
     fail('apt::setting cannot have both content and source')

@@ -181,7 +181,7 @@ apt::source { 'debian_unstable':
   comment  => 'This is the iWeb Debian unstable mirror',
   location => 'http://debian.mirror.iweb.ca/debian/',
   release  => 'unstable',
-  repos    => 'main contrib non-free',
+  repos    => 'main contrib non-free non-free-firmware',
   pin      => '-10',
   key      => {
     'id'     => 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
@@ -235,7 +235,7 @@ apt::sources:
     comment: 'This is the iWeb Debian unstable mirror'
     location: 'http://debian.mirror.iweb.ca/debian/'
     release: 'unstable'
-    repos: 'main contrib non-free'
+    repos: 'main contrib non-free non-free-firmware'
     pin: '-10'
     key:
       id: 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553'

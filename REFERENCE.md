@@ -94,7 +94,7 @@ The following parameters are available in the `apt` class:
 
 ##### <a name="-apt--provider"></a>`provider`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 Specifies the provider that should be used by apt::update.
 
@@ -102,7 +102,7 @@ Default value: `'/usr/bin/apt-get'`
 
 ##### <a name="-apt--keyserver"></a>`keyserver`
 
-Data type: `String`
+Data type: `Stdlib::Host`
 
 Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
 hkp://).
@@ -111,7 +111,7 @@ Default value: `'keyserver.ubuntu.com'`
 
 ##### <a name="-apt--key_options"></a>`key_options`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Specifies the default options for apt::key resources.
 
@@ -119,7 +119,7 @@ Default value: `undef`
 
 ##### <a name="-apt--ppa_options"></a>`ppa_options`
 
-Data type: `Optional[Array[String]]`
+Data type: `Optional[Array[String[1]]]`
 
 Supplies options to be passed to the `add-apt-repository` command.
 
@@ -127,7 +127,7 @@ Default value: `undef`
 
 ##### <a name="-apt--ppa_package"></a>`ppa_package`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Names the package that provides the `apt-add-repository` command.
 
@@ -326,7 +326,7 @@ Default value: `[]`
 
 ##### <a name="-apt--auth_conf_owner"></a>`auth_conf_owner`
 
-Data type: `String`
+Data type: `String[1]`
 
 The owner of the file /etc/apt/auth.conf.
 
@@ -334,7 +334,7 @@ Default value: `'_apt'`
 
 ##### <a name="-apt--root"></a>`root`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 Specifies root directory of Apt executable.
 
@@ -342,7 +342,7 @@ Default value: `'/etc/apt'`
 
 ##### <a name="-apt--sources_list"></a>`sources_list`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 Specifies the path of the sources_list file to use.
 
@@ -350,7 +350,7 @@ Default value: `"${root}/sources.list"`
 
 ##### <a name="-apt--sources_list_d"></a>`sources_list_d`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 Specifies the path of the sources_list.d file to use.
 
@@ -358,7 +358,7 @@ Default value: `"${root}/sources.list.d"`
 
 ##### <a name="-apt--conf_d"></a>`conf_d`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 Specifies the path of the conf.d file to use.
 
@@ -366,7 +366,7 @@ Default value: `"${root}/apt.conf.d"`
 
 ##### <a name="-apt--preferences"></a>`preferences`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 Specifies the path of the preferences file to use.
 
@@ -374,7 +374,7 @@ Default value: `"${root}/preferences"`
 
 ##### <a name="-apt--preferences_d"></a>`preferences_d`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 Specifies the path of the preferences.d file to use.
 
@@ -430,7 +430,7 @@ Default value:
 
 ##### <a name="-apt--apt_conf_d"></a>`apt_conf_d`
 
-Data type: `String`
+Data type: `Stdlib::Absolutepath`
 
 The path to the file `apt.conf.d`
 
@@ -479,7 +479,7 @@ The following parameters are available in the `apt::backports` class:
 
 ##### <a name="-apt--backports--location"></a>`location`
 
-Data type: `Optional[String]`
+Data type: `Optional[Stdlib::HTTPUrl]`
 
 Specifies an Apt repository containing the backports to manage. Valid options: a string containing a URL. Default value for Debian and
 Ubuntu varies:
@@ -492,9 +492,9 @@ Default value: `undef`
 
 ##### <a name="-apt--backports--release"></a>`release`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
-Specifies a distribution of the Apt repository containing the backports to manage. Used in populating the `source.list` configuration file.
+Specifies a distribution of the Apt repository containing the backports to manage. Used in populating the `sources.list` configuration file.
 Default: on Debian and Ubuntu, `${fact('os.distro.codename')}-backports`. We recommend keeping this default, except on other operating
 systems.
 
@@ -502,12 +502,12 @@ Default value: `undef`
 
 ##### <a name="-apt--backports--repos"></a>`repos`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
-Specifies a component of the Apt repository containing the backports to manage. Used in populating the `source.list` configuration file.
+Specifies a component of the Apt repository containing the backports to manage. Used in populating the `sources.list` configuration file.
 Default value for Debian and Ubuntu varies:
 
-- Debian: 'main contrib non-free'
+- Debian: 'main contrib non-free non-free-firmware'
 
 - Ubuntu: 'main universe multiverse restricted'
 
@@ -515,7 +515,7 @@ Default value: `undef`
 
 ##### <a name="-apt--backports--key"></a>`key`
 
-Data type: `Optional[Variant[String, Hash]]`
+Data type: `Optional[Variant[String[1], Hash]]`
 
 Specifies a key to authenticate the backports. Valid options: a string to be passed to the id parameter of the apt::key defined type, or a
 hash of parameter => value pairs to be passed to apt::key's id, server, content, source, and/or options parameters.
@@ -534,7 +534,7 @@ Default value: `"/usr/share/keyrings/${facts['os']['name'].downcase}-archive-key
 
 ##### <a name="-apt--backports--pin"></a>`pin`
 
-Data type: `Variant[Integer, String, Hash]`
+Data type: `Variant[Integer, String[1], Hash]`
 
 Specifies a pin priority for the backports. Valid options: a number or string to be passed to the `id` parameter of the `apt::pin` defined
 type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
@@ -543,7 +543,7 @@ Default value: `200`
 
 ##### <a name="-apt--backports--include"></a>`include`
 
-Data type: `Variant[Hash]`
+Data type: `Hash`
 
 Specifies whether to include 'deb' or 'src', or both.
 
@@ -566,7 +566,7 @@ The following parameters are available in the `apt::conf` defined type:
 
 ##### <a name="-apt--conf--content"></a>`content`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Required unless `ensure` is set to 'absent'. Directly supplies content for the configuration file.
 
@@ -576,13 +576,13 @@ Default value: `undef`
 
 Data type: `Enum['present', 'absent']`
 
-Specifies whether the configuration file should exist. Valid options: 'present' and 'absent'.
+Specifies whether the configuration file should exist.
 
 Default value: `present`
 
 ##### <a name="-apt--conf--priority"></a>`priority`
 
-Data type: `Variant[String, Integer]`
+Data type: `Variant[String[1], Integer[0]]`
 
 Determines the order in which Apt processes the configuration file. Files with lower priority numbers are loaded first.
 Valid options: a string containing an integer or an integer.
@@ -640,14 +640,15 @@ Default value: `$title`
 
 Data type: `Enum['present', 'absent', 'refreshed']`
 
-Specifies whether the key should exist. Valid options: 'present', 'absent' or 'refreshed'. Using 'refreshed' will make keys auto
-update when they have expired (assuming a new key exists on the key server).
+Specifies whether the key should exist. Using `refreshed` will make keys
+auto update when they have expired (assuming a new key exists on the key
+server).
 
 Default value: `present`
 
 ##### <a name="-apt--key--content"></a>`content`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Supplies the entire GPG key. Useful in case the key can't be fetched from a remote location and using a file resource is inconvenient.
 
@@ -675,13 +676,13 @@ Default value: `$apt::keyserver`
 
 Data type: `Boolean`
 
-Specifies whether strict SSL verification on a https URL should be disabled. Valid options: true or false.
+Specifies whether strict SSL verification on a https URL should be disabled.
 
 Default value: `false`
 
 ##### <a name="-apt--key--options"></a>`options`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Passes additional options to `apt-key adv --keyserver-options`.
 
@@ -787,8 +788,7 @@ The following parameters are available in the `apt::mark` defined type:
 
 Data type: `Enum['auto','manual','hold','unhold']`
 
-auto, manual, hold, unhold
-specifies the behavior of apt in case of no more dependencies installed
+Specifies the behavior of apt in case of no more dependencies installed
 https://manpages.debian.org/stable/apt/apt-mark.8.en.html
 
 ### <a name="apt--pin"></a>`apt::pin`
@@ -796,7 +796,7 @@ https://manpages.debian.org/stable/apt/apt-mark.8.en.html
 Manages Apt pins. Does not trigger an apt-get update run.
 
 * **See also**
-  * http://linux.die.net/man/5/apt_preferences
+  * https://manpages.debian.org/stable/apt/apt_preferences.5.en.html
     * for context on these parameters
 
 #### Parameters
@@ -821,13 +821,13 @@ The following parameters are available in the `apt::pin` defined type:
 
 Data type: `Enum['file', 'present', 'absent']`
 
-Specifies whether the pin should exist. Valid options: 'file', 'present', and 'absent'.
+Specifies whether the pin should exist.
 
 Default value: `present`
 
 ##### <a name="-apt--pin--explanation"></a>`explanation`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Supplies a comment to explain the pin. Default: "${caller_module_name}: ${name}".
 
@@ -835,7 +835,7 @@ Default value: `undef`
 
 ##### <a name="-apt--pin--order"></a>`order`
 
-Data type: `Variant[Integer]`
+Data type: `Variant[Integer[0]]`
 
 Determines the order in which Apt processes the pin file. Files with lower order numbers are loaded first.
 
@@ -843,7 +843,7 @@ Default value: `50`
 
 ##### <a name="-apt--pin--packages"></a>`packages`
 
-Data type: `Variant[String, Array]`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Specifies which package(s) to pin.
 
@@ -851,16 +851,16 @@ Default value: `'*'`
 
 ##### <a name="-apt--pin--priority"></a>`priority`
 
-Data type: `Variant[Numeric, String]`
+Data type: `Variant[Integer, String[1]]`
 
 Sets the priority of the package. If multiple versions of a given package are available, `apt-get` installs the one with the highest
-priority number (subject to dependency constraints). Valid options: an integer.
+priority number (subject to dependency constraints).
 
 Default value: `0`
 
 ##### <a name="-apt--pin--release"></a>`release`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Tells APT to prefer packages that support the specified release. Typical values include 'stable', 'testing', and 'unstable'.
 
@@ -868,7 +868,7 @@ Default value: `undef`
 
 ##### <a name="-apt--pin--release_version"></a>`release_version`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Tells APT to prefer packages that support the specified operating system release version (such as Debian release version 7).
 
@@ -876,7 +876,7 @@ Default value: `undef`
 
 ##### <a name="-apt--pin--component"></a>`component`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Names the licensing component associated with the packages in the directory tree of the Release file.
 
@@ -884,7 +884,7 @@ Default value: `undef`
 
 ##### <a name="-apt--pin--originator"></a>`originator`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Names the originator of the packages in the directory tree of the Release file.
 
@@ -892,7 +892,7 @@ Default value: `undef`
 
 ##### <a name="-apt--pin--label"></a>`label`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Names the label of the packages in the directory tree of the Release file.
 
@@ -900,15 +900,15 @@ Default value: `undef`
 
 ##### <a name="-apt--pin--origin"></a>`origin`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
-The package origin
+The package origin (the hostname part of the package's sources.list entry)
 
 Default value: `undef`
 
 ##### <a name="-apt--pin--version"></a>`version`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 The version of the package
 
@@ -916,9 +916,9 @@ Default value: `undef`
 
 ##### <a name="-apt--pin--codename"></a>`codename`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
-The codename of the package
+The codename of the release
 
 Default value: `undef`
 
@@ -928,10 +928,10 @@ Manages PPA repositories using `add-apt-repository`. Not supported on Debian.
 
 #### Examples
 
-##### Example declaration of an Apt PPA
+##### Declaration of an Apt PPA
 
 ```puppet
-apt::ppa{ 'ppa:openstack-ppa/bleeding-edge': }
+apt::ppa { 'ppa:openstack-ppa/bleeding-edge': }
 ```
 
 #### Parameters
@@ -947,23 +947,23 @@ The following parameters are available in the `apt::ppa` defined type:
 
 ##### <a name="-apt--ppa--ensure"></a>`ensure`
 
-Data type: `String`
+Data type: `Enum['present', 'absent']`
 
-Specifies whether the PPA should exist. Valid options: 'present' and 'absent'.
+Specifies whether the PPA should exist.
 
 Default value: `'present'`
 
 ##### <a name="-apt--ppa--options"></a>`options`
 
-Data type: `Optional[Array[String]]`
+Data type: `Optional[Array[String[1]]]`
 
-Supplies options to be passed to the `add-apt-repository` command. Default: '-y'.
+Supplies options to be passed to the `add-apt-repository` command.
 
 Default value: `$apt::ppa_options`
 
 ##### <a name="-apt--ppa--release"></a>`release`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Specifies the operating system of your node. Valid options: a string containing a valid LSB distribution codename.
 Optional if `puppet facts show os.distro.codename` returns your correct distribution release codename.
@@ -972,7 +972,7 @@ Default value: `fact('os.distro.codename')`
 
 ##### <a name="-apt--ppa--dist"></a>`dist`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Specifies the distribution of your node. Valid options: a string containing a valid distribution codename.
 Optional if `puppet facts show os.name` returns your correct distribution name.
@@ -981,9 +981,9 @@ Default value: `$facts['os']['name']`
 
 ##### <a name="-apt--ppa--package_name"></a>`package_name`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
-Names the package that provides the `apt-add-repository` command. Default: 'software-properties-common'.
+Names the package that provides the `apt-add-repository` command.
 
 Default value: `$apt::ppa_package`
 
@@ -1000,7 +1000,7 @@ Default value: `false`
 Manages Apt configuration files.
 
 * **See also**
-  * https://docs.puppetlabs.com/references/latest/type.html#file-attributes
+  * https://www.puppet.com/docs/puppet/latest/types/file.html#file-attributes
     * for more information on source and content parameters
 
 #### Parameters
@@ -1015,7 +1015,7 @@ The following parameters are available in the `apt::setting` defined type:
 
 ##### <a name="-apt--setting--priority"></a>`priority`
 
-Data type: `Variant[String, Integer, Array]`
+Data type: `Variant[String[1], Integer[0]]`
 
 Determines the order in which Apt processes the configuration file. Files with higher priority numbers are loaded first.
 
@@ -1025,13 +1025,13 @@ Default value: `50`
 
 Data type: `Enum['file', 'present', 'absent']`
 
-Specifies whether the file should exist. Valid options: 'present', 'absent', and 'file'.
+Specifies whether the file should exist.
 
 Default value: `file`
 
 ##### <a name="-apt--setting--source"></a>`source`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Required, unless `content` is set. Specifies a source file to supply the content of the configuration file. Cannot be used in combination
 with `content`. Valid options: see link above for Puppet's native file type source attribute.
@@ -1040,7 +1040,7 @@ Default value: `undef`
 
 ##### <a name="-apt--setting--content"></a>`content`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Required, unless `source` is set. Directly supplies content for the configuration file. Cannot be used in combination with `source`. Valid
 options: see link above for Puppet's native file type content attribute.
@@ -1109,15 +1109,15 @@ The following parameters are available in the `apt::source` defined type:
 
 ##### <a name="-apt--source--location"></a>`location`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
-Required, unless ensure is set to 'absent'. Specifies an Apt repository. Valid options: a string containing a repository URL.
+Required, unless ensure is set to 'absent'. Specifies an Apt repository.
 
 Default value: `undef`
 
 ##### <a name="-apt--source--comment"></a>`comment`
 
-Data type: `String`
+Data type: `String[1]`
 
 Supplies a comment for adding to the Apt source file.
 
@@ -1125,7 +1125,7 @@ Default value: `$name`
 
 ##### <a name="-apt--source--ensure"></a>`ensure`
 
-Data type: `String`
+Data type: `Enum['present', 'absent']`
 
 Specifies whether the Apt source file should exist.
 
@@ -1133,7 +1133,7 @@ Default value: `present`
 
 ##### <a name="-apt--source--release"></a>`release`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[0]]`
 
 Specifies a distribution of the Apt repository.
 
@@ -1141,7 +1141,7 @@ Default value: `undef`
 
 ##### <a name="-apt--source--repos"></a>`repos`
 
-Data type: `String`
+Data type: `String[1]`
 
 Specifies a component of the Apt repository.
 
@@ -1149,7 +1149,7 @@ Default value: `'main'`
 
 ##### <a name="-apt--source--include"></a>`include`
 
-Data type: `Variant[Hash]`
+Data type: `Hash`
 
 Configures include options. Valid options: a hash of available keys.
 
@@ -1162,7 +1162,7 @@ Default value: `{}`
 
 ##### <a name="-apt--source--key"></a>`key`
 
-Data type: `Optional[Variant[String, Hash]]`
+Data type: `Optional[Variant[String[1], Hash]]`
 
 Creates an `apt::keyring` in `/etc/apt/keyrings` (or anywhere on disk given `filename`) Valid options:
   * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`
@@ -1185,16 +1185,16 @@ Default value: `undef`
 
 ##### <a name="-apt--source--pin"></a>`pin`
 
-Data type: `Optional[Variant[Hash, Numeric, String]]`
+Data type: `Optional[Variant[Hash, Integer, String[1]]]`
 
-Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `id` parameter of the
+Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
 `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
 
 Default value: `undef`
 
 ##### <a name="-apt--source--architecture"></a>`architecture`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Tells Apt to only download information for specified architectures. Valid options: a string containing one or more architecture names,
 separated by commas (e.g., 'i386' or 'i386,alpha,powerpc').
