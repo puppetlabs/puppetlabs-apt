@@ -118,21 +118,21 @@
 define apt::source (
   Enum['list', 'sources'] $source_format = 'list',
   Array[Enum['deb','deb-src'], 1, 2] $types = ['deb'],
-  Optional[String[1]] $location = undef,
+  Optional[Variant[String, Array[String]]] $location = undef,
   String[1] $comment = $name,
   Optional[Array[String]] $uris = undef, # deb822
   Boolean $enabled = true, # deb822
   Enum['present', 'absent'] $ensure = present,
-  Optional[String[0]] $release = undef,
+  Optional[Variant[String[0], Array[String[0]]]] $release = undef,
   Optional[Array[String]] $suites = undef, # deb822
-  String[1] $repos = 'main',
+  Variant[String[1], Array[String[1]]] $repos = 'main',
   Optional[Array[String]] $components = undef, # deb822
   Hash $include = {},
   Optional[Variant[String[1], Hash]] $key = undef,
   Optional[Stdlib::AbsolutePath] $keyring = undef,
   Optional[Variant[Stdlib::AbsolutePath,Array[String]]] $signed_by = undef, # deb822
-  Optional[Variant[Hash, Integer, String[1]]] $pin = undef,
-  Optional[String[1]] $architecture = undef,
+  Optional[Variant[Hash, Numeric, String]] $pin = undef,
+  Optional[Variant[String, Array[String]]] $architecture = undef,
   Optional[Array[String]] $architectures = undef, # deb822
   Optional[Boolean] $allow_unsigned = undef,
   Optional[Boolean] $repo_trusted = undef, # deb822
@@ -156,23 +156,40 @@ define apt::source (
         }
       } else {
         $_release = $release
+        # If the release is given as an array, use the first element only
+        if (type($_release) =~ Array) {
+          warning("Parameter, 'release', must be a string for 'list' format. Using the first array element instead.")
+          $_release = $_release[0]
+        }
+      }
+
+      if (type($repos =~ Array)) {
+        $_repos = join($repos, ' ')
+      }
+      else {
+        $_repos = $repos
       }
 
       if $release =~ Pattern[/\/$/] {
         $_components = $_release
       } else {
-        $_components = "${_release} ${repos}"
+        $_components = "${_release} ${_repos}"
       }
 
       if $ensure == 'present' {
         if ! $location {
           fail('cannot create a source entry without specifying a location')
         }
-        elsif ($apt::proxy['https_acng']) and ($location =~ /(?i:^https:\/\/)/) {
-          $_location = regsubst($location, 'https://','http://HTTPS///')
-        }
         else {
           $_location = $location
+          # If the location is given as an array, use the first element only
+          if (type($_location) =~ Array) {
+            warning("Parameter, 'location', must be a string for 'list' format. Using the first array element instead.")
+            $_location = $_location[0]
+          }
+          if ($apt::proxy['https_acng']) and ($_location =~ /(?i:^https:\/\/)/) {
+            $_location = regsubst($_location, 'https://','http://HTTPS///')
+          }
         }
       } else {
         $_location = undef
@@ -254,6 +271,9 @@ define apt::source (
 
       if $architecture {
         $_architecture = regsubst($architecture, '\baarch64\b', 'arm64')
+        if (type($_architecture) =~ Array) {
+          $_architecture = join($_architecture, ',')
+        }
       } else {
         $_architecture = undef
       }
