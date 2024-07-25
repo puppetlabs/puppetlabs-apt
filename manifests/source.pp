@@ -316,30 +316,62 @@ define apt::source (
       }
     }
     'sources': {
+      $_file_suffix = $source_format
+
       if $pin {
-        fail('apt::source::pin parameter is not supported with deb822 format')
+        warning('apt::source::pin parameter is not supported with deb822 format.')
       }
-      if !$uris {
+
+      if !$location {
         fail('You must specify a list of URIs for the apt::source resource')
       }
-      if !$suites {
-        fail('You must specify a list of suites for the apt::source resource')
+      if (type($location =~ String)) {
+        warning('For deb822 sources, location must be specified as an array.')
+        $_location = [$location]
       }
-      if !$components {
-        fail('You must specify a list of components for the apt::source resource')
+      else {
+        $_location = $location
       }
-      $_file_suffix = $source_format
+
+      if !$release {
+        if fact('os.distro.codename') {
+          $_release = [fact('os.distro.codename')]
+        } else {
+          fail('os.distro.codename fact not available: release parameter required')
+        }
+      } else {
+        if (type($release) =~ String) {
+          warning("For deb822 sources, 'release' must be specified as an array. Converting to array.")
+          $_release = [$release]
+        }
+      }
+
+      if (type($repos) =~ String) {
+        warning("For deb822 sources, 'repos' must be specified as an array. Converting to array.")
+        $_repos = split($repos, /\s+/)
+      } else {
+        $_repos = $repos
+      }
+
+      if (type($architecture =~ String)) {
+        warning("For deb822 sources, 'architecture' must be specified as an array. Converting to array.")
+        $_architecture = split($architecture, '[,]')
+      }
+      else {
+        $_architecture = $architecture
+      }
+
       case $ensure {
         'present': {
           $header = epp('apt/_header.epp')
           $source_content = epp('apt/source_deb822.epp', delete_undef_values({
-                'uris'              => $uris,
-                'suites'            => $suites,
-                'components'        => $components,
+                'uris'              => $_location,
+                'suites'            => $_release,
+                'components'        => $_repos,
                 'types'             => $types,
                 'comment'           => $comment,
                 'enabled'           => $enabled ? { true => 'yes', false => 'no' },
-                'architectures'     => $architectures,
+                'architectures'     => $_architecture,
                 'allow_insecure'    => $allow_insecure ? { true => 'yes', false => 'no', default => undef },
                 'repo_trusted'      => $repo_trusted ? { true => 'yes', false => 'no', default => undef },
                 'check_valid_until' => $check_valid_until ? { true => 'yes', false => 'no', default => undef },
