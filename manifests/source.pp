@@ -343,6 +343,8 @@ define apt::source (
         if (type($release) =~ String) {
           warning("For deb822 sources, 'release' must be specified as an array. Converting to array.")
           $_release = [$release]
+        } else {
+          $_release = $release
         }
       }
 
@@ -353,14 +355,17 @@ define apt::source (
         $_repos = $repos
       }
 
-      if (type($architecture =~ String)) {
-        warning("For deb822 sources, 'architecture' must be specified as an array. Converting to array.")
-        $_architecture = split($architecture, '[,]')
-      }
-      else {
+      if $architecture != undef {
+        if (type($architecture =~ String)) {
+          warning("For deb822 sources, 'architecture' must be specified as an array. Converting to array.")
+          $_architecture = split($architecture, '[,]')
+        }
+        else {
+          $_architecture = $architecture
+        }
+      } else {
         $_architecture = $architecture
       }
-
       case $ensure {
         'present': {
           $header = epp('apt/_header.epp')
