@@ -39,9 +39,6 @@
 # @param types
 #   DEB822: The package types this source manages.
 #
-# @param uris
-#   DEB822: A list of URIs for the APT source.
-#
 # @param enabled
 #   DEB822: Enable or Disable the APT source.
 #
@@ -54,14 +51,8 @@
 # @param release
 #   Specifies a distribution of the Apt repository.
 #
-# @param suites
-#   DEB822: A list of suites for the APT source ('jammy-updates', 'bookworm', 'stable', etc.).
-#
 # @param repos
 #   Specifies a component of the Apt repository.
-#
-# @param components
-#   DEB822: A list of components for the APT source ('main', 'contrib', 'non-free', etc.).
 #
 # @param include
 #   Configures include options. Valid options: a hash of available keys.
@@ -85,9 +76,6 @@
 #   This is not necessary if the key is installed with `key` param above.
 #   See https://wiki.debian.org/DebianRepository/UseThirdParty for details.
 #
-# @param signed_by
-#   DEB822: Either an absolute path to a PGP keyring file used to sign this repository OR a list of key fingerprints to trust.
-#
 # @param pin
 #   Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
 #   `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
@@ -97,14 +85,8 @@
 #   separated by commas (e.g., 'i386' or 'i386,alpha,powerpc').
 #   (if unspecified, Apt downloads information for all architectures defined in the Apt::Architectures option)
 #
-# @param architectures
-#   DEB822: A list of supported architectures for the APT source ('amd64', 'i386', etc.).
-#
 # @param allow_unsigned
 #   Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked.
-#
-# @param repo_trusted
-#   DEB822: Consider the APT source trusted, even if authentication checks fail.
 #
 # @param allow_insecure
 #   Specifies whether to allow downloads from insecure repositories.
@@ -118,24 +100,18 @@
 define apt::source (
   Enum['list', 'sources'] $source_format = 'list',
   Array[Enum['deb','deb-src'], 1, 2] $types = ['deb'],
-  Optional[Variant[String, Array[String]]] $location = undef,
+  Optional[Variant[String[1], Array[String[1]]]] $location = undef,
   String[1] $comment = $name,
-  Optional[Array[String]] $uris = undef, # deb822
   Boolean $enabled = true, # deb822
   Enum['present', 'absent'] $ensure = present,
-  Optional[String[0]] $release = undef,
-  Optional[Array[String]] $suites = undef, # deb822
-  String[1] $repos = 'main',
-  Optional[Array[String]] $components = undef, # deb822
+  Optional[Variant[String[0], Array[String[0]]]] $release = undef,
+  Variant[String[1], Array[String[1]]] $repos = 'main',
   Hash $include = {},
   Optional[Variant[String[1], Hash]] $key = undef,
   Optional[Stdlib::AbsolutePath] $keyring = undef,
-  Optional[Variant[Stdlib::AbsolutePath,Array[String]]] $signed_by = undef, # deb822
   Optional[Variant[Hash, Numeric, String]] $pin = undef,
-  Optional[String[1]] $architecture = undef,
-  Optional[Array[String]] $architectures = undef, # deb822
+  Optional[Variant[String[1], Array[String[1]]]] $architecture = undef,
   Optional[Boolean] $allow_unsigned = undef,
-  Optional[Boolean] $repo_trusted = undef, # deb822
   Optional[Boolean] $allow_insecure = undef,
   Optional[Boolean] $check_valid_until = undef,
   Boolean $notify_update = true,
@@ -305,7 +281,7 @@ define apt::source (
       if !$location {
         fail('You must specify a list of URIs for the apt::source resource')
       }
-      if (type($location =~ String)) {
+      if (type($location, 'generalized') !~ Type[Array]) {
         warning('For deb822 sources, location must be specified as an array.')
         $_location = [$location]
       }
@@ -320,7 +296,7 @@ define apt::source (
           fail('os.distro.codename fact not available: release parameter required')
         }
       } else {
-        if (type($release) =~ String) {
+        if (type($release, 'generalized') !~ Type[Array]) {
           warning("For deb822 sources, 'release' must be specified as an array. Converting to array.")
           $_release = [$release]
         } else {
@@ -328,7 +304,7 @@ define apt::source (
         }
       }
 
-      if (type($repos) =~ String) {
+      if (type($repos, 'generalized') !~ Type[Array]) {
         warning("For deb822 sources, 'repos' must be specified as an array. Converting to array.")
         $_repos = split($repos, /\s+/)
       } else {
@@ -336,7 +312,7 @@ define apt::source (
       }
 
       if $architecture != undef {
-        if (type($architecture =~ String)) {
+        if (type($architecture, 'generalized') !~ Type[Array]) {
           warning("For deb822 sources, 'architecture' must be specified as an array. Converting to array.")
           $_architecture = split($architecture, '[,]')
         }
@@ -358,9 +334,9 @@ define apt::source (
                 'enabled'           => $enabled ? { true => 'yes', false => 'no' },
                 'architectures'     => $_architecture,
                 'allow_insecure'    => $allow_insecure ? { true => 'yes', false => 'no', default => undef },
-                'repo_trusted'      => $repo_trusted ? { true => 'yes', false => 'no', default => undef },
+                'repo_trusted'      => $allow_unsigned ? { true => 'yes', false => 'no', default => undef },
                 'check_valid_until' => $check_valid_until ? { true => 'yes', false => 'no', default => undef },
-                'signed_by'         => $signed_by,
+                'signed_by'         => $keyring,
               }
             )
           )
