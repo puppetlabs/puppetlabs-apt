@@ -13,6 +13,7 @@
 
 #### Private Classes
 
+* `apt::params`: Provides defaults for the Apt module parameters.
 * `apt::update`: Updates the list of available packages using apt-get update.
 
 ### Defined types
@@ -1093,10 +1094,9 @@ apt::source { 'puppetlabs':
 ```puppet
 apt::source { 'puppetlabs':
   source_format => 'sources'
-  uris          => ['http://apt.puppetlabs.com'],
-  suites        => [$facts['os']['distro']['codename']],
-  components    => ['puppet8'],
-  signed_by     => '/etc/apt/keyrings/puppetlabs.gpg',
+  location      => ['http://apt.puppetlabs.com'],
+  repos         => ['puppet8'],
+  keyring       => '/etc/apt/keyrings/puppetlabs.gpg',
 }
 ```
 
@@ -1107,23 +1107,17 @@ The following parameters are available in the `apt::source` defined type:
 * [`source_format`](#-apt--source--source_format)
 * [`location`](#-apt--source--location)
 * [`types`](#-apt--source--types)
-* [`uris`](#-apt--source--uris)
 * [`enabled`](#-apt--source--enabled)
 * [`comment`](#-apt--source--comment)
 * [`ensure`](#-apt--source--ensure)
 * [`release`](#-apt--source--release)
-* [`suites`](#-apt--source--suites)
 * [`repos`](#-apt--source--repos)
-* [`components`](#-apt--source--components)
 * [`include`](#-apt--source--include)
 * [`key`](#-apt--source--key)
 * [`keyring`](#-apt--source--keyring)
-* [`signed_by`](#-apt--source--signed_by)
 * [`pin`](#-apt--source--pin)
 * [`architecture`](#-apt--source--architecture)
-* [`architectures`](#-apt--source--architectures)
 * [`allow_unsigned`](#-apt--source--allow_unsigned)
-* [`repo_trusted`](#-apt--source--repo_trusted)
 * [`allow_insecure`](#-apt--source--allow_insecure)
 * [`notify_update`](#-apt--source--notify_update)
 * [`check_valid_until`](#-apt--source--check_valid_until)
@@ -1138,9 +1132,10 @@ Default value: `'list'`
 
 ##### <a name="-apt--source--location"></a>`location`
 
-Data type: `Optional[String[1]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
-Required, unless ensure is set to 'absent'. Specifies an Apt repository.
+Required, unless ensure is set to 'absent'. Specifies an Apt repository. Valid options: a string containing a repository URL.
+DEB822: Supports an array of URL values
 
 Default value: `undef`
 
@@ -1151,14 +1146,6 @@ Data type: `Array[Enum['deb','deb-src'], 1, 2]`
 DEB822: The package types this source manages.
 
 Default value: `['deb']`
-
-##### <a name="-apt--source--uris"></a>`uris`
-
-Data type: `Optional[Array[String]]`
-
-DEB822: A list of URIs for the APT source.
-
-Default value: `undef`
 
 ##### <a name="-apt--source--enabled"></a>`enabled`
 
@@ -1186,35 +1173,21 @@ Default value: `present`
 
 ##### <a name="-apt--source--release"></a>`release`
 
-Data type: `Optional[String[0]]`
+Data type: `Optional[Variant[String[0], Array[String[0]]]]`
 
 Specifies a distribution of the Apt repository.
-
-Default value: `undef`
-
-##### <a name="-apt--source--suites"></a>`suites`
-
-Data type: `Optional[Array[String]]`
-
-DEB822: A list of suites for the APT source ('jammy-updates', 'bookworm', 'stable', etc.).
+DEB822: Supports an array of values
 
 Default value: `undef`
 
 ##### <a name="-apt--source--repos"></a>`repos`
 
-Data type: `String[1]`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Specifies a component of the Apt repository.
+DEB822: Supports an array of values
 
 Default value: `'main'`
-
-##### <a name="-apt--source--components"></a>`components`
-
-Data type: `Optional[Array[String]]`
-
-DEB822: A list of components for the APT source ('main', 'contrib', 'non-free', etc.).
-
-Default value: `undef`
 
 ##### <a name="-apt--source--include"></a>`include`
 
@@ -1252,17 +1225,9 @@ See https://wiki.debian.org/DebianRepository/UseThirdParty for details.
 
 Default value: `undef`
 
-##### <a name="-apt--source--signed_by"></a>`signed_by`
-
-Data type: `Optional[Variant[Stdlib::AbsolutePath,Array[String]]]`
-
-DEB822: Either an absolute path to a PGP keyring file used to sign this repository OR a list of key fingerprints to trust.
-
-Default value: `undef`
-
 ##### <a name="-apt--source--pin"></a>`pin`
 
-Data type: `Optional[Variant[Hash, Integer, String[1]]]`
+Data type: `Optional[Variant[Hash, Numeric, String]]`
 
 Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
 `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
@@ -1271,19 +1236,12 @@ Default value: `undef`
 
 ##### <a name="-apt--source--architecture"></a>`architecture`
 
-Data type: `Optional[String[1]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Tells Apt to only download information for specified architectures. Valid options: a string containing one or more architecture names,
 separated by commas (e.g., 'i386' or 'i386,alpha,powerpc').
 (if unspecified, Apt downloads information for all architectures defined in the Apt::Architectures option)
-
-Default value: `undef`
-
-##### <a name="-apt--source--architectures"></a>`architectures`
-
-Data type: `Optional[Array[String]]`
-
-DEB822: A list of supported architectures for the APT source ('amd64', 'i386', etc.).
+DEB822: Supports an array of values
 
 Default value: `undef`
 
@@ -1292,14 +1250,6 @@ Default value: `undef`
 Data type: `Optional[Boolean]`
 
 Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked.
-
-Default value: `undef`
-
-##### <a name="-apt--source--repo_trusted"></a>`repo_trusted`
-
-Data type: `Optional[Boolean]`
-
-DEB822: Consider the APT source trusted, even if authentication checks fail.
 
 Default value: `undef`
 

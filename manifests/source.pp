@@ -24,10 +24,9 @@
 # @example Install the puppetlabs apt source (deb822 format)
 #   apt::source { 'puppetlabs':
 #     source_format => 'sources'
-#     uris          => ['http://apt.puppetlabs.com'],
-#     suites        => [$facts['os']['distro']['codename']],
-#     components    => ['puppet8'],
-#     signed_by     => '/etc/apt/keyrings/puppetlabs.gpg',
+#     location      => ['http://apt.puppetlabs.com'],
+#     repos         => ['puppet8'],
+#     keyring       => '/etc/apt/keyrings/puppetlabs.gpg',
 #   }
 #
 # @param source_format
@@ -35,6 +34,7 @@
 #
 # @param location
 #   Required, unless ensure is set to 'absent'. Specifies an Apt repository. Valid options: a string containing a repository URL.
+#   DEB822: Supports an array of URL values
 #
 # @param types
 #   DEB822: The package types this source manages.
@@ -50,9 +50,11 @@
 #
 # @param release
 #   Specifies a distribution of the Apt repository.
+#   DEB822: Supports an array of values
 #
 # @param repos
 #   Specifies a component of the Apt repository.
+#   DEB822: Supports an array of values
 #
 # @param include
 #   Configures include options. Valid options: a hash of available keys.
@@ -84,6 +86,7 @@
 #   Tells Apt to only download information for specified architectures. Valid options: a string containing one or more architecture names,
 #   separated by commas (e.g., 'i386' or 'i386,alpha,powerpc').
 #   (if unspecified, Apt downloads information for all architectures defined in the Apt::Architectures option)
+#   DEB822: Supports an array of values
 #
 # @param allow_unsigned
 #   Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked.
@@ -275,11 +278,15 @@ define apt::source (
       $_file_suffix = $source_format
 
       if $pin {
-        warning('apt::source::pin parameter is not supported with deb822 format.')
+        warning("'pin' parameter is not supported with deb822 format.")
       }
-
-      if !$location {
-        fail('You must specify a list of URIs for the apt::source resource')
+      if $key {
+        warning("'key' parameter is not supported with deb822 format.")
+      }
+      if $ensure == 'present' {
+        if ! $location {
+          fail('cannot create a source entry without specifying a location')
+        }
       }
       if (type($location, 'generalized') !~ Type[Array]) {
         warning('For deb822 sources, location must be specified as an array.')
