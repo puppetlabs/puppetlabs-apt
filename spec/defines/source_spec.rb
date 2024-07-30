@@ -416,4 +416,63 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("list-#{title}").with_notify_update(false) }
     end
   end
+
+  describe 'deb822 sources' do
+    let :params do
+      {
+        source_format: 'sources',
+      }
+    end
+
+    context 'basic deb822 source' do
+      let :params do
+        super().merge({
+          location: ['http://debian.mirror.iweb.ca/debian/'],
+          repos: ['main', 'contrib', 'non-free']
+        })
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
+    end
+
+    context 'complex deb822 source' do
+      let :params do
+        super().merge({
+          types: ['deb', 'deb-src'],
+          location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
+          release: ['stable', 'stable-updates', 'stable-backports'],
+          repos: ['main', 'contrib', 'non-free'],
+          architecture: ['amd64', 'i386'],
+          allow_unsigned: true,
+          notify_update: false
+        })
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(false) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Enabled: yes}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Types: deb deb-src}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{URIs: http://fr.debian.org/debian http://de.debian.org/debian}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Suites: stable stable-updates stable-backports}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Components: main contrib non-free}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Architectures: amd64 i386}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
+    end
+
+    context '.list backwards compatibility' do
+      let :params do
+        super().merge({
+          location: 'http://debian.mirror.iweb.ca/debian/',
+          release: 'unstable',
+          repos: 'main contrib non-free',
+          key: {
+            id: 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
+            server: 'keyserver.ubuntu.com',
+          },
+          pin: '-10'
+        })
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
+    end
+  end
 end
