@@ -426,10 +426,12 @@ describe 'apt::source' do
 
     context 'basic deb822 source' do
       let :params do
-        super().merge({
-          location: ['http://debian.mirror.iweb.ca/debian/'],
-          repos: ['main', 'contrib', 'non-free']
-        })
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main', 'contrib', 'non-free']
+          },
+        )
       end
 
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
@@ -437,15 +439,17 @@ describe 'apt::source' do
 
     context 'complex deb822 source' do
       let :params do
-        super().merge({
-          types: ['deb', 'deb-src'],
-          location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
-          release: ['stable', 'stable-updates', 'stable-backports'],
-          repos: ['main', 'contrib', 'non-free'],
-          architecture: ['amd64', 'i386'],
-          allow_unsigned: true,
-          notify_update: false
-        })
+        super().merge(
+          {
+            types: ['deb', 'deb-src'],
+            location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
+            release: ['stable', 'stable-updates', 'stable-backports'],
+            repos: ['main', 'contrib', 'non-free'],
+            architecture: ['amd64', 'i386'],
+            allow_unsigned: true,
+            notify_update: false
+          },
+        )
       end
 
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(false) }
@@ -460,16 +464,18 @@ describe 'apt::source' do
 
     context '.list backwards compatibility' do
       let :params do
-        super().merge({
-          location: 'http://debian.mirror.iweb.ca/debian/',
-          release: 'unstable',
-          repos: 'main contrib non-free',
-          key: {
-            id: 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
-            server: 'keyserver.ubuntu.com',
+        super().merge(
+          {
+            location: 'http://debian.mirror.iweb.ca/debian/',
+            release: 'unstable',
+            repos: 'main contrib non-free',
+            key: {
+              id: 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
+              server: 'keyserver.ubuntu.com',
+            },
+            pin: '-10'
           },
-          pin: '-10'
-        })
+        )
       end
 
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
