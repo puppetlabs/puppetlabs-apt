@@ -94,11 +94,14 @@ class apt::backports (
   if $pin =~ Hash {
     $_pin = $pin
   } elsif $pin =~ Numeric or $pin =~ String {
-    # apt::source defaults to pinning to origin, but we should pin to release
-    # for backports
+    $pin_type = $facts['os']['name'] ? {
+      'Debian' => 'codename',
+      'Ubuntu' => 'release',
+    }
+
     $_pin = {
       'priority' => $pin,
-      'release'  => $_release,
+      $pin_type  => $_release,
     }
   } else {
     fail('pin must be either a string, number or hash')
