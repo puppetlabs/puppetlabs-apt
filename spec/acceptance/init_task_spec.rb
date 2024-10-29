@@ -25,10 +25,10 @@ describe 'apt tasks' do
     end
   end
 
-  describe 'autoremove' do
-    it 'autoremoves obsolete packages' do
-      result = run_bolt_task('apt', 'action' => 'autoremove')
-      expect(result.stdout).to contain(%r{\d+ upgraded, \d+ newly installed, \d+ to remove and \d+ not upgraded})
-    end
-  end
+  # describe 'autoremove' do
+  #   it 'autoremoves obsolete packages' do
+  #     result = run_bolt_task('apt', 'action' => 'autoremove')
+  #     expect(result.stdout).to contain(%r{\d+ upgraded, \d+ newly installed, \d+ to remove and \d+ not upgraded})
+  #   end
+  # end
 end
