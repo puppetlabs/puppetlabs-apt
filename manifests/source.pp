@@ -14,11 +14,25 @@
 #   extension. Absence of extension will result in file formation with just name and no extension.
 #   apt::source { 'puppetlabs':
 #     location => 'http://apt.puppetlabs.com',
-#     comment  => 'Puppet8',
+#     repos    => 'puppet8'
+#     comment  => 'Puppet 8 release',
 #     key      => {
-#       'name'   => 'puppetlabs.gpg',
+#       'name'   => 'puppetlabs-keyring.gpg',
 #       'source' => 'https://apt.puppetlabs.com/keyring.gpg',
 #     },
+#   }
+#
+# @example Deploy the apt source and associated keyring file with checksum
+#   apt::source { 'puppetlabs':
+#     location => 'http://apt.puppetlabs.com',
+#     repos    => 'puppet8',
+#     comment  => 'Puppet 8 release',
+#     key      => {
+#       name           => 'puppetlabs-keyring.gpg',
+#       source         => 'https://apt.puppetlabs.com/keyring.gpg'
+#       checksum       => 'sha256',
+#       checksum_value => '9d7a61ab06b18454e9373edec4fc7c87f9a91bacfc891893ba0da37a33069771',
+#     }
 #   }
 #
 # @param location
@@ -47,7 +61,7 @@
 #
 # @param key
 #   Creates an `apt::keyring` in `/etc/apt/keyrings` (or anywhere on disk given `filename`) Valid options:
-#     * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`
+#     * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`, `checksum`, `checksum_value`.
 #
 #   The following inputs are valid for the (deprecated) `apt::key` defined type. Valid options:
 #     * a string to be passed to the `id` parameter of the `apt::key` defined type
@@ -177,13 +191,15 @@ define apt::source (
     # Modern apt keyrings
     elsif $_key =~ Hash and $_key['name'] {
       apt::keyring { $_key['name']:
-        ensure   => $_key_ensure,
-        content  => $_key['content'],
-        source   => $_key['source'],
-        dir      => $_key['dir'],
-        filename => $_key['filename'],
-        mode     => $_key['mode'],
-        before   => $_before,
+        ensure          => $_key_ensure,
+        content         => $_key['content'],
+        source          => $_key['source'],
+        dir             => $_key['dir'],
+        filename        => $_key['filename'],
+        mode            => $_key['mode'],
+        checksum        => $_key['checksum'],
+        checksum_value  => $_key['checksum_value'],
+        before          => $_before,
       }
 
       $_list_keyring = if $_key['dir'] and $_key['filename'] {
