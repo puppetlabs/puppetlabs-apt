@@ -32,5 +32,5 @@ Check-Valid-Until: <%= $check_valid_until %>
 Signed-By: <% if type($signed_by) =~ Type[Array] { -%><%- $signed_by.each |String $keyring| { -%><%= $keyring %> <% } -%>
 <%- } -%>
 <%- elsif type($signed_by) =~ Type[String] { -%>
- <%= $signed_by -%>
+<%= $signed_by -%>
 <%- }} %>
