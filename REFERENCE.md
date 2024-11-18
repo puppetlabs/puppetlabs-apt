@@ -13,7 +13,6 @@
 
 #### Private Classes
 
-* `apt::params`: Provides defaults for the Apt module parameters.
 * `apt::update`: Updates the list of available packages using apt-get update.
 
 ### Defined types
@@ -402,6 +401,10 @@ Default value:
     'list'   => {
       'path' => $sources_list_d,
       'ext'  => '.list',
+    },
+    'sources' => {
+      'path' => $sources_list_d,
+      'ext'  => '.sources',
     },
   }
 ```
@@ -1227,7 +1230,7 @@ Default value: `undef`
 
 ##### <a name="-apt--source--pin"></a>`pin`
 
-Data type: `Optional[Variant[Hash, Numeric, String]]`
+Data type: `Optional[Variant[Hash, Integer, String[1]]]`
 
 Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
 `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.

@@ -112,7 +112,7 @@ define apt::source (
   Hash $include = {},
   Optional[Variant[String[1], Hash]] $key = undef,
   Optional[Stdlib::AbsolutePath] $keyring = undef,
-  Optional[Variant[Hash, Numeric, String]] $pin = undef,
+  Optional[Variant[Hash, Integer, String[1]]] $pin = undef,
   Optional[Variant[String[1], Array[String[1]]]] $architecture = undef,
   Optional[Boolean] $allow_unsigned = undef,
   Optional[Boolean] $allow_insecure = undef,
