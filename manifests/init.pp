@@ -213,6 +213,10 @@ class apt (
       'path' => $sources_list_d,
       'ext'  => '.list',
     },
+    'sources' => {
+      'path' => $sources_list_d,
+      'ext'  => '.sources',
+    },
   },
   Boolean $sources_list_force = false,
   Hash $source_key_defaults = {

@@ -225,6 +225,27 @@ apt::source { 'puppetlabs':
 
 <a id="configure-apt-from-hiera"></a>
 
+### Generating a DEB822 .sources file
+
+You  can also generate a DEB822 format .sources file. This example covers most of the available options.
+
+Use the `source_format` parameter to choose between 'list' and 'sources' (DEB822) formats.
+```puppet
+apt::source { 'debian':
+  source_format => 'sources'
+  comment        => 'Official Debian Repository',
+  enabled        => true,
+  types          => ['deb', 'deb-src'],
+  location       => ['http://fr.debian.org/debian', 'http://de.debian.org/debian']
+  release        => ['stable', 'stable-updates', 'stable-backports'],
+  repos          => ['main', 'contrib', 'non-free'],
+  architecture   => ['amd64', 'i386'],
+  allow_unsigned => true,
+  keyring        => '/etc/apt/keyrings/debian.gpg'
+  notify_update  => false
+}
+```
+
 ### Configure Apt from Hiera
 
 Instead of specifying your sources directly as resources, you can instead just include the `apt` class, which will pick up the values automatically from hiera.

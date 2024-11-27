@@ -402,6 +402,10 @@ Default value:
       'path' => $sources_list_d,
       'ext'  => '.list',
     },
+    'sources' => {
+      'path' => $sources_list_d,
+      'ext'  => '.sources',
+    },
   }
 ```
 
@@ -1088,11 +1092,25 @@ apt::source { 'puppetlabs':
 }
 ```
 
+##### Install the puppetlabs apt source (deb822 format)
+
+```puppet
+apt::source { 'puppetlabs':
+  source_format => 'sources'
+  location      => ['http://apt.puppetlabs.com'],
+  repos         => ['puppet8'],
+  keyring       => '/etc/apt/keyrings/puppetlabs.gpg',
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `apt::source` defined type:
 
+* [`source_format`](#-apt--source--source_format)
 * [`location`](#-apt--source--location)
+* [`types`](#-apt--source--types)
+* [`enabled`](#-apt--source--enabled)
 * [`comment`](#-apt--source--comment)
 * [`ensure`](#-apt--source--ensure)
 * [`release`](#-apt--source--release)
@@ -1107,13 +1125,38 @@ The following parameters are available in the `apt::source` defined type:
 * [`notify_update`](#-apt--source--notify_update)
 * [`check_valid_until`](#-apt--source--check_valid_until)
 
+##### <a name="-apt--source--source_format"></a>`source_format`
+
+Data type: `Enum['list', 'sources']`
+
+The file format to use for the apt source. See https://wiki.debian.org/SourcesList
+
+Default value: `'list'`
+
 ##### <a name="-apt--source--location"></a>`location`
 
-Data type: `Optional[String[1]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
-Required, unless ensure is set to 'absent'. Specifies an Apt repository.
+Required, unless ensure is set to 'absent'. Specifies an Apt repository. Valid options: a string containing a repository URL.
+DEB822: Supports an array of URL values
 
 Default value: `undef`
+
+##### <a name="-apt--source--types"></a>`types`
+
+Data type: `Array[Enum['deb','deb-src'], 1, 2]`
+
+DEB822: The package types this source manages.
+
+Default value: `['deb']`
+
+##### <a name="-apt--source--enabled"></a>`enabled`
+
+Data type: `Boolean`
+
+DEB822: Enable or Disable the APT source.
+
+Default value: `true`
 
 ##### <a name="-apt--source--comment"></a>`comment`
 
@@ -1133,17 +1176,19 @@ Default value: `present`
 
 ##### <a name="-apt--source--release"></a>`release`
 
-Data type: `Optional[String[0]]`
+Data type: `Optional[Variant[String[0], Array[String[0]]]]`
 
 Specifies a distribution of the Apt repository.
+DEB822: Supports an array of values
 
 Default value: `undef`
 
 ##### <a name="-apt--source--repos"></a>`repos`
 
-Data type: `String[1]`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Specifies a component of the Apt repository.
+DEB822: Supports an array of values
 
 Default value: `'main'`
 
@@ -1194,29 +1239,30 @@ Default value: `undef`
 
 ##### <a name="-apt--source--architecture"></a>`architecture`
 
-Data type: `Optional[String[1]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Tells Apt to only download information for specified architectures. Valid options: a string containing one or more architecture names,
 separated by commas (e.g., 'i386' or 'i386,alpha,powerpc').
 (if unspecified, Apt downloads information for all architectures defined in the Apt::Architectures option)
+DEB822: Supports an array of values
 
 Default value: `undef`
 
 ##### <a name="-apt--source--allow_unsigned"></a>`allow_unsigned`
 
-Data type: `Boolean`
+Data type: `Optional[Boolean]`
 
 Specifies whether to authenticate packages from this release, even if the Release file is not signed or the signature can't be checked.
 
-Default value: `false`
+Default value: `undef`
 
 ##### <a name="-apt--source--allow_insecure"></a>`allow_insecure`
 
-Data type: `Boolean`
+Data type: `Optional[Boolean]`
 
 Specifies whether to allow downloads from insecure repositories.
 
-Default value: `false`
+Default value: `undef`
 
 ##### <a name="-apt--source--notify_update"></a>`notify_update`
 
@@ -1228,11 +1274,11 @@ Default value: `true`
 
 ##### <a name="-apt--source--check_valid_until"></a>`check_valid_until`
 
-Data type: `Boolean`
+Data type: `Optional[Boolean]`
 
 Specifies whether to check if the package release date is valid.
 
-Default value: `true`
+Default value: `undef`
 
 ## Data types
 
