@@ -103,21 +103,20 @@ describe 'apt::source' do
           release: 'sid',
           repos: 'testing',
           key: {
-            'ensure' => 'refreshed',
-            'id' => id,
-            'server' => 'pgp.mit.edu',
-            'content' => 'GPG key content',
-            'source' => 'http://apt.puppetlabs.com/pubkey.gpg',
-            'weak_ssl' => true
+            'name' => 'puppetlabs-keyring.gpg',
+            'ensure' => 'present',
+            'source' => 'https://apt.puppetlabs.com/pubkey.gpg',
+            'checksum' => 'sha256',
+            'checksum_value' => '050e8c0c43d4b43449ea89ffbea8a1c912a1bb3d008a70ad9623912024933e01',
           },
           pin: '10',
           architecture: 'x86_64',
-          allow_unsigned: true
+          allow_insecure: true
         }
       end
 
       it {
-        expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').with_content(%r{# foo\ndeb \[arch=x86_64 trusted=yes\] http://debian.mirror.iweb.ca/debian/ sid testing\n})
+        expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').with_content(%r{# foo\ndeb \[arch=x86_64 allow-insecure=yes signed-by=/etc/apt/keyrings/puppetlabs-keyring.gpg\] http://debian.mirror.iweb.ca/debian/ sid testing\n})
                                                                  .without_content(%r{deb-src})
       }
 
@@ -128,12 +127,11 @@ describe 'apt::source' do
       }
 
       it {
-        expect(subject).to contain_apt__key("Add key: #{id} from Apt::Source my_source").that_comes_before('Apt::Setting[list-my_source]').with(ensure: 'refreshed',
-                                                                                                                                                id: id,
-                                                                                                                                                server: 'pgp.mit.edu',
-                                                                                                                                                content: 'GPG key content',
-                                                                                                                                                source: 'http://apt.puppetlabs.com/pubkey.gpg',
-                                                                                                                                                weak_ssl: true)
+        expect(subject).to contain_apt__keyring("puppetlabs-keyring.gpg").that_comes_before('Apt::Setting[list-my_source]').with(ensure: 'present',
+                                                                                                                                                name: 'puppetlabs-keyring.gpg',
+                                                                                                                                                source: 'https://apt.puppetlabs.com/pubkey.gpg',
+                                                                                                                                                checksum: 'sha256',
+                                                                                                                                                checksum_value: '050e8c0c43d4b43449ea89ffbea8a1c912a1bb3d008a70ad9623912024933e01')
       }
     end
   end
