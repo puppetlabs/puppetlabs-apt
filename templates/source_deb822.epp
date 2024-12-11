@@ -1,14 +1,15 @@
-<% | String $comment,
+<%- |
+  String[1] $comment,
   Enum['yes','no'] $enabled,
-  Array[String] $types,
-  Array[String] $uris,
-  Array[String] $suites,
-  Array[String] $components,
-  Optional[Array] $architectures = undef,
+  Array[String[1]] $types,
+  Array[String[1]] $uris,
+  Array[String[1]] $suites,
+  Array[String[1]] $components,
+  Optional[Array[String[1]]] $architectures = undef,
   Optional[Enum['yes','no']] $allow_insecure = undef,
   Optional[Enum['yes','no']] $repo_trusted = undef,
   Optional[Enum['yes','no']] $check_valid_until = undef,
-  Optional[Variant[Stdlib::AbsolutePath,Array[String]]] $signed_by = undef,
+  Optional[Variant[Stdlib::AbsolutePath,Array[String[1]]]] $signed_by = undef,
 | -%>
 # <%= $comment %>
 Enabled: <%= $enabled %>
