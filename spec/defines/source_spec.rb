@@ -416,4 +416,89 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("list-#{title}").with_notify_update(false) }
     end
   end
+
+  describe 'deb822 sources' do
+    let :params do
+      {
+        source_format: 'sources',
+      }
+    end
+
+    context 'basic deb822 source' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main', 'contrib', 'non-free']
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(<<~SOURCE) }
+        # This file is managed by Puppet. DO NOT EDIT.
+        # my_source
+        Enabled: yes
+        Types: deb
+        URIs: http://debian.mirror.iweb.ca/debian/
+        Suites: stretch
+        Components: main contrib non-free
+      SOURCE
+    end
+
+    context 'complex deb822 source' do
+      let :params do
+        super().merge(
+          {
+            enabled: false,
+            types: ['deb', 'deb-src'],
+            location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
+            release: ['stable', 'stable-updates', 'stable-backports'],
+            repos: ['main', 'contrib', 'non-free'],
+            architecture: ['amd64', 'i386'],
+            allow_unsigned: true,
+            allow_insecure: true,
+            notify_update: false,
+            check_valid_until: false,
+            keyring: '/foo'
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(false) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(<<~SOURCE) }
+        # This file is managed by Puppet. DO NOT EDIT.
+        # my_source
+        Enabled: no
+        Types: deb deb-src
+        URIs: http://fr.debian.org/debian http://de.debian.org/debian
+        Suites: stable stable-updates stable-backports
+        Components: main contrib non-free
+        Architectures: amd64 i386
+        Allow-Insecure: yes
+        Trusted: yes
+        Check-Valid-Until: no
+        Signed-By: /foo
+      SOURCE
+    end
+
+    context '.list backwards compatibility' do
+      let :params do
+        super().merge(
+          {
+            location: 'http://debian.mirror.iweb.ca/debian/',
+            release: 'unstable',
+            repos: 'main contrib non-free',
+            key: {
+              id: 'A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553',
+              server: 'keyserver.ubuntu.com',
+            },
+            pin: '-10'
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
+    end
+  end
 end
