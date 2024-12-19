@@ -12,12 +12,12 @@
 | -%>
 # <%= $comment %>
 Enabled: <%= $enabled %>
-Types: <% $types.each |String $type| { -%> <%= $type %> <% } %>
-URIs: <% $uris.each | String $uri | { -%> <%= $uri %> <% } %>
-Suites: <% $suites.each | String $suite | { -%> <%= $suite %> <% } %>
-Components: <% $components.each | String $component | { -%> <%= $component %> <% } %>
+Types: <%= $types.join(' ') %>
+URIs: <%= $uris.join(' ') %>
+Suites: <%= $suites.join(' ') %>
+Components: <%= $components.join(' ') %>
 <% if $architectures { -%>
-Architectures:<% $architectures.each | String $arch | { %> <%= $arch %><% } %>
+Architectures: <%= $architectures.join(' ') %>
 <%- } -%>
 <% if $allow_insecure { -%>
 Allow-Insecure: <%= $allow_insecure %>
@@ -29,8 +29,5 @@ Trusted: <%= $repo_trusted %>
 Check-Valid-Until: <%= $check_valid_until %>
 <% } -%>
 <% if $signed_by { -%>
-Signed-By: <% if type($signed_by) =~ Type[Array] { -%><%- $signed_by.each |String $keyring| { -%><%= $keyring %> <% } -%>
-<%- } -%>
-<%- elsif type($signed_by) =~ Type[String] { -%>
-<%= $signed_by -%>
-<%- }} %>
+Signed-By: <%= [$signed_by].flatten.join(' ') %>
+<% } -%>
