@@ -86,13 +86,27 @@ class apt::update {
   } else {
     $_refresh = true
   }
+  # We perform the update in an `unless` clause of the exec, and
+  # return true only if the package cache file changed.
+  # This ensures that Puppet does not report a change if the
+  # update command had no effect. See MODULES-10763 for discussion.
+  $apt_update_had_no_effect = epp(
+    "${module_name}/update_had_no_effect.sh.epp",
+    {
+      'provider' => $apt::provider,
+      'timeout'  => $apt::_update['timeout'],
+      'tries'    => $apt::_update['tries'],
+    }
+  )
   exec { 'apt_update':
-    command     => "${apt::provider} update",
+    command     => "echo ${apt::provider} successfully updated the package cache.",
     loglevel    => $apt::_update['loglevel'],
-    logoutput   => 'on_failure',
+    logoutput   => true,
+    provider    => shell,
     refreshonly => $_refresh,
     timeout     => $apt::_update['timeout'],
     tries       => $apt::_update['tries'],
     try_sleep   => 1,
+    unless      => $apt_update_had_no_effect,
   }
 }
