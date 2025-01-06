@@ -139,6 +139,8 @@ define apt::source (
 
       if $release =~ Pattern[/\/$/] {
         $_components = $_release
+      } elsif $repos =~ Array {
+        $_components = join([$_release] + $repos, ' ')
       } else {
         $_components = "${_release} ${repos}"
       }
