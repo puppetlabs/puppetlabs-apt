@@ -36,6 +36,24 @@ describe 'apt::source' do
       it {
         expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').without_content(%r{# my_source\ndeb-src hello.there wheezy main\n})
       }
+
+      context 'with repos' do
+        context 'as empty array' do
+          let(:params) { super().merge(repos: []) }
+
+          it {
+            expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').without_content(%r{# my_source\ndeb-src hello.there wheezy\n})
+          }
+        end
+
+        context 'as non-empty array' do
+          let(:params) { super().merge(repos: ['main', 'non-free', 'contrib']) }
+
+          it {
+            expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').without_content(%r{# my_source\ndeb-src hello.there wheezy main non-free contrib\n})
+          }
+        end
+      end
     end
   end
 
