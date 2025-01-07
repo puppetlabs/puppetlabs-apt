@@ -453,31 +453,51 @@ describe 'apt::source' do
       end
 
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(<<~SOURCE) }
+        # This file is managed by Puppet. DO NOT EDIT.
+        # my_source
+        Enabled: yes
+        Types: deb
+        URIs: http://debian.mirror.iweb.ca/debian/
+        Suites: stretch
+        Components: main contrib non-free
+      SOURCE
     end
 
     context 'complex deb822 source' do
       let :params do
         super().merge(
           {
+            enabled: false,
             types: ['deb', 'deb-src'],
             location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
             release: ['stable', 'stable-updates', 'stable-backports'],
             repos: ['main', 'contrib', 'non-free'],
             architecture: ['amd64', 'i386'],
             allow_unsigned: true,
-            notify_update: false
+            allow_insecure: true,
+            notify_update: false,
+            check_valid_until: false,
+            keyring: '/foo'
           },
         )
       end
 
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(false) }
-      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Enabled: yes}) }
-      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Types: deb deb-src}) }
-      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{URIs: http://fr.debian.org/debian http://de.debian.org/debian}) }
-      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Suites: stable stable-updates stable-backports}) }
-      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Components: main contrib non-free}) }
-      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Architectures: amd64 i386}) }
-      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(<<~SOURCE) }
+        # This file is managed by Puppet. DO NOT EDIT.
+        # my_source
+        Enabled: no
+        Types: deb deb-src
+        URIs: http://fr.debian.org/debian http://de.debian.org/debian
+        Suites: stable stable-updates stable-backports
+        Components: main contrib non-free
+        Architectures: amd64 i386
+        Allow-Insecure: yes
+        Trusted: yes
+        Check-Valid-Until: no
+        Signed-By: /foo
+      SOURCE
     end
 
     context '.list backwards compatibility' do
