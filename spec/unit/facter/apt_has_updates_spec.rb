@@ -9,7 +9,7 @@ describe 'apt_has_updates fact' do
 
   describe 'on non-Debian distro' do
     before(:each) do
-      allow(Facter.fact(:osfamily)).to receive(:value).once.and_return('Redhat')
+      allow(Facter.fact(:'os.family')).to receive(:value).once.and_return('Redhat')
     end
 
     it { is_expected.to be_nil }
@@ -17,7 +17,7 @@ describe 'apt_has_updates fact' do
 
   describe 'on Debian based distro missing apt-get' do
     before(:each) do
-      allow(Facter.fact(:osfamily)).to receive(:value).once.and_return('Debian')
+      allow(Facter.fact(:'os.family')).to receive(:value).once.and_return('Debian')
       allow(File).to receive(:executable?) # Stub all other calls
       allow(File).to receive(:executable?).with('/usr/bin/apt-get').and_return(false)
     end
@@ -27,7 +27,7 @@ describe 'apt_has_updates fact' do
 
   describe 'on Debian based distro' do
     before(:each) do
-      allow(Facter.fact(:osfamily)).to receive(:value).and_return('Debian')
+      allow(Facter.fact(:'os.family')).to receive(:value).and_return('Debian')
       allow(File).to receive(:executable?) # Stub all other calls
       allow(Facter::Core::Execution).to receive(:execute) # Catch all other calls
       allow(File).to receive(:executable?).with('/usr/bin/apt-get').and_return(true)
