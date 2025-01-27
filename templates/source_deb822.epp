@@ -1,23 +1,24 @@
-<% | String $comment,
+<%- |
+  String[1] $comment,
   Enum['yes','no'] $enabled,
-  Array[String] $types,
-  Array[String] $uris,
-  Array[String] $suites,
-  Array[String] $components,
-  Optional[Array] $architectures = undef,
+  Array[String[1]] $types,
+  Array[String[1]] $uris,
+  Array[String[1]] $suites,
+  Array[String[1]] $components,
+  Optional[Array[String[1]]] $architectures = undef,
   Optional[Enum['yes','no']] $allow_insecure = undef,
   Optional[Enum['yes','no']] $repo_trusted = undef,
   Optional[Enum['yes','no']] $check_valid_until = undef,
-  Optional[Variant[Stdlib::AbsolutePath,Array[String]]] $signed_by = undef,
+  Optional[Variant[Stdlib::AbsolutePath,Array[String[1]]]] $signed_by = undef,
 | -%>
 # <%= $comment %>
 Enabled: <%= $enabled %>
-Types: <% $types.each |String $type| { -%> <%= $type %> <% } %>
-URIs: <% $uris.each | String $uri | { -%> <%= $uri %> <% } %>
-Suites: <% $suites.each | String $suite | { -%> <%= $suite %> <% } %>
-Components: <% $components.each | String $component | { -%> <%= $component %> <% } %>
+Types: <%= $types.join(' ') %>
+URIs: <%= $uris.join(' ') %>
+Suites: <%= $suites.join(' ') %>
+Components: <%= $components.join(' ') %>
 <% if $architectures { -%>
-Architectures:<% $architectures.each | String $arch | { %> <%= $arch %><% } %>
+Architectures: <%= $architectures.join(' ') %>
 <%- } -%>
 <% if $allow_insecure { -%>
 Allow-Insecure: <%= $allow_insecure %>
@@ -29,8 +30,5 @@ Trusted: <%= $repo_trusted %>
 Check-Valid-Until: <%= $check_valid_until %>
 <% } -%>
 <% if $signed_by { -%>
-Signed-By: <% if type($signed_by) =~ Type[Array] { -%><%- $signed_by.each |String $keyring| { -%><%= $keyring %> <% } -%>
-<%- } -%>
-<%- elsif type($signed_by) =~ Type[String] { -%>
-<%= $signed_by -%>
-<%- }} %>
+Signed-By: <%= [$signed_by].flatten.join(' ') %>
+<% } -%>
