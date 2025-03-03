@@ -14,8 +14,11 @@
 Enabled: <%= $enabled %>
 Types: <% $types.each |String $type| { -%> <%= $type %> <% } %>
 URIs: <% $uris.each | String $uri | { -%> <%= $uri %> <% } %>
-Suites: <% $suites.each | String $suite | { -%> <%= $suite %> <% } %>
-Components: <% $components.each | String $component | { -%> <%= $component %> <% } %>
+Suites: <% $suites.each |String $suite| { -%> <%= $suite %>
+<% if $suite !~ /\/$/ { -%>
+Components: <% $components.each |String $component| { -%> <%= $component %> <% } -%>
+<% } -%>
+<% } -%>
 <% if $architectures { -%>
 Architectures:<% $architectures.each | String $arch | { %> <%= $arch %><% } %>
 <%- } -%>
