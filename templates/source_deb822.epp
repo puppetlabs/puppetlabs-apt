@@ -12,11 +12,11 @@
 | -%>
 # <%= $comment %>
 Enabled: <%= $enabled %>
-Types: <% $types.each |String $type| { -%> <%= $type %> <% } %>
+Types: <% $types.each | String $type | { -%> <%= $type %> <% } %>
 URIs: <% $uris.each | String $uri | { -%> <%= $uri %> <% } %>
-Suites: <% $suites.each |String $suite| { -%> <%= $suite %> <% } %>
+Suites: <% $suites.each | String $suite | { -%> <%= $suite %> <% } %>
 <% if $suites[0] !~ /\/$/ { -%>
-Components: <% $components.each |String $component| { -%> <%= $component %> <% } %>
+Components: <% $components.each | String $component | { -%> <%= $component %> <% } %>
 <% } -%>
 <% if $architectures { -%>
 Architectures:<% $architectures.each | String $arch | { %> <%= $arch %><% } %>
