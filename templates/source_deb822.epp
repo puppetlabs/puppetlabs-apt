@@ -3,7 +3,7 @@
   Array[String] $types,
   Array[String] $uris,
   Array[String] $suites,
-  Array[String] $components,
+  Optional[Array[String]] $components = undef,
   Optional[Array] $architectures = undef,
   Optional[Enum['yes','no']] $allow_insecure = undef,
   Optional[Enum['yes','no']] $repo_trusted = undef,
@@ -15,7 +15,9 @@ Enabled: <%= $enabled %>
 Types: <% $types.each |String $type| { -%> <%= $type %> <% } %>
 URIs: <% $uris.each | String $uri | { -%> <%= $uri %> <% } %>
 Suites: <% $suites.each | String $suite | { -%> <%= $suite %> <% } %>
+<% if $components { -%>
 Components: <% $components.each | String $component | { -%> <%= $component %> <% } %>
+<%- } -%>
 <% if $architectures { -%>
 Architectures:<% $architectures.each | String $arch | { %> <%= $arch %><% } %>
 <%- } -%>

@@ -480,6 +480,24 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
     end
 
+    context 'path based deb822 source' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
+            release: ['./'],
+            allow_unsigned: true,
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Enabled: yes}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{URIs: http://fr.debian.org/debian http://de.debian.org/debian}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Suites: ./}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").without_content(%r{Components:}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
+    end
+
     context '.list backwards compatibility' do
       let :params do
         super().merge(

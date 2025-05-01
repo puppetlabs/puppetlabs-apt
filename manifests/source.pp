@@ -310,7 +310,12 @@ define apt::source (
         $_release = $release
       }
 
-      if $repos !~ Array {
+      # The deb822 format requires that if the Suite ($release) is a path (contains a /) that
+      # the Components field be absent.  Check the original
+      $_releasefilter = $_release.any |$item| { $item.index('/') != undef }
+      if $_releasefilter {
+        $_repos = undef
+      } elsif $repos !~ Array {
         warning("For deb822 sources, 'repos' must be specified as an array. Converting to array.")
         $_repos = split($repos, /\s+/)
       } else {
