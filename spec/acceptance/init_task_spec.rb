@@ -1,9 +1,21 @@
 # frozen_string_literal: true
 
-# run a test task
 require 'spec_helper_acceptance'
 
 describe 'apt tasks' do
+  # Prevent sshd from being upgraded during 'upgrade' task
+  before(:all) do
+    run_shell('apt-mark hold openssh-server')
+  rescue
+    nil
+  end
+
+  after(:all) do
+    run_shell('apt-mark unhold openssh-server')
+  rescue
+    nil
+  end
+
   describe 'update' do
     it 'updates package lists' do
       result = run_bolt_task('apt', 'action' => 'update')
