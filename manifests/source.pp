@@ -139,6 +139,8 @@ define apt::source (
 
       if $release =~ Pattern[/\/$/] {
         $_components = $_release
+      } elsif $repos =~ Array {
+        $_components = join([$_release] + $repos, ' ')
       } else {
         $_components = "${_release} ${repos}"
       }
@@ -288,11 +290,10 @@ define apt::source (
           fail('cannot create a source entry without specifying a location')
         }
       }
-      if (type($location, 'generalized') !~ Type[Array]) {
+      if $location !~ Array {
         warning('For deb822 sources, location must be specified as an array.')
         $_location = [$location]
-      }
-      else {
+      } else {
         $_location = $location
       }
 
@@ -302,30 +303,28 @@ define apt::source (
         } else {
           fail('os.distro.codename fact not available: release parameter required')
         }
+      } elsif $release !~ Array {
+        warning("For deb822 sources, 'release' must be specified as an array. Converting to array.")
+        $_release = [$release]
       } else {
-        if (type($release, 'generalized') !~ Type[Array]) {
-          warning("For deb822 sources, 'release' must be specified as an array. Converting to array.")
-          $_release = [$release]
-        } else {
-          $_release = $release
-        }
+        $_release = $release
       }
 
-      if (type($repos, 'generalized') !~ Type[Array]) {
+      # The deb822 format requires that if the Suite ($release) is a path (contains a /) that
+      # the Components field be absent.  Check the original
+      $_releasefilter = $_release.any |$item| { $item.index('/') != undef }
+      if $_releasefilter {
+        $_repos = undef
+      } elsif $repos !~ Array {
         warning("For deb822 sources, 'repos' must be specified as an array. Converting to array.")
         $_repos = split($repos, /\s+/)
       } else {
         $_repos = $repos
       }
 
-      if $architecture != undef {
-        if (type($architecture, 'generalized') !~ Type[Array]) {
-          warning("For deb822 sources, 'architecture' must be specified as an array. Converting to array.")
-          $_architecture = split($architecture, '[,]')
-        }
-        else {
-          $_architecture = $architecture
-        }
+      if $architecture and $architecture !~ Array {
+        warning("For deb822 sources, 'architecture' must be specified as an array. Converting to array.")
+        $_architecture = split($architecture, '[,]')
       } else {
         $_architecture = $architecture
       }

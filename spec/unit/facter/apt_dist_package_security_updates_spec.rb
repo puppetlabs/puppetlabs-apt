@@ -17,7 +17,7 @@ describe 'apt_package_security_dist_updates fact' do
 
   describe 'when apt has updates' do
     before(:each) do
-      allow(Facter.fact(:osfamily)).to receive(:value).and_return('Debian')
+      allow(Facter.fact(:'os.family')).to receive(:value).and_return('Debian')
       allow(File).to receive(:executable?) # Stub all other calls
       allow(Facter::Core::Execution).to receive(:execute) # Catch all other calls
       allow(File).to receive(:executable?).with('/usr/bin/apt-get').and_return(true)

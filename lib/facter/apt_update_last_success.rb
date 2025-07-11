@@ -6,7 +6,7 @@ require 'facter'
 # This is generated upon a successful apt-get update run natively in ubuntu.
 # the Puppetlabs-apt module deploys this same functionality for other debian-ish OSes
 Facter.add('apt_update_last_success') do
-  confine osfamily: 'Debian'
+  confine 'os.family': 'Debian'
   setcode do
     if File.exist?('/var/lib/apt/periodic/update-success-stamp')
       # get epoch time

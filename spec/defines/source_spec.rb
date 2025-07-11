@@ -36,6 +36,24 @@ describe 'apt::source' do
       it {
         expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').without_content(%r{# my_source\ndeb-src hello.there wheezy main\n})
       }
+
+      context 'with repos' do
+        context 'as empty array' do
+          let(:params) { super().merge(repos: []) }
+
+          it {
+            expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').without_content(%r{# my_source\ndeb-src hello.there wheezy\n})
+          }
+        end
+
+        context 'as non-empty array' do
+          let(:params) { super().merge(repos: ['main', 'non-free', 'contrib']) }
+
+          it {
+            expect(subject).to contain_apt__setting('list-my_source').with(ensure: 'present').without_content(%r{# my_source\ndeb-src hello.there wheezy main non-free contrib\n})
+          }
+        end
+      end
     end
   end
 
@@ -459,6 +477,24 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Suites: stable stable-updates stable-backports}) }
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Components: main contrib non-free}) }
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Architectures: amd64 i386}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
+    end
+
+    context 'path based deb822 source' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
+            release: ['./'],
+            allow_unsigned: true,
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Enabled: yes}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{URIs: http://fr.debian.org/debian http://de.debian.org/debian}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Suites: ./}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").without_content(%r{Components:}) }
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
     end
 

@@ -11,8 +11,8 @@ require 'tempfile'
 Puppet::Type.type(:apt_key).provide(:apt_key) do
   desc 'apt-key provider for apt_key resource'
 
-  confine    osfamily: :debian
-  defaultfor osfamily: :debian
+  confine    'os.family': :debian
+  defaultfor 'os.family': :debian
   commands   apt_key: 'apt-key'
   commands   gpg: '/usr/bin/gpg'
 

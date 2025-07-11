@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v10.0.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v10.0.0) - 2024-11-25
+## [v10.0.1](https://github.com/puppetlabs/puppetlabs-apt/tree/v10.0.1) - 2025-01-24
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v10.0.0...v10.0.1)
+
+### Fixed
+
+- Handle repos passed as an array for list format [#1215](https://github.com/puppetlabs/puppetlabs-apt/pull/1215) ([ekohl](https://github.com/ekohl))
+
+## [v10.0.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v10.0.0) - 2024-12-18
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v9.4.0...v10.0.0)
 
@@ -17,14 +25,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 - Add Debian 12 "bookworm" support [#1178](https://github.com/puppetlabs/puppetlabs-apt/pull/1178) ([kenyon](https://github.com/kenyon))
+- Support PPA in deb822 format [#1169](https://github.com/puppetlabs/puppetlabs-apt/pull/1169) ([fredericgiquel](https://github.com/fredericgiquel))
+- Add support for deb822 APT sources [#1167](https://github.com/puppetlabs/puppetlabs-apt/pull/1167) ([jps-help](https://github.com/jps-help))
 
 ### Fixed
 
 - apt::setting: Dont expect source/content when removing settings [#1208](https://github.com/puppetlabs/puppetlabs-apt/pull/1208) ([bastelfreak](https://github.com/bastelfreak))
+- apt::keyring: Require "source" or "content" only if ensure=present [#1198](https://github.com/puppetlabs/puppetlabs-apt/pull/1198) ([webcompas](https://github.com/webcompas))
 
 ### Other
 
-- apt::keyring: Require "source" or "content" only if ensure=present [#1198](https://github.com/puppetlabs/puppetlabs-apt/pull/1198) ([webcompas](https://github.com/webcompas))
 - Eliminate `params.pp` and `create_resources()` [#1172](https://github.com/puppetlabs/puppetlabs-apt/pull/1172) ([kenyon](https://github.com/kenyon))
 
 ## [v9.4.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v9.4.0) - 2024-02-15
