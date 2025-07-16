@@ -54,7 +54,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
         short: line_hash[:key_short],
         long: line_hash[:key_long],
         ensure: :present,
-        expired: expired,
+        expired:,
         expiry: line_hash[:key_expiry].nil? ? nil : line_hash[:key_expiry].strftime('%Y-%m-%d'),
         size: line_hash[:key_size],
         type: line_hash[:key_type],
