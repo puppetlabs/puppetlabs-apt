@@ -109,7 +109,7 @@ describe 'apt::source' do
 
       it {
         expect(subject).to contain_apt__key("Add key: #{id} from Apt::Source my_source").that_comes_before('Apt::Setting[list-my_source]').with(ensure: 'present',
-                                                                                                                                                id: id)
+                                                                                                                                                id:)
       }
     end
 
@@ -147,7 +147,7 @@ describe 'apt::source' do
 
       it {
         expect(subject).to contain_apt__key("Add key: #{id} from Apt::Source my_source").that_comes_before('Apt::Setting[list-my_source]').with(ensure: 'refreshed',
-                                                                                                                                                id: id,
+                                                                                                                                                id:,
                                                                                                                                                 server: 'pgp.mit.edu',
                                                                                                                                                 content: 'GPG key content',
                                                                                                                                                 source: 'http://apt.puppetlabs.com/pubkey.gpg',
@@ -477,6 +477,24 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Suites: stable stable-updates stable-backports}) }
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Components: main contrib non-free}) }
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Architectures: amd64 i386}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
+    end
+
+    context 'path based deb822 source' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
+            release: ['./'],
+            allow_unsigned: true,
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Enabled: yes}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{URIs: http://fr.debian.org/debian http://de.debian.org/debian}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Suites: ./}) }
+      it { is_expected.to contain_apt__setting("sources-#{title}").without_content(%r{Components:}) }
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
     end
 

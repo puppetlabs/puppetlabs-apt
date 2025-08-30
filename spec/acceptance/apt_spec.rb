@@ -9,7 +9,7 @@ everything_everything_pp = <<-MANIFEST
           'location' => 'http://apt.puppetlabs.com',
           'repos'    => 'main',
           'key'      => {
-            'id'     => '6F6B15509CF8E59E6E469F327F438280EF8D349F',
+            'id'     => 'D6811ED3ADEEB8441AF5AA8F4528B6CD9E61EF26',
             'server' => 'keyserver.ubuntu.com',
           },
         },
