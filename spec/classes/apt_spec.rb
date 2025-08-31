@@ -358,6 +358,34 @@ describe 'apt' do
           }
         }
       },
+      'Ubuntu 22.04' => {
+        os: {
+          family: 'Debian',
+          name: 'Ubuntu',
+          release: {
+            major: '22.04',
+            full: '22.04'
+          },
+          distro: {
+            codename: 'jammy',
+            id: 'Ubuntu'
+          }
+        }
+      },
+      'Ubuntu 24.04' => {
+        os: {
+          family: 'Debian',
+          name: 'Ubuntu',
+          release: {
+            major: '24.04',
+            full: '24.04'
+          },
+          distro: {
+            codename: 'noble',
+            id: 'Ubuntu'
+          }
+        }
+      },
       'Debian 9.0' => {
         os: {
           family: 'Debian',
