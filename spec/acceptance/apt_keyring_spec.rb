@@ -2,7 +2,7 @@
 
 require 'spec_helper_acceptance'
 
-PUPPETLABS_KEYRING_CHECK_COMMAND = 'gpg --import /etc/apt/keyrings/puppetlabs-keyring.gpg && gpg --list-keys | grep -F -A 1 \'pub   rsa4096 2019-04-08 [SC] [expires: 2025-04-06]\'' \
+PUPPETLABS_KEYRING_CHECK_COMMAND = 'gpg --import /etc/apt/keyrings/puppetlabs-keyring.gpg && gpg --list-keys | grep -F -A 1 \'pub   rsa4096 2019-04-08 [SC]\'' \
 '| grep \'D6811ED3ADEEB8441AF5AA8F4528B6CD9E61EF26\''
 
 describe 'apt::keyring' do

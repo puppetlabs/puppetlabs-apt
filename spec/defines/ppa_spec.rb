@@ -4,7 +4,7 @@ require 'spec_helper'
 
 def ppa_exec_params(user, repo, distro = 'trusty', environment = [])
   [
-    environment: environment,
+    environment:,
     command: "/opt/puppetlabs/puppet/cache/add-apt-repository-#{user}-ubuntu-#{repo}-#{distro}.sh",
     logoutput: 'on_failure',
   ]
