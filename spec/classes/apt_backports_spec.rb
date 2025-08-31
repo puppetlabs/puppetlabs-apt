@@ -71,6 +71,38 @@ describe 'apt::backports', type: :class do
       }
     end
 
+    context 'with defaults on ubuntu 24.04' do
+      let(:facts) do
+        {
+          os: {
+            family: 'Debian',
+            name: 'Ubuntu',
+            release: {
+              major: '24.04',
+              full: '24.04'
+            },
+            distro: {
+              codename: 'noble',
+              id: 'Ubuntu'
+            }
+          }
+        }
+      end
+
+      it {
+        expect(subject).to contain_apt__source('backports').with(
+          location: 'http://archive.ubuntu.com/ubuntu',
+          repos: 'main universe multiverse restricted',
+          release: 'noble-backports',
+          pin: {
+            'priority' => 200,
+            'release' => 'noble-backports'
+          },
+          keyring: '/usr/share/keyrings/ubuntu-archive-keyring.gpg',
+        )
+      }
+    end
+
     context 'with everything set' do
       let(:facts) do
         {
