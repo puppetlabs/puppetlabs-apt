@@ -217,11 +217,11 @@ define apt::source (
           }
 
           $_list_keyring = if $_key['dir'] and $_key['filename'] {
-            "${_key['dir']}${_key['filename']}"
+            "${_key['dir']}/${_key['filename']}"
           } elsif $_key['filename'] {
             "/etc/apt/keyrings/${_key['filename']}"
           } elsif $_key['dir'] {
-            "${_key['dir']}${_key['name']}"
+            "${_key['dir']}/${_key['name']}"
           } else {
             "/etc/apt/keyrings/${_key['name']}"
           }
