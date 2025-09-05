@@ -455,6 +455,20 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
     end
 
+    context 'absent deb822 source' do
+      let :params do
+        super().merge(
+          {
+            ensure: 'absent',
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main', 'contrib', 'non-free']
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_ensure('absent') }
+    end
+
     context 'complex deb822 source' do
       let :params do
         super().merge(
