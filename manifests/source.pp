@@ -108,7 +108,7 @@ define apt::source (
   Boolean $enabled = true, # deb822
   Enum['present', 'absent'] $ensure = present,
   Optional[Variant[String[0], Array[String[0]]]] $release = undef,
-  Variant[String[1], Array[String[1]]] $repos = 'main',
+  Optional[Variant[String[1], Array[String[1]]]] $repos = 'main',
   Hash $include = {},
   Optional[Variant[String[1], Hash]] $key = undef,
   Optional[Stdlib::AbsolutePath] $keyring = undef,
