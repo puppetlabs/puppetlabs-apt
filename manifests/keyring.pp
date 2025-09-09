@@ -61,7 +61,7 @@ define apt::keyring (
       }
 
       if $ensure == 'refreshed' {
-        exec {"check_keyring_${name}":
+        exec { "check_keyring_${name}":
           command => "rm ${file}",
           onlyif  => "test -f ${file} && gpg --show-keys --list-options show-sig-expire ${file} | grep expired",
           path    => $facts['path'],
