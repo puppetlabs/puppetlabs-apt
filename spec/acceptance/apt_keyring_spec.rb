@@ -40,6 +40,7 @@ describe 'apt::keyring' do
 
     it 'updates GPG key' do
       retry_on_error_matching do
+        idempotent_apply(keyring_pp)
         res = run_shell('gpg --show-keys --list-options show-sig-expire /etc/apt/keyrings/puppetlabs-keyring.gpg | grep expired')
         expect(res.stdout.strip).to eq('')
       end
