@@ -25,4 +25,24 @@ describe 'apt::keyring' do
       end
     end
   end
+
+  context 'when using refreshed GPG' do
+    # add expired GPG key
+    before(:each) do
+      run_shell('curl https://apt.puppetlabs.com/DEB-GPG-KEY-puppet | gpg --dearmor >/etc/apt/keyrings/puppetlabs-keyring.gpg')
+    end
+    keyring_pp = <<-MANIFEST
+      apt::keyring { 'puppetlabs-keyring.gpg':
+        ensure => 'refreshed',
+        source => 'https://apt.puppetlabs.com/keyring.gpg',
+      }
+    MANIFEST
+
+    it 'updates GPG key' do
+      retry_on_error_matching do
+        res = run_shell('gpg --show-keys --list-options show-sig-expire /etc/apt/keyrings/puppetlabs-keyring.gpg | grep expired')
+        expect(res.stdout.strip).to eq('')
+      end
+    end
+  end
 end
