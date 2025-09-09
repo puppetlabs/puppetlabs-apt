@@ -38,7 +38,7 @@ define apt::keyring (
   Stdlib::Filemode $mode = '0644',
   Optional[Stdlib::Filesource] $source = undef,
   Optional[String[1]] $content = undef,
-  Enum['present','absent'] $ensure = 'present',
+  Enum['present','refreshed','absent'] $ensure = 'present',
 ) {
   ensure_resource('file', $dir, { ensure => 'directory', mode => '0755', })
   if $source and $content {
@@ -50,7 +50,7 @@ define apt::keyring (
   $file = "${dir}/${filename}"
 
   case $ensure {
-    'present': {
+    /^(refreshed|present)$/: {
       file { $file:
         ensure  => 'file',
         mode    => $mode,
@@ -58,6 +58,15 @@ define apt::keyring (
         group   => 'root',
         source  => $source,
         content => $content,
+      }
+
+      if $ensure == 'refreshed' {
+        exec {"check_keyring_${name}":
+          command => "rm ${file}",
+          onlyif  => "test -f ${file} && gpg --show-keys --list-options show-sig-expire ${file} | grep expired",
+          path    => $facts['path'],
+          notify  => File[$file],
+        }
       }
     }
     'absent': {

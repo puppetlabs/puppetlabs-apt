@@ -772,7 +772,7 @@ Default value: `undef`
 
 ##### <a name="-apt--keyring--ensure"></a>`ensure`
 
-Data type: `Enum['present','absent']`
+Data type: `Enum['present','refreshed','absent']`
 
 Ensure presence or absence of the resource.
 
