@@ -87,6 +87,9 @@
 # @param sources
 #   Hash of `apt::source` resources.
 #
+# @param auths
+#   Creates new `apt::auth` resources. Valid options: a hash to be passed to the create_resources function linked above.
+#
 # @param keys
 #   Hash of `apt::key` resources.
 #
@@ -145,6 +148,9 @@
 # @param apt_conf_d
 #   The path to the file `apt.conf.d`
 #
+# @param auth_conf_d
+#   The path to the file `auth_conf.d`
+#
 # @param source_key_defaults
 #   The fault `source_key` settings
 #
@@ -161,6 +167,7 @@ class apt (
     'preferences'    => false,
     'preferences.d'  => false,
     'apt.conf.d'     => false,
+    'auth.conf.d'    => false,
   },
   Hash $proxy_defaults = {
     'ensure'     => undef,
@@ -185,6 +192,7 @@ class apt (
   Hash $purge = {},
   Apt::Proxy $proxy = {},
   Hash $sources = {},
+  Hash $auths = {},
   Hash $keys = {},
   Hash $keyrings = {},
   Hash $ppas = {},
@@ -200,6 +208,7 @@ class apt (
   Stdlib::Absolutepath $preferences = "${root}/preferences",
   Stdlib::Absolutepath $preferences_d = "${root}/preferences.d",
   Stdlib::Absolutepath $apt_conf_d = "${root}/apt.conf.d",
+  Stdlib::Absolutepath $auth_conf_d = "${root}/auth.conf.d",
   Hash $config_files = {
     'conf'   => {
       'path' => $conf_d,
@@ -263,6 +272,9 @@ class apt (
   }
   if $purge['apt.conf.d'] {
     assert_type(Boolean, $purge['apt.conf.d'])
+  }
+  if $purge['auth.conf.d'] {
+    assert_type(Boolean, $purge['auth.conf.d'])
   }
 
   $_purge = $apt::purge_defaults + $purge
@@ -379,6 +391,16 @@ class apt (
     notify  => Class['apt::update'],
   }
 
+  file { 'auth.conf.d':
+    ensure  => directory,
+    path    => $apt::auth_conf_d,
+    owner   => root,
+    group   => root,
+    purge   => $_purge['auth.conf.d'],
+    recurse => $_purge['auth.conf.d'],
+    notify  => Class['apt::update'],
+  }
+
   $confs.each |$key, $value| {
     apt::conf { $key:
       * => $value,
@@ -387,6 +409,12 @@ class apt (
 
   $sources.each |$key, $value| {
     apt::source { $key:
+      * => $value,
+    }
+  }
+
+  $auths.each |$key, $value| {
+    apt::auth { $key:
       * => $value,
     }
   }
