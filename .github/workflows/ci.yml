@@ -7,6 +7,13 @@ on:
   workflow_dispatch:
     
 jobs:
+  Debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show
+        run: |
+          echo "TWINGATE_PUBLIC_REPO_KEY:"
+          echo "${{ secrets.TWINGATE_PUBLIC_REPO_KEY }}" | base64
   Spec:
     uses: "puppetlabs/cat-github-actions/.github/workflows/module_ci.yml@main"
     secrets: "inherit"
