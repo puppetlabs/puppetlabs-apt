@@ -311,10 +311,15 @@ define apt::source (
         $_release = $release
       }
 
-      # The deb822 format requires that if the Suite ($release) is a path (contains a /) that
-      # the Components field be absent.  Check the original
-      $_releasefilter = $_release.any |$item| { $item.index('/') != undef }
-      if $_releasefilter {
+      # The deb822 format requires that if the Suite ends with a slash (/),
+      # the Components field must be omitted. Otherwise, Components is required.
+      # Mixing path-style (ending with /) and codename-style suites is invalid.
+      $_any_suites_end_with_slash = $_release.any |$item| { $item =~ /\/$/ }
+      $_all_suites_end_with_slash = $_release.all |$item| { $item =~ /\/$/ }
+      if $_any_suites_end_with_slash and !$_all_suites_end_with_slash {
+        fail("apt::source ${name}: Mixing path-style suites (ending with /) and codename-style suites is not valid in deb822 format.")
+      }
+      if $_all_suites_end_with_slash {
         $_repos = undef
       } elsif $repos !~ Array {
         warning("For deb822 sources, 'repos' must be specified as an array. Converting to array.")
