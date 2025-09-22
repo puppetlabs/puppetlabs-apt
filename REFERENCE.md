@@ -17,6 +17,7 @@
 
 ### Defined types
 
+* [`apt::auth`](#apt--auth)
 * [`apt::conf`](#apt--conf): Specifies a custom Apt configuration file.
 * [`apt::key`](#apt--key): Manages the GPG keys that Apt uses to authenticate packages.
 * [`apt::keyring`](#apt--keyring): Manage GPG keyrings for apt repositories
@@ -72,6 +73,7 @@ The following parameters are available in the `apt` class:
 * [`proxy`](#-apt--proxy)
 * [`proxy_defaults`](#-apt--proxy_defaults)
 * [`sources`](#-apt--sources)
+* [`auths`](#-apt--auths)
 * [`keys`](#-apt--keys)
 * [`keyrings`](#-apt--keyrings)
 * [`ppas`](#-apt--ppas)
@@ -90,6 +92,7 @@ The following parameters are available in the `apt` class:
 * [`sources_list_force`](#-apt--sources_list_force)
 * [`include_defaults`](#-apt--include_defaults)
 * [`apt_conf_d`](#-apt--apt_conf_d)
+* [`auth_conf_d`](#-apt--auth_conf_d)
 * [`source_key_defaults`](#-apt--source_key_defaults)
 
 ##### <a name="-apt--provider"></a>`provider`
@@ -226,6 +229,7 @@ Default value:
     'preferences'    => false,
     'preferences.d'  => false,
     'apt.conf.d'     => false,
+    'auth.conf.d'    => false,
   }
 ```
 
@@ -261,6 +265,14 @@ Default value:
 Data type: `Hash`
 
 Hash of `apt::source` resources.
+
+Default value: `{}`
+
+##### <a name="-apt--auths"></a>`auths`
+
+Data type: `Hash`
+
+Creates new `apt::auth` resources. Valid options: a hash to be passed to the create_resources function linked above.
 
 Default value: `{}`
 
@@ -440,6 +452,14 @@ The path to the file `apt.conf.d`
 
 Default value: `"${root}/apt.conf.d"`
 
+##### <a name="-apt--auth_conf_d"></a>`auth_conf_d`
+
+Data type: `Stdlib::Absolutepath`
+
+The path to the file `auth_conf.d`
+
+Default value: `"${root}/auth.conf.d"`
+
 ##### <a name="-apt--source_key_defaults"></a>`source_key_defaults`
 
 Data type: `Hash`
@@ -554,6 +574,51 @@ Specifies whether to include 'deb' or 'src', or both.
 Default value: `{}`
 
 ## Defined types
+
+### <a name="apt--auth"></a>`apt::auth`
+
+The apt::auth class.
+
+#### Parameters
+
+The following parameters are available in the `apt::auth` defined type:
+
+* [`ensure`](#-apt--auth--ensure)
+* [`machine`](#-apt--auth--machine)
+* [`login`](#-apt--auth--login)
+* [`password`](#-apt--auth--password)
+
+##### <a name="-apt--auth--ensure"></a>`ensure`
+
+Data type: `String`
+
+
+
+Default value: `'present'`
+
+##### <a name="-apt--auth--machine"></a>`machine`
+
+Data type: `String`
+
+
+
+Default value: `$name`
+
+##### <a name="-apt--auth--login"></a>`login`
+
+Data type: `String`
+
+
+
+Default value: `undef`
+
+##### <a name="-apt--auth--password"></a>`password`
+
+Data type: `String`
+
+
+
+Default value: `undef`
 
 ### <a name="apt--conf"></a>`apt::conf`
 

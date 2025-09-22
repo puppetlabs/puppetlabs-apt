@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v11.1.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.1.0) - 2025-09-22
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.0.0...v11.1.0)
+
+### Added
+
+- add auth.conf.d resources [#1258](https://github.com/puppetlabs/puppetlabs-apt/pull/1258) ([shubhamshinde360](https://github.com/shubhamshinde360))
+- add auth.conf.d resources [#1087](https://github.com/puppetlabs/puppetlabs-apt/pull/1087) ([aba-rechsteiner](https://github.com/aba-rechsteiner))
+
 ## [v11.0.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.0.0) - 2025-09-05
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v10.0.1...v11.0.0)
@@ -820,17 +829,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [1.5.1](https://github.com/puppetlabs/puppetlabs-apt/tree/1.5.1) - 2014-07-10
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/1.5.0...1.5.1)
-
-### Added
-
-- Enable auto-update for Debian squeeze-lts [#321](https://github.com/puppetlabs/puppetlabs-apt/pull/321) ([raoulbhatia](https://github.com/raoulbhatia))
-- add facts showing available updates [#319](https://github.com/puppetlabs/puppetlabs-apt/pull/319) ([damoxc](https://github.com/damoxc))
-- Allow for custom comment in sources.list file [#311](https://github.com/puppetlabs/puppetlabs-apt/pull/311) ([juniorsysadmin](https://github.com/juniorsysadmin))
-
-### Fixed
-
-- MODULES-780 Don't blow up on unicode characters. [#327](https://github.com/puppetlabs/puppetlabs-apt/pull/327) ([adik](https://github.com/adik))
-- MODULES-780 Don't blow up on unicode characters. [#318](https://github.com/puppetlabs/puppetlabs-apt/pull/318) ([daenney](https://github.com/daenney))
 
 ## [1.5.0](https://github.com/puppetlabs/puppetlabs-apt/tree/1.5.0) - 2014-06-05
 
