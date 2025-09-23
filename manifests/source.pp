@@ -348,8 +348,8 @@ define apt::source (
           )
         }
         'absent': {
-          $header = undef
-          $source_content = undef
+          $header = '# no content not permitted, ignored for absent case'
+          $source_content = '# not content not permitted, ignored for absent case'
         }
         default: {
           fail('Unexpected value for $ensure parameter.')
