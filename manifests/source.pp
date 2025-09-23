@@ -297,6 +297,21 @@ define apt::source (
         $_location = $location
       }
 
+      # Handle the HTTPS to HTTP trick for APT-Cacher-NG
+      if ($ensure == 'present') and ($apt::proxy['https_acng']) {
+        $__location = $_location.reduce([]) | Array $acng_locations, $loc | {
+          if $loc =~ /(?i:^https:\/\/)/ {
+            $patched_location = regsubst($loc, 'https://', 'http://HTTPS///')
+          } else {
+            $patched_location = $loc
+          }
+          $acng_locations + [$patched_location]
+        }
+      }
+      else {
+        $__location = $_location
+      }
+
       if !$release {
         if fact('os.distro.codename') {
           $_release = [fact('os.distro.codename')]
@@ -332,7 +347,7 @@ define apt::source (
         'present': {
           $header = epp('apt/_header.epp')
           $source_content = epp('apt/source_deb822.epp', delete_undef_values({
-                'uris'              => $_location,
+                'uris'              => $__location,
                 'suites'            => $_release,
                 'components'        => $_repos,
                 'types'             => $types,
