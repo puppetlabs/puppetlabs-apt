@@ -254,6 +254,7 @@ define apt::source (
           'components'       => $_components,
         }
       )
+      $_content = "${header}${source_content}"
 
       if $pin {
         if $pin =~ Hash {
@@ -346,10 +347,10 @@ define apt::source (
               }
             )
           )
+          $_content = "${header}${source_content}"
         }
         'absent': {
-          $header = undef
-          $source_content = undef
+          $_content = undef
         }
         default: {
           fail('Unexpected value for $ensure parameter.')
@@ -362,7 +363,7 @@ define apt::source (
   }
   apt::setting { "${_file_suffix}-${name}":
     ensure        => $ensure,
-    content       => "${header}${source_content}",
+    content       => $_content,
     notify_update => $notify_update,
   }
 }
