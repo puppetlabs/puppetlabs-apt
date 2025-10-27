@@ -40,7 +40,7 @@
 #   DEB822: The package types this source manages.
 #
 # @param enabled
-#   DEB822: Enable or Disable the APT source.
+#   Enable or Disable the APT source.
 #
 # @param comment
 #   Supplies a comment for adding to the Apt source file.
@@ -105,7 +105,7 @@ define apt::source (
   Array[Enum['deb','deb-src'], 1, 2] $types = ['deb'],
   Optional[Variant[String[1], Array[String[1]]]] $location = undef,
   String[1] $comment = $name,
-  Boolean $enabled = true, # deb822
+  Boolean $enabled = true,
   Enum['present', 'absent'] $ensure = present,
   Optional[Variant[String[0], Array[String[0]]]] $release = undef,
   Variant[String[1], Array[String[1]]] $repos = 'main',
@@ -241,6 +241,7 @@ define apt::source (
 
       $source_content = epp('apt/source.list.epp', {
           'comment'          => $comment,
+          'enabled'          => $enabled,
           'includes'         => $includes,
           'options'          => delete_undef_values({
               'arch'              => $_architecture,

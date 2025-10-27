@@ -1,8 +1,10 @@
-<%- | String $comment, Hash $includes, Hash $options, $location, String $components | -%>
+<%- | String $comment, Boolean $enabled, Hash $includes, Hash $options, $location, String $components | -%>
 # <%= $comment %>
 <%- if $includes['deb'] { -%>
+<%- unless $enabled { -%># <% } -%>
 deb <% if !$options.empty() { -%>[<%=  $options.map |$key, $value| { if !$value.empty() { "${key}=${value}" } }.join(" ") %>] <% } -%> <%= $location %> <%= $components %>
 <%- } -%>
 <%- if $includes['src'] { -%>
+<%- unless $enabled { -%># <% } -%>
 deb-src <% if !$options.empty() { -%>[<%=  $options.map |$key, $value| { if !$value.empty() { "${key}=${value}" } }.join(" ") %>] <% } -%> <%= $location %> <%= $components %>
 <%- } -%>
