@@ -17,7 +17,7 @@ describe 'apt::backports' do
     end
 
     it 'provides backports apt sources' do
-      run_shell('apt policy | grep --quiet backports')
+      run_shell('apt-cache policy | grep --quiet backports')
     end
   end
 end

@@ -5,7 +5,32 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v10.0.1](https://github.com/puppetlabs/puppetlabs-apt/tree/v10.0.1) - 2025-01-24
+## [v11.1.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.1.0) - 2025-09-22
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.0.0...v11.1.0)
+
+### Added
+
+- add auth.conf.d resources [#1087](https://github.com/puppetlabs/puppetlabs-apt/pull/1087) ([aba-rechsteiner](https://github.com/aba-rechsteiner))
+
+## [v11.0.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.0.0) - 2025-09-05
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v10.0.1...v11.0.0)
+
+### Changed
+
+- (CAT-2354) Puppetcore update [#1240](https://github.com/puppetlabs/puppetlabs-apt/pull/1240) ([LukasAud](https://github.com/LukasAud))
+
+### Fixed
+
+- join key dir and key filename/name with slash "/" [#1233](https://github.com/puppetlabs/puppetlabs-apt/pull/1233) ([wolfaba](https://github.com/wolfaba))
+- Suites with a path don't get components [#1229](https://github.com/puppetlabs/puppetlabs-apt/pull/1229) ([jstraw](https://github.com/jstraw))
+
+### Other
+
+- (MODULES-11617) Replace apt with apt-cache when using with grep [#1248](https://github.com/puppetlabs/puppetlabs-apt/pull/1248) ([shubhamshinde360](https://github.com/shubhamshinde360))
+
+## [v10.0.1](https://github.com/puppetlabs/puppetlabs-apt/tree/v10.0.1) - 2025-01-27
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v10.0.0...v10.0.1)
 
