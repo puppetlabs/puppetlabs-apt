@@ -1,0 +1,3 @@
+apt::backports:
+  location: http://archive.debian.org/debian
+  repos: main contrib non-free
