@@ -33,21 +33,32 @@
 #   Ensure presence or absence of the resource.
 #
 define apt::keyring (
-  Stdlib::Absolutepath $dir = '/etc/apt/keyrings',
+  Optional[Stdlib::Absolutepath] $dir = undef,
   String[1] $filename = $name,
   Stdlib::Filemode $mode = '0644',
   Optional[Stdlib::Filesource] $source = undef,
   Optional[String[1]] $content = undef,
   Enum['present','absent'] $ensure = 'present',
 ) {
-  ensure_resource('file', $dir, { ensure => 'directory', mode => '0755', })
+  include apt
+
+  # Use the keyrings directory managed by apt class if default is used
+  $_dir = pick($dir, "${apt::root}/keyrings")
+  
+  if $_dir == "${apt::root}/keyrings" {
+    $require_dir = File['keyrings']
+  } else {
+    ensure_resource('file', $_dir, { ensure => 'directory', mode => '0755', })
+    $require_dir = File[$_dir]
+  }
+
   if $source and $content {
     fail("Parameters 'source' and 'content' are mutually exclusive")
   } elsif $ensure == 'present' and ! $source and ! $content {
     fail("One of 'source' or 'content' parameters are required")
   }
 
-  $file = "${dir}/${filename}"
+  $file = "${_dir}/${filename}"
 
   case $ensure {
     'present': {
@@ -58,6 +69,7 @@ define apt::keyring (
         group   => 'root',
         source  => $source,
         content => $content,
+        require => $require_dir,
       }
     }
     'absent': {

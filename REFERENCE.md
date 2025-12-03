@@ -211,6 +211,7 @@ Options:
 * **:sources.list.d** `Boolean`: Specifies whether to purge any unmanaged entries from sources.list.d. Default false.
 * **:preferences** `Boolean`: Specifies whether to purge any unmanaged entries from preferences. Default false.
 * **:preferences.d.** `Boolean`: Specifies whether to purge any unmanaged entries from preferences.d. Default false.
+* **:keyrings** `Boolean`: Specifies whether to purge any unmanaged entries from keyrings. Default false.
 
 Default value: `{}`
 
@@ -230,6 +231,7 @@ Default value:
     'preferences.d'  => false,
     'apt.conf.d'     => false,
     'auth.conf.d'    => false,
+    'keyrings'       => false,
   }
 ```
 
@@ -797,11 +799,11 @@ The following parameters are available in the `apt::keyring` defined type:
 
 ##### <a name="-apt--keyring--dir"></a>`dir`
 
-Data type: `Stdlib::Absolutepath`
+Data type: `Optional[Stdlib::Absolutepath]`
 
 Path to the directory where the keyring will be stored.
 
-Default value: `'/etc/apt/keyrings'`
+Default value: `undef`
 
 ##### <a name="-apt--keyring--filename"></a>`filename`
 

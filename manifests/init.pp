@@ -75,6 +75,9 @@
 # @option purge [Boolean] :preferences.d.
 #   Specifies whether to purge any unmanaged entries from preferences.d. Default false.
 #
+# @option purge [Boolean] :keyrings
+#   Specifies whether to purge any unmanaged entries from keyrings. Default false.
+#
 # @param purge_defaults
 #   The default purge settings that are combined and merged with the passed `purge` value
 #
@@ -168,6 +171,7 @@ class apt (
     'preferences.d'  => false,
     'apt.conf.d'     => false,
     'auth.conf.d'    => false,
+    'keyrings'       => false,
   },
   Hash $proxy_defaults = {
     'ensure'     => undef,
@@ -275,6 +279,9 @@ class apt (
   }
   if $purge['auth.conf.d'] {
     assert_type(Boolean, $purge['auth.conf.d'])
+  }
+  if $purge['keyrings'] {
+    assert_type(Boolean, $purge['keyrings'])
   }
 
   $_purge = $apt::purge_defaults + $purge
@@ -398,6 +405,17 @@ class apt (
     group   => root,
     purge   => $_purge['auth.conf.d'],
     recurse => $_purge['auth.conf.d'],
+    notify  => Class['apt::update'],
+  }
+
+  file { 'keyrings':
+    ensure  => directory,
+    path    => "${root}/keyrings",
+    owner   => root,
+    group   => root,
+    mode    => '0755',
+    purge   => $_purge['keyrings'],
+    recurse => $_purge['keyrings'],
     notify  => Class['apt::update'],
   }
 
