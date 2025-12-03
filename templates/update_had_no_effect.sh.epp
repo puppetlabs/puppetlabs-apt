@@ -1,0 +1,51 @@
+<%- |
+  String  $provider = 'apt',
+  Integer $timeout = 300,
+  Integer $tries = 1,
+| -%>
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin
+<%# Since `mktemp` might not be available, we choose a reasonable default. -%>
+TMPFILE="$(mktemp)" || TMPFILE=/tmp/.puppetlabs.apt.update_had_no_effect.sh
+<%# Try to prevent command injection by truncating immediately before using. -%>
+cat /dev/null > "$TMPFILE"
+<%# Retrieve the configured apt-cache directory. -%>
+apt-config shell DIR Dir::Cache > "$TMPFILE" && . "$TMPFILE"
+<%# Set a reasonable default in case `apt-config shell` didn't work. -%>
+[ "$DIR" ] || DIR='var/cache/apt'
+<%# Early exit if the cache directory doesn't exist. -%>
+cd "/$DIR" || exit 0
+<%# Try to prevent command injection by truncating immediately before using. -%>
+cat /dev/null > "$TMPFILE"
+<%# Retrieve the configured cache filename. -%>
+apt-config shell CUR DIR::Cache::pkgcache >"$TMPFILE" && . "$TMPFILE"
+<%# Set a reasonable default in case `apt-config shell` didn't work. -%>
+[ "$CUR" ] || CUR=pkgcache.bin
+<%# If the cache file doesn't exist, create it as an empty file. -%>
+[ -e "$CUR" ] || cat /dev/null > "$CUR"
+<%# Copy the cache file contents so we can detect changes. -%>
+cat "$CUR" > "$TMPFILE"
+<%# Loop for the configured number of tries. -%>
+TRIES=<%= $tries %>
+while true; do
+<%# Use the `timeout` command from GNU coretools if available. -%>
+  if timeout 1 true; then
+    timeout <%= $timeout %> <%= $provider %> update && break
+  else
+    <%= $provider %> update && break
+  fi
+<%# Exit if the number of configured tries has been reached. -%>
+  [ $TRIES -le 1 ] && break
+<%# Emulate `try_sleep => 1` from the original `exec` resource -%>
+  sleep 1
+<%# Decrement the loop count -%>
+  TRIES=$(( TRIES - 1 ))
+done
+<%# Set the exit code to failure (1) presuming a change occurred. -%>
+EXITCODE=1
+<%# Guard against a missing package cache file. -%>
+[ -e "$CUR" ] || cat /dev/null > "$CUR"
+<%# Set the exit code to success (0) if no change occurred. -%>
+cmp "$CUR" "$TMPFILE" && EXITCODE=0
+<%# Clean up -%>
+rm -f "$TMPFILE"
+exit $EXITCODE
