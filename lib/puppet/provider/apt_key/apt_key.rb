@@ -207,6 +207,9 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
     elsif resource[:source]
       key_file = source_to_file(resource[:source])
       command.push('add', key_file.path)
+      unless resource[:options].nil?
+        command.push('--keyserver-options', resource[:options])
+      end
     # In case we really screwed up, better safe than sorry.
     else
       raise(_('an unexpected condition occurred while trying to add the key: %{_resource}') % { _resource: resource[:id] })
