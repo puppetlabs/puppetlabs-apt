@@ -1,3 +1,0 @@
-apt::backports:
-  location: http://deb.debian.org/debian
-  repos: main contrib non-free non-free-firmware

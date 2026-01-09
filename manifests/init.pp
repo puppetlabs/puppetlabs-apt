@@ -190,7 +190,10 @@ class apt (
   Optional[String[1]] $key_options = undef,
   Optional[Array[String[1]]] $ppa_options = undef,
   Optional[String[1]] $ppa_package = undef,
-  Optional[Hash] $backports = undef,
+  Hash $backports = {
+    'location' => 'http://deb.debian.org/debian',
+    'repos' => 'main contrib non-free non-free-firmware',
+  },
   Hash $confs = {},
   Hash $update = {},
   Hash $purge = {},
