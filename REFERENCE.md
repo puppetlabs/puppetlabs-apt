@@ -138,7 +138,7 @@ Default value: `undef`
 
 ##### <a name="-apt--backports"></a>`backports`
 
-Data type: `Optional[Hash]`
+Data type: `Hash`
 
 Specifies some of the default parameters used by apt::backports. Valid options: a hash made up from the following keys:
 
@@ -148,7 +148,14 @@ Options:
 * **:repos** `String`: See apt::backports for documentation.
 * **:key** `String`: See apt::backports for documentation.
 
-Default value: `undef`
+Default value:
+
+```puppet
+{
+    'location' => 'http://deb.debian.org/debian',
+    'repos' => 'main contrib non-free non-free-firmware',
+  }
+```
 
 ##### <a name="-apt--confs"></a>`confs`
 
