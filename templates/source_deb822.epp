@@ -1,4 +1,5 @@
-<% | String $comment,
+<%- |
+  String $comment,
   Enum['yes','no'] $enabled,
   Array[String] $types,
   Array[String] $uris,
