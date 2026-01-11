@@ -23,13 +23,14 @@
 
 ## Module Description
 
-The apt module lets you use Puppet to manage APT (Advanced Package Tool) sources, keys, and other configuration options.
+The APT module lets you use Puppet to manage APT (Advanced Package Tool) sources, keys, and other configuration options.
 
-APT is a package manager available on Debian, Ubuntu, and several other operating systems. The apt module provides a series of classes, defines, types, and facts to help you automate APT package management.
+APT is a package manager available on Debian, Ubuntu, and several other operating systems. The APT module provides a series of classes, defined types, native types, and facts to help you automate APT package management.
 
-**Note**: Prior to Puppet 7, for this module to correctly autodetect which version of
+
+**Note:** Prior to Puppet 7, for this module to correctly autodetect which version of
 Debian/Ubuntu (or derivative) you're running, you need to make sure the `lsb-release` package is
-installed. With Puppet 7 the `lsb-release` package is not needed.
+installed. With Puppet 7, the `lsb-release` package is no longer needed.
 
 <a id="setup"></a>
 
@@ -45,7 +46,7 @@ installed. With Puppet 7 the `lsb-release` package is not needed.
 * System repositories
 * Authentication keys
 
-**Note:** This module offers `purge` parameters which, if set to `true`, **destroy** any configuration on the node's `sources.list(.d)`, `preferences(.d)` and `apt.conf.d` that you haven't declared through Puppet. The default for these parameters is `false`.
+**Note:** This module offers `purge` parameters which, if set to `true`, **remove** any configuration on the node's `source.list(.d)`, `preferences(.d)` and `apt.conf.d` that is not managed through Puppet. The default for these parameters is `false`.
 
 <a id="beginning-with-apt"></a>
 
@@ -67,7 +68,7 @@ include apt
 
 ### Add GPG keys
 
-You can fetch GPG keys via HTTP, Puppet URI, or local filesystem. The key can be in GPG binary format, or ASCII armored, but the filename should have the appropriate extension (`.gpg` for keys in binary format; or `.asc` for ASCII armored keys).
+You can fetch GPG keys via HTTP, Puppet URI, or the local filesystem. The key can be in GPG binary format, or ASCII armored, but the filename should have the appropriate extension (`.gpg` for keys in binary format; or `.asc` for ASCII armored keys).
 
 #### Fetch via HTTP
 
@@ -87,9 +88,9 @@ apt::keyring { 'puppetlabs-keyring.gpg':
 
 Alternatively `apt::key` can be used.
 
-**Warning** `apt::key` is deprecated in the latest Debian and Ubuntu releases. Please use apt::keyring instead.
+**Warning:** `apt::key` is deprecated in the latest Debian and Ubuntu releases. Please use apt::keyring instead.
 
-**Warning:** Using short key IDs presents a serious security issue, potentially leaving you open to collision attacks. We recommend you always use full fingerprints to identify your GPG keys. This module allows short keys, but issues a security warning if you use them.
+**Warning:** Using short key IDs presents a serious security issue, potentially leaving you open to collision attacks. We recommend you always use full fingerprints to identify your GPG keys. This module allows short keys, but issues a security warning when they are used.
 
 Declare the `apt::key` defined type:
 
@@ -113,7 +114,7 @@ class { 'apt::backports':
 
 By default, the `apt::backports` class drops a pin file for backports, pinning it to a priority of 200. This is lower than the normal default of 500, so packages with `ensure => latest` don't get upgraded from backports without your explicit permission.
 
-If you raise the priority through the `pin` parameter to 500, normal policy goes into effect and Apt installs or upgrades to the newest version. This means that if a package is available from backports, it and its dependencies are pulled in from backports unless you explicitly set the `ensure` attribute of the `package` resource to `installed`/`present` or a specific version.
+If you raise the priority through the `pin` parameter to 500, normal policy goes into effect and APT installs or upgrades to the newest version. This means that if a package is available in backports, it and its dependencies are pulled in from backports unless you explicitly set the `ensure` attribute of the `package` resource to `installed`/`present` or a specific version.
 
 <a id="update-the-list-of-packages"></a>
 
@@ -129,7 +130,7 @@ class { 'apt':
 }
 ```
 
-When `Exec['apt_update']` is triggered, it generates a `notice`-level message. Because the default [logging level for agents](https://puppet.com/docs/puppet/latest/configuration.html#loglevel) is `notice`, this causes the repository update to appear in agent logs. To silence these updates from the default log output, set the [loglevel](https://puppet.com/docs/puppet/latest/metaparameter.html#loglevel) metaparameter for `Exec['apt_update']` above the agent logging level:
+When `Exec['apt_update']` is triggered, it generates a `notice`-level message. Because the default [agent logging level](https://puppet.com/docs/puppet/latest/configuration.html#loglevel) is `notice`, this causes the repository update to appear in agent logs. To silence these updates from the default log output, set the [loglevel](https://puppet.com/docs/puppet/latest/metaparameter.html#loglevel) metaparameter for `Exec['apt_update']` above the agent logging level:
 
 ```puppet
 class { 'apt':
@@ -140,7 +141,7 @@ class { 'apt':
 }
 ```
 
-> **NOTE:** Every `Exec['apt_update']` run will generate a corrective change, even if the apt caches are not updated. For example, setting an update frequency of `always` can result in every Puppet run resulting in a corrective change. This is a known issue. For details, see [MODULES-10763](https://tickets.puppetlabs.com/browse/MODULES-10763).
+> **Note:** Every `Exec['apt_update']` run will generate a corrective change, even if the apt caches are not updated. For example, setting an update frequency of `always` can result in every Puppet run resulting in a corrective change. This is a known issue. For details, see [MODULES-10763](https://tickets.puppetlabs.com/browse/MODULES-10763).
 
 <a id="pin-a-specific-release"></a>
 
@@ -227,22 +228,22 @@ apt::source { 'puppetlabs':
 
 ### Generating a DEB822 .sources file
 
-You  can also generate a DEB822 format .sources file. This example covers most of the available options.
+You can also generate a DEB822 format .sources file. This example covers most of the available options.
 
 Use the `source_format` parameter to choose between 'list' and 'sources' (DEB822) formats.
 ```puppet
 apt::source { 'debian':
-  source_format => 'sources'
+  source_format  => 'sources',
   comment        => 'Official Debian Repository',
   enabled        => true,
   types          => ['deb', 'deb-src'],
-  location       => ['http://fr.debian.org/debian', 'http://de.debian.org/debian']
+  location       => ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
   release        => ['stable', 'stable-updates', 'stable-backports'],
   repos          => ['main', 'contrib', 'non-free'],
   architecture   => ['amd64', 'i386'],
   allow_unsigned => true,
-  keyring        => '/etc/apt/keyrings/debian.gpg'
-  notify_update  => false
+  keyring        => '/etc/apt/keyrings/debian.gpg',
+  notify_update  => false,
 }
 ```
 
@@ -315,7 +316,7 @@ username and password, for APT sources or proxies that require authentication
 in the `/etc/apt/auth.conf` file. This is preferable to embedding login
 information directly in `source.list` entries, which are usually world-readable.
 
-The `/etc/apt/auth.conf` file follows the format of netrc (used by ftp or
+The `/etc/apt/auth.conf` file follows the format of 'netrc' (used by FTP or
 curl) and has restrictive file permissions. See [here](https://manpages.debian.org/testing/apt/apt_auth.conf.5.en.html) for details.
 
 Use the optional `apt::auth_conf_entries` parameter to specify an array of hashes containing login configuration settings. These hashes may only contain the `machine`, `login` and `password` keys.
@@ -392,7 +393,7 @@ You can also find a tutorial and walkthrough of using Litmus and the PDK on [You
 If you run into an issue with this module, or if you would like to request a feature, please [file a ticket](https://github.com/puppetlabs/puppetlabs-apt/issues).
 Every Monday the Puppet IA Content Team has [office hours](https://puppet.com/community/office-hours) in the [Puppet Community Slack](http://slack.puppet.com/), alternating between an EMEA friendly time (1300 UTC) and an Americas friendly time (0900 Pacific, 1700 UTC).
 
-If you have problems getting this module up and running, please [contact Support](http://puppetlabs.com/services/customer-support).
+If you encounter issues getting this module up and running, please [contact Support](http://puppetlabs.com/services/customer-support).
 
 If you submit a change to this module, be sure to regenerate the reference documentation as follows:
 
