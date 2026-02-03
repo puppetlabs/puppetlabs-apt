@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v11.2.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.2.0) - 2025-12-17
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.1.0...v11.2.0)
+
+### Added
+
+- (MODULES-11641) Add support for ubuntu-24.04 [#1267](https://github.com/puppetlabs/puppetlabs-apt/pull/1267) ([shubhamshinde360](https://github.com/shubhamshinde360))
+
 ## [v11.1.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.1.0) - 2025-09-22
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.0.0...v11.1.0)
@@ -12,6 +20,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 - add auth.conf.d resources [#1087](https://github.com/puppetlabs/puppetlabs-apt/pull/1087) ([aba-rechsteiner](https://github.com/aba-rechsteiner))
+
+### Other
+
+- add auth.conf.d resources [#1258](https://github.com/puppetlabs/puppetlabs-apt/pull/1258) ([shubhamshinde360](https://github.com/shubhamshinde360))
 
 ## [v11.0.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.0.0) - 2025-09-05
 
