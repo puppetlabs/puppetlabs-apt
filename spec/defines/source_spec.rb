@@ -516,5 +516,36 @@ describe 'apt::source' do
 
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
     end
+
+    context 'absent deb822 source' do
+      let :params do
+        super().merge(
+          {
+            ensure: 'absent',
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_ensure('absent') }
+    end
+
+    context 'absent complex deb822 source' do
+      let :params do
+        super().merge(
+          {
+            ensure: 'absent',
+            types: ['deb', 'deb-src'],
+            location: ['http://fr.debian.org/debian', 'http://de.debian.org/debian'],
+            release: ['stable', 'stable-updates', 'stable-backports'],
+            repos: ['main', 'contrib', 'non-free'],
+            architecture: ['amd64', 'i386'],
+            allow_unsigned: true,
+            notify_update: false
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_ensure('absent') }
+    end
   end
 end
