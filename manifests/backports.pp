@@ -41,13 +41,13 @@
 #   Specifies whether to include 'deb' or 'src', or both.
 #
 class apt::backports (
-  Optional[Stdlib::HTTPUrl] $location = undef,
-  Optional[String[1]] $release = undef,
-  Optional[String[1]] $repos = undef,
+  Optional[Stdlib::HTTPUrl] $location     = undef,
+  Optional[String[1]] $release            = undef,
+  Optional[String[1]] $repos              = undef,
   Optional[Variant[String[1], Hash]] $key = undef,
-  Stdlib::AbsolutePath $keyring = "/usr/share/keyrings/${facts['os']['name'].downcase}-archive-keyring.gpg",
-  Variant[Integer, String[1], Hash] $pin = 200,
-  Hash $include = {},
+  Stdlib::AbsolutePath $keyring           = "/usr/share/keyrings/${facts['os']['name'].downcase}-archive-keyring.gpg",
+  Variant[Integer, String[1], Hash] $pin  = 200,
+  Hash $include                           = {},
 ) {
   include apt
 

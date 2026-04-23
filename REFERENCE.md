@@ -17,7 +17,7 @@
 
 ### Defined types
 
-* [`apt::auth`](#apt--auth)
+* [`apt::auth`](#apt--auth): Manages the Apt auth conf in /etc/apt/auth.conf.d/.
 * [`apt::conf`](#apt--conf): Specifies a custom Apt configuration file.
 * [`apt::key`](#apt--key): Manages the GPG keys that Apt uses to authenticate packages.
 * [`apt::keyring`](#apt--keyring): Manage GPG keyrings for apt repositories
@@ -31,9 +31,7 @@
 
 #### Private Resource types
 
-* `apt_key`: This type provides Puppet with the capabilities to manage GPG keys needed
-by apt to perform package validation. Apt has it's own GPG keyring that can
-be manipulated through the `apt-key` command.
+* `apt_key`: Manages GPG keys needed by apt to perform package validation.
 
 ### Data types
 
@@ -577,7 +575,19 @@ Default value: `{}`
 
 ### <a name="apt--auth"></a>`apt::auth`
 
-The apt::auth class.
+Manages the Apt auth conf in /etc/apt/auth.conf.d/.
+
+#### Examples
+
+##### Install the puppetlabs apt auth
+
+```puppet
+apt::auth { 'puppetlabs':
+  machine  => 'apt.puppetlabs.com',
+  login    => 'apt',
+  password => 'password',
+}
+```
 
 #### Parameters
 
@@ -592,7 +602,7 @@ The following parameters are available in the `apt::auth` defined type:
 
 Data type: `String`
 
-
+Specifies whether the Apt auth file should exist. Valid options: 'present' and 'absent'.
 
 Default value: `'present'`
 
@@ -600,7 +610,7 @@ Default value: `'present'`
 
 Data type: `String`
 
-
+The machine entry specifies the auth URI.
 
 Default value: `$name`
 
@@ -608,7 +618,7 @@ Default value: `$name`
 
 Data type: `String`
 
-
+The username to be used.
 
 Default value: `undef`
 
@@ -616,7 +626,7 @@ Default value: `undef`
 
 Data type: `String`
 
-
+The password to be used.
 
 Default value: `undef`
 

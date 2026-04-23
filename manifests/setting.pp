@@ -20,11 +20,11 @@
 #   Specifies whether to trigger an `apt-get update` run.
 #
 define apt::setting (
-  Variant[String[1], Integer[0]] $priority = 50,
+  Variant[String[1], Integer[0]] $priority  = 50,
   Enum['file', 'present', 'absent'] $ensure = file,
-  Optional[String[1]] $source = undef,
-  Optional[String[1]] $content = undef,
-  Boolean $notify_update = true,
+  Optional[String[1]] $source               = undef,
+  Optional[String[1]] $content              = undef,
+  Boolean $notify_update                    = true,
 ) {
   if $content and $source {
     fail('apt::setting cannot have both content and source')

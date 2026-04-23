@@ -5,9 +5,10 @@ require 'puppet/parameter/boolean'
 
 Puppet::Type.newtype(:apt_key) do
   @doc = <<-MANIFEST
-    @summary This type provides Puppet with the capabilities to manage GPG keys needed
-      by apt to perform package validation. Apt has it's own GPG keyring that can
-      be manipulated through the `apt-key` command.
+    @summary Manages GPG keys needed by apt to perform package validation.
+
+    Apt has its own GPG keyring that can be manipulated through the
+    `apt-key` command.
 
     @example Basic usage
       apt_key { '6F6B15509CF8E59E6E469F327F438280EF8D349F':

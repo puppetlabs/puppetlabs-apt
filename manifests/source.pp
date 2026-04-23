@@ -115,23 +115,23 @@
 #   Specifies whether to check if the package release date is valid.
 #
 define apt::source (
-  Enum['list', 'sources'] $source_format = 'list',
-  Array[Enum['deb','deb-src'], 1, 2] $types = ['deb'],
-  Optional[Variant[String[1], Array[String[1]]]] $location = undef,
-  String[1] $comment = $name,
-  Boolean $enabled = true, # deb822
-  Enum['present', 'absent'] $ensure = present,
-  Optional[Variant[String[0], Array[String[0]]]] $release = undef,
-  Variant[String[1], Array[String[1]]] $repos = 'main',
-  Hash $include = {},
-  Optional[Variant[String[1], Hash]] $key = undef,
-  Optional[Stdlib::AbsolutePath] $keyring = undef,
-  Optional[Variant[Hash, Integer, String[1]]] $pin = undef,
+  Enum['list', 'sources'] $source_format                       = 'list',
+  Array[Enum['deb','deb-src'], 1, 2] $types                    = ['deb'],
+  Optional[Variant[String[1], Array[String[1]]]] $location     = undef,
+  String[1] $comment                                           = $name,
+  Boolean $enabled                                             = true, # deb822
+  Enum['present', 'absent'] $ensure                            = present,
+  Optional[Variant[String[0], Array[String[0]]]] $release      = undef,
+  Variant[String[1], Array[String[1]]] $repos                  = 'main',
+  Hash $include                                                = {},
+  Optional[Variant[String[1], Hash]] $key                      = undef,
+  Optional[Stdlib::AbsolutePath] $keyring                      = undef,
+  Optional[Variant[Hash, Integer, String[1]]] $pin             = undef,
   Optional[Variant[String[1], Array[String[1]]]] $architecture = undef,
-  Optional[Boolean] $allow_unsigned = undef,
-  Optional[Boolean] $allow_insecure = undef,
-  Optional[Boolean] $check_valid_until = undef,
-  Boolean $notify_update = true,
+  Optional[Boolean] $allow_unsigned                            = undef,
+  Optional[Boolean] $allow_insecure                            = undef,
+  Optional[Boolean] $check_valid_until                         = undef,
+  Boolean $notify_update                                       = true,
 ) {
   include apt
 

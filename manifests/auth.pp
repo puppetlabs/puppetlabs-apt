@@ -19,7 +19,6 @@
 # @param password
 #   The password to be used.
 #
-
 define apt::auth (
   String $ensure   = 'present',
   String $machine  = $name,

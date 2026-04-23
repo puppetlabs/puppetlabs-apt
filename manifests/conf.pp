@@ -14,10 +14,10 @@
 #   Specifies whether to trigger an `apt-get update` run.
 #
 define apt::conf (
-  Optional[String[1]] $content = undef,
-  Enum['present', 'absent'] $ensure = present,
+  Optional[String[1]] $content             = undef,
+  Enum['present', 'absent'] $ensure        = present,
   Variant[String[1], Integer[0]] $priority = 50,
-  Optional[Boolean] $notify_update = undef,
+  Optional[Boolean] $notify_update         = undef,
 ) {
   unless $ensure == 'absent' {
     unless $content {
