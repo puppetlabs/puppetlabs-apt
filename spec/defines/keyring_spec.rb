@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'apt::keyring' do
-  let(:title) { 'namevar' }
+  let(:title) { 'puppetlabs-keyring.gpg' }
   let(:params) do
     {
       source: 'http://apt.puppetlabs.com/pubkey.gpg',

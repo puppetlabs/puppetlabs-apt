@@ -66,14 +66,25 @@ define apt::keyring (
   Optional[Enum['md5','sha256','sha224','sha384','sha512']] $checksum = undef,
   Optional[String] $checksum_value                                    = undef,
 ) {
-  ensure_resource('file', $dir, { ensure => 'directory', mode => '0755', })
+  include apt
+
+  # Use the keyrings directory managed by apt class if default is used
+  $_dir = pick($dir, "${apt::root}/keyrings")
+
+  if $_dir == "${apt::root}/keyrings" {
+    $require_dir = File['keyrings']
+  } else {
+    ensure_resource('file', $_dir, { ensure => 'directory', mode => '0755', })
+    $require_dir = File[$_dir]
+  }
+
   if $source and $content {
     fail("Parameters 'source' and 'content' are mutually exclusive")
   } elsif $ensure == 'present' and ! $source and ! $content {
     fail("One of 'source' or 'content' parameters are required")
   }
 
-  $file = "${dir}/${filename}"
+  $file = "${_dir}/${filename}"
 
   case $ensure {
     'present': {
