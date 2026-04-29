@@ -373,7 +373,7 @@ For an extensive list of supported operating systems, see [metadata.json](https:
 
 ### Adding new sources or PPAs
 
-If you are adding a new source or PPA and trying to install packages from the new source or PPA on the same Puppet run, your `package` resource should depend on `Class['apt::update']`, as well as depending on the `Apt::Source` or the `Apt::Ppa`. You can also add [collectors](https://docs.puppetlabs.com/puppet/latest/reference/lang_collectors.html) to ensure that all packages happen after `apt::update`, but this can lead to dependency cycles and has implications for [virtual resources](https://docs.puppetlabs.com/puppet/latest/reference/lang_collectors.html#behavior). Before running the command below, ensure that all packages have the provider set to apt.
+If you are adding a new source or PPA and trying to install packages from the new source or PPA on the same Puppet run, your `package` resource should depend on `Class['apt::update']`, as well as depending on the `Apt::Source` or the `Apt::Ppa`. You can also add [collectors](https://docs.puppetlabs.com/puppet/latest/reference/lang_collectors.html) to ensure that all packages happen after `apt::update`, but this can lead to dependency cycles and has implications for [virtual resources](https://docs.puppetlabs.com/puppet/latest/reference/lang_collectors.html#behavior). Before running the command below, ensure that all packages [have the provider explicitly set to apt](https://www.puppet.com/docs/puppet/latest/lang_relationships.html#lang_rel_chaining_arrows-cautions-chaining-resource-collectors).
 
 ```puppet
 Class['apt::update'] -> Package <| provider == 'apt' |>
