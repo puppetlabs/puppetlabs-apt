@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-apt",
-  "version": "11.1.0",
+  "version": "11.2.0",
   "author": "puppetlabs",
   "summary": "Provides an interface for managing Apt source, key, and definitions with Puppet",
   "license": "Apache-2.0",
@@ -26,7 +26,8 @@
       "operatingsystemrelease": [
         "18.04",
         "20.04",
-        "22.04"
+        "22.04",
+        "24.04"
       ]
     }
   ],

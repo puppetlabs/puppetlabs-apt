@@ -40,7 +40,7 @@
 #   If this parameter is set, source_permissions will be assumed to be false, and ownership and permissions will not be read from source.
 #
 define apt::keyring (
-  Stdlib::Absolutepath $dir = '/etc/apt/keyrings',
+  Optional[Stdlib::Absolutepath] $dir = undef,
   String[1] $filename = $name,
   Stdlib::Filemode $mode = '0644',
   Optional[Stdlib::Filesource] $source = undef,
@@ -49,14 +49,25 @@ define apt::keyring (
   Enum['sha256', 'sha256lite', 'md5', 'md5lite', 'sha1', 'sha1lite', 'sha512', 'sha384', 'sha224', 'mtime', 'ctime', 'none'] $checksum = 'sha256',
   Optional[String[1]] $checksum_value = undef,
 ) {
-  ensure_resource('file', $dir, { ensure => 'directory', mode => '0755', })
+  include apt
+
+  # Use the keyrings directory managed by apt class if default is used
+  $_dir = pick($dir, "${apt::root}/keyrings")
+
+  if $_dir == "${apt::root}/keyrings" {
+    $require_dir = File['keyrings']
+  } else {
+    ensure_resource('file', $_dir, { ensure => 'directory', mode => '0755', })
+    $require_dir = File[$_dir]
+  }
+
   if $source and $content {
     fail("Parameters 'source' and 'content' are mutually exclusive")
   } elsif $ensure == 'present' and ! $source and ! $content {
     fail("One of 'source' or 'content' parameters are required")
   }
 
-  $file = "${dir}/${filename}"
+  $file = "${_dir}/${filename}"
 
   case $ensure {
     'present': {
@@ -69,6 +80,7 @@ define apt::keyring (
         content        => $content,
         checksum       => $checksum,
         checksum_value => $checksum_value,
+        require        => $require_dir,
       }
     }
     'absent': {

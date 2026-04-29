@@ -732,7 +732,7 @@ describe 'apt_key' do
     context 'with nonexistant.key.server' do
       it 'fails' do
         apply_manifest(nonexistant_key_server_pp, expect_failures: true) do |r|
-          expect(r.stderr).to match(%r{(Host not found|Couldn't resolve host|No name)})
+          expect(r.stderr).to match(%r{(Host not found|Couldn't resolve host|No name|No keyserver available)})
         end
       end
     end
