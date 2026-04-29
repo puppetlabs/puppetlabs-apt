@@ -17,7 +17,7 @@
 
 ### Defined types
 
-* [`apt::auth`](#apt--auth)
+* [`apt::auth`](#apt--auth): Manages the Apt auth conf in /etc/apt/auth.conf.d/.
 * [`apt::conf`](#apt--conf): Specifies a custom Apt configuration file.
 * [`apt::key`](#apt--key): Manages the GPG keys that Apt uses to authenticate packages.
 * [`apt::keyring`](#apt--keyring): Manage GPG keyrings for apt repositories
@@ -31,9 +31,7 @@
 
 #### Private Resource types
 
-* `apt_key`: This type provides Puppet with the capabilities to manage GPG keys needed
-by apt to perform package validation. Apt has it's own GPG keyring that can
-be manipulated through the `apt-key` command.
+* `apt_key`: Manages GPG keys needed by apt to perform package validation.
 
 ### Data types
 
@@ -579,7 +577,19 @@ Default value: `{}`
 
 ### <a name="apt--auth"></a>`apt::auth`
 
-The apt::auth class.
+Manages the Apt auth conf in /etc/apt/auth.conf.d/.
+
+#### Examples
+
+##### Install the puppetlabs apt auth
+
+```puppet
+apt::auth { 'puppetlabs':
+  machine  => 'apt.puppetlabs.com',
+  login    => 'apt',
+  password => 'password',
+}
+```
 
 #### Parameters
 
@@ -594,7 +604,7 @@ The following parameters are available in the `apt::auth` defined type:
 
 Data type: `String`
 
-
+Specifies whether the Apt auth file should exist. Valid options: 'present' and 'absent'.
 
 Default value: `'present'`
 
@@ -602,7 +612,7 @@ Default value: `'present'`
 
 Data type: `String`
 
-
+The machine entry specifies the auth URI.
 
 Default value: `$name`
 
@@ -610,7 +620,7 @@ Default value: `$name`
 
 Data type: `String`
 
-
+The username to be used.
 
 Default value: `undef`
 
@@ -618,7 +628,7 @@ Default value: `undef`
 
 Data type: `String`
 
-
+The password to be used.
 
 Default value: `undef`
 
@@ -786,6 +796,21 @@ apt::source { 'puppet8-release':
 }
 ```
 
+##### Deploy the apt source and associated keyring file with checksum
+
+```puppet
+apt::source { 'puppet8-release':
+  location => 'http://apt.puppetlabs.com',
+  repos    => 'puppet8',
+  key      => {
+    name           => 'puppetlabs-keyring.gpg',
+    source         => 'https://apt.puppetlabs.com/keyring.gpg'
+    checksum       => 'sha256',
+    checksum_value => '9d7a61ab06b18454e9373edec4fc7c87f9a91bacfc891893ba0da37a33069771',
+  }
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `apt::keyring` defined type:
@@ -796,6 +821,8 @@ The following parameters are available in the `apt::keyring` defined type:
 * [`source`](#-apt--keyring--source)
 * [`content`](#-apt--keyring--content)
 * [`ensure`](#-apt--keyring--ensure)
+* [`checksum`](#-apt--keyring--checksum)
+* [`checksum_value`](#-apt--keyring--checksum_value)
 
 ##### <a name="-apt--keyring--dir"></a>`dir`
 
@@ -844,6 +871,29 @@ Data type: `Enum['present','absent']`
 Ensure presence or absence of the resource.
 
 Default value: `'present'`
+
+##### <a name="-apt--keyring--checksum"></a>`checksum`
+
+Data type: `Optional[Enum['md5','sha256','sha224','sha384','sha512']]`
+
+Checksum type of the keyfile.
+Only md5, sha256, sha224, sha384 and sha512 are supported when specifying
+this parameter (due to checksum_value parameter).
+Optional, but is useful if the keyfile is from a remote HTTP source that
+does not provide the necessary headers for the file resource to determine if
+content has changed.
+
+Default value: `undef`
+
+##### <a name="-apt--keyring--checksum_value"></a>`checksum_value`
+
+Data type: `Optional[String]`
+
+The value of the checksum, must be a String.
+Only md5, sha256, sha224, sha384 and sha512 are supported when specifying
+this parameter.
+
+Default value: `undef`
 
 ### <a name="apt--mark"></a>`apt::mark`
 
@@ -1151,11 +1201,28 @@ apt::source { 'puppetlabs':
 extension. Absence of extension will result in file formation with just name and no extension.
 apt::source { 'puppetlabs':
   location => 'http://apt.puppetlabs.com',
-  comment  => 'Puppet8',
+  repos    => 'puppet8'
+  comment  => 'Puppet 8 release',
   key      => {
-    'name'   => 'puppetlabs.gpg',
+    'name'   => 'puppetlabs-keyring.gpg',
     'source' => 'https://apt.puppetlabs.com/keyring.gpg',
   },
+}
+```
+
+##### Deploy the apt source and associated keyring file with checksum
+
+```puppet
+apt::source { 'puppetlabs':
+  location => 'http://apt.puppetlabs.com',
+  repos    => 'puppet8',
+  comment  => 'Puppet 8 release',
+  key      => {
+    name           => 'puppetlabs-keyring.gpg',
+    source         => 'https://apt.puppetlabs.com/keyring.gpg'
+    checksum       => 'sha256',
+    checksum_value => '9d7a61ab06b18454e9373edec4fc7c87f9a91bacfc891893ba0da37a33069771',
+  }
 }
 ```
 
@@ -1277,7 +1344,7 @@ Default value: `{}`
 Data type: `Optional[Variant[String[1], Hash]]`
 
 Creates an `apt::keyring` in `/etc/apt/keyrings` (or anywhere on disk given `filename`) Valid options:
-  * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`
+  * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`, `checksum`, `checksum_value`.
 
 The following inputs are valid for the (deprecated) `apt::key` defined type. Valid options:
   * a string to be passed to the `id` parameter of the `apt::key` defined type

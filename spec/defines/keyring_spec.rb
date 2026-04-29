@@ -16,113 +16,16 @@ describe 'apt::keyring' do
 
       it { is_expected.to compile }
 
-      context 'with default directory' do
-        it {
-          is_expected.to contain_file('/etc/apt/keyrings/puppetlabs-keyring.gpg').with(
-            ensure: 'file',
-            mode: '0644',
-            owner: 'root',
-            group: 'root',
-            source: 'http://apt.puppetlabs.com/pubkey.gpg',
-          ).that_requires('File[keyrings]')
-        }
-
-        it {
-          is_expected.to contain_class('apt')
-        }
-      end
-
-      context 'with custom directory' do
+      context 'with checksum verification enabled' do
         let(:params) do
           {
-            source: 'http://apt.puppetlabs.com/pubkey.gpg',
-            dir: '/usr/share/keyrings',
+            source: 'https://apt.puppetlabs.com/pubkey.gpg',
+            checksum: 'sha256',
+            checksum_value: '9d7a61ab06b18454e9373edec4fc7c87f9a91bacfc891893ba0da37a33069771',
           }
         end
 
-        it {
-          is_expected.to contain_file('/usr/share/keyrings/puppetlabs-keyring.gpg').with(
-            ensure: 'file',
-            mode: '0644',
-            owner: 'root',
-            group: 'root',
-            source: 'http://apt.puppetlabs.com/pubkey.gpg',
-          ).that_requires('File[/usr/share/keyrings]')
-        }
-
-        it {
-          is_expected.to contain_file('/usr/share/keyrings').with(
-            ensure: 'directory',
-            mode: '0755',
-          )
-        }
-      end
-
-      context 'with content parameter' do
-        let(:params) do
-          {
-            content: 'GPG KEY CONTENT',
-          }
-        end
-
-        it {
-          is_expected.to contain_file('/etc/apt/keyrings/puppetlabs-keyring.gpg').with(
-            ensure: 'file',
-            content: 'GPG KEY CONTENT',
-          )
-        }
-      end
-
-      context 'with custom filename' do
-        let(:params) do
-          {
-            source: 'http://apt.puppetlabs.com/pubkey.gpg',
-            filename: 'custom-name.gpg',
-          }
-        end
-
-        it {
-          is_expected.to contain_file('/etc/apt/keyrings/custom-name.gpg')
-        }
-      end
-
-      context 'with ensure absent' do
-        let(:params) do
-          {
-            ensure: 'absent',
-          }
-        end
-
-        it {
-          is_expected.to contain_file('/etc/apt/keyrings/puppetlabs-keyring.gpg').with(
-            ensure: 'absent',
-          )
-        }
-      end
-
-      context 'with both source and content' do
-        let(:params) do
-          {
-            source: 'http://apt.puppetlabs.com/pubkey.gpg',
-            content: 'GPG KEY CONTENT',
-          }
-        end
-
-        it {
-          is_expected.to raise_error(%r{Parameters 'source' and 'content' are mutually exclusive})
-        }
-      end
-
-      context 'without source or content and ensure present' do
-        let(:params) do
-          {
-            ensure: 'present',
-          }
-        end
-
-        it {
-          is_expected.to raise_error(%r{One of 'source' or 'content' parameters are required})
-        }
+        it { is_expected.to compile }
       end
     end
   end

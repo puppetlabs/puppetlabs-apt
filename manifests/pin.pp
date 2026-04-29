@@ -43,19 +43,19 @@
 #   The codename of the release
 #
 define apt::pin (
-  Enum['file', 'present', 'absent'] $ensure = present,
-  Optional[String[1]] $explanation = undef,
-  Variant[Integer[0]] $order = 50,
+  Enum['file', 'present', 'absent'] $ensure      = present,
+  Optional[String[1]] $explanation               = undef,
+  Variant[Integer[0]] $order                     = 50,
   Variant[String[1], Array[String[1]]] $packages = '*',
-  Variant[Integer, String[1]] $priority = 0,
-  Optional[String[1]] $release = undef, # a=
-  Optional[String[1]] $origin = undef,
-  Optional[String[1]] $version = undef,
-  Optional[String[1]] $codename = undef, # n=
-  Optional[String[1]] $release_version = undef, # v=
-  Optional[String[1]] $component = undef, # c=
-  Optional[String[1]] $originator = undef, # o=
-  Optional[String[1]] $label = undef, # l=
+  Variant[Integer, String[1]] $priority          = 0,
+  Optional[String[1]] $release                   = undef, # a=
+  Optional[String[1]] $origin                    = undef,
+  Optional[String[1]] $version                   = undef,
+  Optional[String[1]] $codename                  = undef, # n=
+  Optional[String[1]] $release_version           = undef, # v=
+  Optional[String[1]] $component                 = undef, # c=
+  Optional[String[1]] $originator                = undef, # o=
+  Optional[String[1]] $label                     = undef, # l=
 ) {
   if $explanation {
     $_explanation = $explanation
