@@ -1,0 +1,127 @@
+name: "Community PR Test"
+
+on:
+  pull_request_target:
+    types:
+      - labeled
+  workflow_run:
+    workflows: ["ci"]
+    types:
+      - completed
+    branches:
+      - "community-pr-test-*"
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  create-test-pr:
+    if: |
+      github.event_name == 'pull_request_target' &&
+      contains(github.event.pull_request.labels.*.name, 'ok-to-test') &&
+      github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify labeler has write access
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LABELER: ${{ github.event.sender.login }}
+        run: |
+          PERMISSION=$(gh api repos/${{ github.repository }}/collaborators/${LABELER}/permission --jq '.permission')
+          if [[ "$PERMISSION" != "write" && "$PERMISSION" != "admin" && "$PERMISSION" != "maintain" ]]; then
+            echo "${LABELER} has permission '${PERMISSION}' — removing label and notifying."
+            gh pr edit ${{ github.event.pull_request.number }} --remove-label "ok-to-test"
+            gh pr comment ${{ github.event.pull_request.number }} \
+              --body "The \`ok-to-test\` label can only be applied by maintainers. It has been removed."
+            exit 0
+          fi
+
+      - name: Checkout community PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Rebase onto main
+        id: rebase
+        run: |
+          git fetch origin main
+          if ! git rebase origin/main; then
+            git rebase --abort
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Comment and exit on conflict
+        if: steps.rebase.outputs.failed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMUNITY_PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr comment "${COMMUNITY_PR_NUMBER}" \
+            --body "Cannot run tests: this PR has merge conflicts with \`main\`. Please rebase and re-apply the \`ok-to-test\` label."
+          exit 1
+
+      - name: Push branch and open or update test PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMUNITY_PR_NUMBER: ${{ github.event.pull_request.number }}
+          COMMUNITY_PR_TITLE: ${{ github.event.pull_request.title }}
+          COMMUNITY_PR_URL: ${{ github.event.pull_request.html_url }}
+          COMMUNITY_PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          COMMUNITY_PR_FORK: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          BRANCH="community-pr-test-${COMMUNITY_PR_NUMBER}"
+
+          echo "Community PR #${COMMUNITY_PR_NUMBER} from fork ${COMMUNITY_PR_FORK} — proceeding."
+
+          git push origin "HEAD:refs/heads/${BRANCH}" --force
+
+          EXISTING=$(gh pr list --head "${BRANCH}" --state open --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            echo "Updated branch for existing test PR #${EXISTING}."
+            gh pr comment "${EXISTING}" \
+              --body "Branch updated with latest commits from community PR #${COMMUNITY_PR_NUMBER}."
+            exit 0
+          fi
+
+          PR_BODY=$(printf '%s\n\n%s\n%s\n%s\n\n%s' \
+            "Automated test PR to run CI on behalf of community PR #${COMMUNITY_PR_NUMBER}." \
+            "**Original PR:** ${COMMUNITY_PR_URL}" \
+            "**Author:** @${COMMUNITY_PR_AUTHOR}" \
+            "**Fork:** \`${COMMUNITY_PR_FORK}\`" \
+            "> **Note:** This PR was created automatically when the \`ok-to-test\` label was applied. Do not merge — close it once tests complete and review the original PR instead.")
+
+          gh pr create \
+            --title "[Test] Community PR #${COMMUNITY_PR_NUMBER}: ${COMMUNITY_PR_TITLE}" \
+            --body "${PR_BODY}" \
+            --base main \
+            --head "${BRANCH}"
+
+  notify-on-failure:
+    if: |
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on original community PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          TEST_PR_URL: ${{ github.event.workflow_run.pull_requests[0].url }}
+        run: |
+          # Extract the original PR number from the branch name (community-pr-test-<N>)
+          COMMUNITY_PR_NUMBER="${BRANCH#community-pr-test-}"
+
+          COMMENT_BODY=$(printf '%s\n\n%s\n%s' \
+            "CI tests failed on the test PR for this community PR. Please review the failures and push a fix." \
+            "**Test PR:** ${TEST_PR_URL}" \
+            "**CI run:** ${{ github.event.workflow_run.html_url }}")
+
+          gh pr comment "${COMMUNITY_PR_NUMBER}" --body "${COMMENT_BODY}"
