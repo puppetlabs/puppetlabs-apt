@@ -18,8 +18,7 @@ describe 'apt_update_last_success fact' do
   describe 'on Debian based distro which has created the update-success-stamp' do
     it 'has the value of the mtime of the file' do
       allow(Facter.fact(:'os.family')).to receive(:value).and_return('Debian')
-      allow(File).to receive(:exist?).and_return(true)
-      allow(File).to receive(:mtime).and_return(1_407_660_561)
+      allow(File).to receive_messages(exist?: true, mtime: 1_407_660_561)
       expect(subject).to eq(1_407_660_561)
     end
   end
