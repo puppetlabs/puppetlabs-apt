@@ -32,6 +32,13 @@
 # @param ensure
 #   Ensure presence or absence of the resource.
 #
+# @param checksum
+#   The checksum type to use when determining whether to replace a file's contents.
+#
+# @param checksum_value
+#   The checksum of the source contents. Only md5, sha256, sha224, sha384 and sha512 are supported when specifying this parameter.
+#   If this parameter is set, source_permissions will be assumed to be false, and ownership and permissions will not be read from source.
+#
 define apt::keyring (
   Optional[Stdlib::Absolutepath] $dir = undef,
   String[1] $filename = $name,
@@ -39,6 +46,8 @@ define apt::keyring (
   Optional[Stdlib::Filesource] $source = undef,
   Optional[String[1]] $content = undef,
   Enum['present','absent'] $ensure = 'present',
+  Enum['sha256', 'sha256lite', 'md5', 'md5lite', 'sha1', 'sha1lite', 'sha512', 'sha384', 'sha224', 'mtime', 'ctime', 'none'] $checksum = 'sha256',
+  Optional[String[1]] $checksum_value = undef,
 ) {
   include apt
 
@@ -63,13 +72,15 @@ define apt::keyring (
   case $ensure {
     'present': {
       file { $file:
-        ensure  => 'file',
-        mode    => $mode,
-        owner   => 'root',
-        group   => 'root',
-        source  => $source,
-        content => $content,
-        require => $require_dir,
+        ensure         => 'file',
+        mode           => $mode,
+        owner          => 'root',
+        group          => 'root',
+        source         => $source,
+        content        => $content,
+        checksum       => $checksum,
+        checksum_value => $checksum_value,
+        require        => $require_dir,
       }
     }
     'absent': {
