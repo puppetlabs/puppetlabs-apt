@@ -18,7 +18,7 @@ describe 'apt::backports', type: :class do
               full: release_full
             },
             distro: {
-              codename:,
+              codename: codename,
               id: 'Ubuntu'
             }
           }
@@ -50,7 +50,7 @@ describe 'apt::backports', type: :class do
               full: release_full
             },
             distro: {
-              codename:,
+              codename: codename,
               id: 'Ubuntu'
             }
           }
@@ -88,7 +88,7 @@ describe 'apt::backports', type: :class do
               full: release_full
             },
             distro: {
-              codename:,
+              codename: codename,
               id: 'Ubuntu'
             }
           }
@@ -127,7 +127,7 @@ describe 'apt::backports', type: :class do
               full: release_full
             },
             distro: {
-              codename:,
+              codename: codename,
               id: 'Ubuntu'
             }
           }

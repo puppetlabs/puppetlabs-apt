@@ -51,6 +51,9 @@ Style/FormatStringToken:
   Description: Following the main puppet project's style, prefer the simpler template
     tokens over annotated ones.
   EnforcedStyle: template
+Style/HashSyntax:
+  Description: "Allow both shorthand and explicit hash value forms."
+  EnforcedShorthandSyntax: either
 Style/Lambda:
   Description: Prefer the keyword for easier discoverability.
   EnforcedStyle: literal
