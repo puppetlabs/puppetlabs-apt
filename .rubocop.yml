@@ -52,8 +52,7 @@ Style/FormatStringToken:
     tokens over annotated ones.
   EnforcedStyle: template
 Style/HashSyntax:
-  Description: "Allow both shorthand and explicit hash value forms."
-  EnforcedShorthandSyntax: either
+  Enabled: false
 Style/Lambda:
   Description: Prefer the keyword for easier discoverability.
   EnforcedStyle: literal
