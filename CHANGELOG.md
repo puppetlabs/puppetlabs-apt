@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v11.3.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.3.0) - 2026-05-18
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.2.0...v11.3.0)
+
+### Added
+
+- Add param for purging keyrings [#1266](https://github.com/puppetlabs/puppetlabs-apt/pull/1266) ([bwitt](https://github.com/bwitt))
+
+### Fixed
+
+- Include components when suite does not end with slash [#1259](https://github.com/puppetlabs/puppetlabs-apt/pull/1259) ([bwitt](https://github.com/bwitt))
+- Bugfix - sources format and ensure => absent fails [#1243](https://github.com/puppetlabs/puppetlabs-apt/pull/1243) ([traylenator](https://github.com/traylenator))
+- fix: allow plus signs in ppa [#1222](https://github.com/puppetlabs/puppetlabs-apt/pull/1222) ([moritz-makandra](https://github.com/moritz-makandra))
+- Fix and improve DEB822-style template [#1212](https://github.com/puppetlabs/puppetlabs-apt/pull/1212) ([smortex](https://github.com/smortex))
+
 ## [v11.2.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.2.0) - 2025-12-17
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.1.0...v11.2.0)
@@ -17,13 +32,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.0.0...v11.1.0)
 
+### Changed
+
+- add auth.conf.d resources [#1258](https://github.com/puppetlabs/puppetlabs-apt/pull/1258) ([shubhamshinde360](https://github.com/shubhamshinde360))
+
 ### Added
 
 - add auth.conf.d resources [#1087](https://github.com/puppetlabs/puppetlabs-apt/pull/1087) ([aba-rechsteiner](https://github.com/aba-rechsteiner))
-
-### Other
-
-- add auth.conf.d resources [#1258](https://github.com/puppetlabs/puppetlabs-apt/pull/1258) ([shubhamshinde360](https://github.com/shubhamshinde360))
 
 ## [v11.0.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.0.0) - 2025-09-05
 
@@ -35,12 +50,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Fixed
 
+- (MODULES-11617) Replace apt with apt-cache when using with grep [#1248](https://github.com/puppetlabs/puppetlabs-apt/pull/1248) ([shubhamshinde360](https://github.com/shubhamshinde360))
 - join key dir and key filename/name with slash "/" [#1233](https://github.com/puppetlabs/puppetlabs-apt/pull/1233) ([wolfaba](https://github.com/wolfaba))
 - Suites with a path don't get components [#1229](https://github.com/puppetlabs/puppetlabs-apt/pull/1229) ([jstraw](https://github.com/jstraw))
-
-### Other
-
-- (MODULES-11617) Replace apt with apt-cache when using with grep [#1248](https://github.com/puppetlabs/puppetlabs-apt/pull/1248) ([shubhamshinde360](https://github.com/shubhamshinde360))
 
 ## [v10.0.1](https://github.com/puppetlabs/puppetlabs-apt/tree/v10.0.1) - 2025-01-27
 
