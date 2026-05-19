@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-apt",
-  "version": "11.3.0",
+  "version": "11.3.1",
   "author": "puppetlabs",
   "summary": "Provides an interface for managing Apt source, key, and definitions with Puppet",
   "license": "Apache-2.0",
