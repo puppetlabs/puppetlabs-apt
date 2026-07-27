@@ -68,27 +68,20 @@ define apt::keyring (
 
   $file = "${_dir}/${filename}"
 
-  case $ensure {
-    'present': {
-      file { $file:
-        ensure         => 'file',
-        mode           => $mode,
-        owner          => 'root',
-        group          => 'root',
-        source         => $source,
-        content        => $content,
-        checksum       => $checksum,
-        checksum_value => $checksum_value,
-        require        => $require_dir,
-      }
-    }
-    'absent': {
-      file { $file:
-        ensure => $ensure,
-      }
-    }
-    default: {
-      fail("Invalid 'ensure' value '${ensure}' for apt::keyring")
-    }
+  $file_ensure = $ensure ? {
+    'absent' => 'absent',
+    default  => 'file',
+  }
+
+  file { $file:
+    ensure         => $file_ensure,
+    mode           => $mode,
+    owner          => 'root',
+    group          => 'root',
+    source         => $source,
+    content        => $content,
+    checksum       => $checksum,
+    checksum_value => $checksum_value,
+    require        => $require_dir,
   }
 }
