@@ -11,22 +11,29 @@ define apt::mark (
     fail("Invalid package name: ${title}")
   }
 
-  if $setting == 'unhold' {
-    $unless_cmd = undef
-  } else {
-    $action = "show${setting}"
-
-    # It would be ideal if we could break out this command in to an array of args, similar
-    # to $onlyif_cmd and $command. However, in this case it wouldn't work as expected due
-    # to the inclusion of a pipe character.
-    # When passed to the exec function, the posix provider will strip everything to the right of the pipe,
-    # causing the command to return a full list of packages for the given action.
-    # The trade off is to use an interpolated string knowing that action is built from an enum value and
-    # title is pre-validated.
-    $unless_cmd = ["/usr/bin/apt-mark ${action} ${title} | grep ${title} -q"]
+  # The piped guards must be strings: in the array form the posix provider
+  # strips everything right of the pipe. $setting is an enum and the title is
+  # pre-validated above.
+  case $setting {
+    'unhold': {
+      # showhold prints the package name when held, nothing otherwise.
+      $onlyif_cmd = ["/usr/bin/apt-mark showhold ${title} | grep -q ."]
+      $unless_cmd = undef
+    }
+    'hold': {
+      # Deliberately loose gate: pre-holding a not-yet-installed package is
+      # legitimate, so only names dpkg has never heard of are filtered.
+      $onlyif_cmd = [['/usr/bin/dpkg', '-l', $title]]
+      $unless_cmd = ["/usr/bin/apt-mark showhold ${title} | grep ${title} -q"]
+    }
+    default: {
+      # auto/manual only take effect on an installed package;
+      # db:Status-Status is 'installed' solely for state ii.
+      $onlyif_cmd = ["/usr/bin/dpkg-query --show --showformat '\${db:Status-Status}' ${title} | grep -qx installed"]
+      $unless_cmd = ["/usr/bin/apt-mark show${setting} ${title} | grep ${title} -q"]
+    }
   }
 
-  $onlyif_cmd = [['/usr/bin/dpkg', '-l', $title]]
   $command = ['/usr/bin/apt-mark', $setting, $title]
 
   exec { "apt-mark ${setting} ${title}":
