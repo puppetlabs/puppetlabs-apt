@@ -19,10 +19,24 @@ spec/spec_helper.rb:
 .github/workflows/auto_release.yml:
   unmanaged: false
 .github/workflows/ci.yml:
-  unmanaged: false
+  unmanaged: true
+  acceptance_flags:
+    - '--nightly'
+    - '--collection-platform-exclude 9:ubuntu-18.04'
+    - '--collection-platform-exclude 9:ubuntu-20.04'
 .github/workflows/nightly.yml:
-  unmanaged: false
+  unmanaged: true
+  acceptance_flags:
+    - '--nightly'
+    - '--collection-platform-exclude 9:ubuntu-18.04'
+    - '--collection-platform-exclude 9:ubuntu-20.04'
 .github/workflows/release.yml:
   unmanaged: false
 .travis.yml:
   delete: true
+Gemfile:
+  overrides:
+    - gem: 'puppetlabs_spec_helper'
+      version: '~> 9.0'
+    - gem: 'puppet_litmus'
+      version: '~> 2.8'
