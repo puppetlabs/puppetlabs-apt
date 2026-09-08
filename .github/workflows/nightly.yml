@@ -8,12 +8,16 @@ on:
 jobs:
   Spec:
     uses: "puppetlabs/cat-github-actions/.github/workflows/module_ci.yml@main"
+    with:
+      additional_packages: "libcurl4-openssl-dev"
+      ruby_version: "3.2"
     secrets: "inherit"
 
   Acceptance:
     needs: Spec
     uses: "puppetlabs/cat-github-actions/.github/workflows/module_acceptance.yml@main"
     with:
-      flags: '--nightly'
+      flags: '--nightly --collection-platform-exclude 9:ubuntu-18.04 --collection-platform-exclude 9:ubuntu-20.04'
+      ruby_version: "3.2"
     secrets: "inherit"
 
