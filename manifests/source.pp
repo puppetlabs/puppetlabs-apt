@@ -37,7 +37,7 @@
 #   DEB822: Supports an array of URL values
 #
 # @param types
-#   DEB822: The package types this source manages.
+#   DEB822: The package types this source manages. Defaults to the types enabled by `include`.
 #
 # @param enabled
 #   DEB822: Enable or Disable the APT source.
@@ -64,6 +64,8 @@
 #
 # @option include [Boolean] :src
 #   Specifies whether to request the distribution's uncompiled source code.
+#
+#   DEB822: Used to set `types` when `types` is not given.
 #
 # @param key
 #   Creates an `apt::keyring` in `/etc/apt/keyrings` (or anywhere on disk given `filename`) Valid options:
@@ -102,7 +104,7 @@
 #
 define apt::source (
   Enum['list', 'sources'] $source_format = 'list',
-  Array[Enum['deb','deb-src'], 1, 2] $types = ['deb'],
+  Optional[Array[Enum['deb','deb-src'], 1, 2]] $types = undef,
   Optional[Variant[String[1], Array[String[1]]]] $location = undef,
   String[1] $comment = $name,
   Boolean $enabled = true, # deb822
@@ -328,11 +330,23 @@ define apt::source (
         $_repos = $repos
       }
 
+      if $types {
+        $_types = $types
+      } else {
+        $_includes = $apt::include_defaults + $include
+        $_types = delete_undef_values([
+          $_includes['deb'] ? { true => 'deb', default => undef },
+          $_includes['src'] ? { true => 'deb-src', default => undef },
+        ])
+      }
+
       if $architecture and $architecture !~ Array {
         warning("For deb822 sources, 'architecture' must be specified as an array. Converting to array.")
-        $_architecture = split($architecture, '[,]')
+        $_architecture = regsubst(split($architecture, '[,]'), '\baarch64\b', 'arm64')
+      } elsif $architecture {
+        $_architecture = regsubst($architecture, '\baarch64\b', 'arm64')
       } else {
-        $_architecture = $architecture
+        $_architecture = undef
       }
       case $ensure {
         'present': {
@@ -341,7 +355,7 @@ define apt::source (
                 'uris'              => $_location,
                 'suites'            => $_release,
                 'components'        => $_repos,
-                'types'             => $types,
+                'types'             => $_types,
                 'comment'           => $comment,
                 'enabled'           => $enabled ? { true => 'yes', false => 'no' },
                 'architectures'     => $_architecture,
