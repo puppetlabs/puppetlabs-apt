@@ -1170,6 +1170,21 @@ apt::source { 'puppetlabs':
 }
 ```
 
+##### Install the puppetlabs apt source (deb822 format) with a managed keyring and pin
+
+```puppet
+apt::source { 'puppetlabs':
+  source_format => 'sources',
+  location      => ['http://apt.puppetlabs.com'],
+  repos         => ['puppet8'],
+  key           => {
+    'name'   => 'puppetlabs.gpg',
+    'source' => 'https://apt.puppetlabs.com/keyring.gpg',
+  },
+  pin           => 600,
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `apt::source` defined type:
@@ -1301,6 +1316,7 @@ Data type: `Optional[Variant[Hash, Integer, String[1]]]`
 
 Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
 `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
+DEB822: When given a number or string, the pin origin is set to the hostname of the first `location` entry.
 
 Default value: `undef`
 
