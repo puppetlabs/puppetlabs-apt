@@ -51,6 +51,8 @@ describe 'apt resources' do
   # Verify pin priorities and removal are reflected in APT preference files.
   it 'manages pin priority and removal' do
     present_pp = <<-MANIFEST
+      include apt
+
       apt::pin { 'acceptance-priority':
         packages => ['bash', 'curl'],
         origin   => 'example.invalid',
@@ -58,6 +60,8 @@ describe 'apt resources' do
       }
     MANIFEST
     absent_pp = <<-MANIFEST
+      include apt
+
       apt::pin { 'acceptance-priority':
         ensure => absent,
       }
@@ -73,6 +77,8 @@ describe 'apt resources' do
   # Verify apt::conf maps priorities and ensure-absent to apt.conf.d files.
   it 'manages apt configuration files' do
     present_pp = <<-MANIFEST
+      include apt
+
       apt::conf { 'acceptance':
         content       => 'Acquire::Retries "2";',
         priority      => 42,
@@ -80,6 +86,8 @@ describe 'apt resources' do
       }
     MANIFEST
     absent_pp = <<-MANIFEST
+      include apt
+
       apt::conf { 'acceptance':
         ensure        => absent,
         notify_update => false,
@@ -95,6 +103,8 @@ describe 'apt resources' do
   # Verify direct apt::setting resources honor file priority and removal.
   it 'manages direct apt settings' do
     present_pp = <<-MANIFEST
+      include apt
+
       apt::setting { 'conf-acceptance-setting':
         ensure        => present,
         priority      => 43,
@@ -103,6 +113,8 @@ describe 'apt resources' do
       }
     MANIFEST
     absent_pp = <<-MANIFEST
+      include apt
+
       apt::setting { 'conf-acceptance-setting':
         ensure        => absent,
         notify_update => false,
@@ -118,6 +130,8 @@ describe 'apt resources' do
   # Verify auth credentials use restrictive permissions and can be removed.
   it 'manages authentication configuration securely' do
     present_pp = <<-MANIFEST
+      include apt
+
       apt::auth { 'acceptance-auth':
         machine  => 'packages.example.invalid',
         login    => 'acceptance-user',
@@ -125,6 +139,8 @@ describe 'apt resources' do
       }
     MANIFEST
     absent_pp = <<-MANIFEST
+      include apt
+
       apt::auth { 'acceptance-auth':
         ensure => absent,
       }
