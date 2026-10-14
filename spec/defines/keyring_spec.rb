@@ -86,6 +86,45 @@ describe 'apt::keyring' do
         }
       end
 
+      context 'with default checksum' do
+        it {
+          is_expected.to contain_file('/etc/apt/keyrings/puppetlabs-keyring.gpg').with(
+            checksum: 'sha256',
+            checksum_value: nil,
+          )
+        }
+      end
+
+      context 'with custom checksum and checksum_value' do
+        let(:params) do
+          {
+            source: 'http://apt.puppetlabs.com/pubkey.gpg',
+            checksum: 'md5',
+            checksum_value: 'd41d8cd98f00b204e9800998ecf8427e',
+          }
+        end
+
+        it {
+          is_expected.to contain_file('/etc/apt/keyrings/puppetlabs-keyring.gpg').with(
+            checksum: 'md5',
+            checksum_value: 'd41d8cd98f00b204e9800998ecf8427e',
+          )
+        }
+      end
+
+      context 'with an invalid checksum type' do
+        let(:params) do
+          {
+            source: 'http://apt.puppetlabs.com/pubkey.gpg',
+            checksum: 'bogus',
+          }
+        end
+
+        it {
+          is_expected.to raise_error(%r{parameter 'checksum'})
+        }
+      end
+
       context 'with ensure absent' do
         let(:params) do
           {
