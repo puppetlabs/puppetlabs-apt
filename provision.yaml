@@ -19,7 +19,7 @@ docker_ub_6:
   - litmusimage/ubuntu:18.04
   - litmusimage/ubuntu:20.04
   - litmusimage/ubuntu:22.04
-  - litmusimage/ubuntu:24.04
+  # - litmusimage/ubuntu:24.04 # image uses puppet agent from distro with wrong binary paths
 docker_el7:
   provisioner: docker
   images: []
