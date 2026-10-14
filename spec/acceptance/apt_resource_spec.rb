@@ -68,10 +68,10 @@ describe 'apt resources' do
     MANIFEST
 
     expect(retry_on_error_matching { idempotent_apply(present_pp) }).to be_truthy
-    expect(run_shell("grep -F 'Package: bash curl' /etc/apt/preferences.d/50acceptance-priority.pref")).to be_truthy
-    expect(run_shell("grep -F 'Pin-Priority: 990' /etc/apt/preferences.d/50acceptance-priority.pref")).to be_truthy
+    expect(run_shell("grep -F 'Package: bash curl' /etc/apt/preferences.d/acceptance-priority.pref")).to be_truthy
+    expect(run_shell("grep -F 'Pin-Priority: 990' /etc/apt/preferences.d/acceptance-priority.pref")).to be_truthy
     expect(apply_manifest(absent_pp, catch_failures: true)).to be_truthy
-    expect(run_shell('test ! -e /etc/apt/preferences.d/50acceptance-priority.pref')).to be_truthy
+    expect(run_shell('test ! -e /etc/apt/preferences.d/acceptance-priority.pref')).to be_truthy
   end
 
   # Verify apt::conf maps priorities and ensure-absent to apt.conf.d files.
