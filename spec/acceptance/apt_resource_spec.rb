@@ -90,6 +90,7 @@ describe 'apt resources' do
 
       apt::conf { 'acceptance':
         ensure        => absent,
+        priority      => 42,
         notify_update => false,
       }
     MANIFEST
@@ -117,6 +118,7 @@ describe 'apt resources' do
 
       apt::setting { 'conf-acceptance-setting':
         ensure        => absent,
+        priority      => 43,
         notify_update => false,
       }
     MANIFEST
