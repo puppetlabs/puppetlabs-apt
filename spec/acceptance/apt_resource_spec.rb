@@ -135,19 +135,24 @@ describe 'apt resources' do
       apt::auth { 'acceptance-auth':
         machine  => 'packages.example.invalid',
         login    => 'acceptance-user',
-        password => 'fake-acceptance-credential',
+        password => 'acceptance-test-password',
       }
     MANIFEST
     absent_pp = <<-MANIFEST
       include apt
 
       apt::auth { 'acceptance-auth':
-        ensure => absent,
+        ensure   => absent,
+        machine  => 'packages.example.invalid',
+        login    => 'acceptance-user',
+        password => 'acceptance-test-password',
       }
     MANIFEST
 
     expect(retry_on_error_matching { idempotent_apply(present_pp) }).to be_truthy
     expect(run_shell("grep -F 'machine packages.example.invalid' /etc/apt/auth.conf.d/acceptance-auth.conf")).to be_truthy
+    expect(run_shell("grep -Fx 'login acceptance-user' /etc/apt/auth.conf.d/acceptance-auth.conf")).to be_truthy
+    expect(run_shell("grep -Fx 'password acceptance-test-password' /etc/apt/auth.conf.d/acceptance-auth.conf")).to be_truthy
     expect(run_shell('test "$(stat -c %a /etc/apt/auth.conf.d/acceptance-auth.conf)" = 600')).to be_truthy
     expect(apply_manifest(absent_pp, catch_failures: true)).to be_truthy
     expect(run_shell('test ! -e /etc/apt/auth.conf.d/acceptance-auth.conf')).to be_truthy
