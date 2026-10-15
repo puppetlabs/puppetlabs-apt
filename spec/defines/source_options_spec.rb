@@ -6,6 +6,7 @@ describe 'apt::source' do
   let(:title) { 'advanced' }
   let(:facts) do
     {
+      apt_version: '2.7.0',
       os: {
         family: 'Debian', name: 'Debian',
         release: { major: '12', full: '12.0' },
@@ -39,6 +40,9 @@ describe 'apt::source' do
   boolean_values = [true, false]
   hash_values = ['yes', 'no', 'force']
   snapshot_values = ['yes', 'no', 'enable', 'disable']
+  list_only_options = [:allow_weak, :allow_downgrade_to_insecure]
+  apt_versions = ['1.6.17', '1.7.0', '1.8.0', '2.4.0', '2.7.0']
+  unavailable_versions = [nil, '', 'unknown', '1.6 invalid']
 
   ['list', 'sources'].each do |format|
     context "with #{format} format" do
@@ -55,9 +59,10 @@ describe 'apt::source' do
       end
 
       context 'with all advanced options' do
-        let(:params) { super().merge(options.transform_values(&:first)) }
+        supported_options = (format == 'list') ? options : options.except(*list_only_options)
+        let(:params) { super().merge(supported_options.transform_values(&:first)) }
 
-        options.each_value do |_, list_name, deb822_name, rendered|
+        supported_options.each_value do |_, list_name, deb822_name, rendered|
           it "renders #{deb822_name}" do
             prefix = (format == 'list') ? "#{list_name}=" : "#{deb822_name}: "
             separator = (format == 'list') ? ',' : ' '
@@ -71,11 +76,15 @@ describe 'apt::source' do
           context "with #{param} #{value}" do
             let(:params) { super().merge(param => value) }
 
-            it 'preserves explicit boolean choices' do
-              definition = options.fetch(param)
-              rendered = value ? 'yes' : 'no'
-              expected = (format == 'list') ? "#{definition[1]}=#{rendered}" : "#{definition[2]}: #{rendered}"
-              expect(content).to include(expected)
+            if format == 'sources' && list_only_options.include?(param)
+              it { is_expected.to compile.and_raise_error(%r{require source_format list}) }
+            else
+              it 'preserves explicit boolean choices' do
+                definition = options.fetch(param)
+                rendered = value ? 'yes' : 'no'
+                expected = (format == 'list') ? "#{definition[1]}=#{rendered}" : "#{definition[2]}: #{rendered}"
+                expect(content).to include(expected)
+              end
             end
           end
         end
@@ -195,6 +204,97 @@ describe 'apt::source' do
         it 'uses the appropriate separator' do
           expect(content).to include((format == 'list') ? 'arch=amd64,arm64' : 'Architectures: amd64 arm64')
         end
+      end
+
+      apt_versions.each do |version|
+        context "with APT #{version} compatible options" do
+          let(:facts) { super().merge(apt_version: version) }
+          let(:params) { super().merge(options.except(:snapshot, *list_only_options).transform_values(&:first)) }
+
+          it { is_expected.to compile }
+        end
+
+        [
+          ['/etc/apt/archive.gpg', nil],
+          [['/etc/apt/archive.gpg'], nil],
+          [fingerprint, nil],
+          [[fingerprint, 'ABCDEF0123456789ABCDEF0123456789ABCDEF01'], nil],
+          [["#{fingerprint}!"], '1.8'],
+          ["#{fingerprint}!", '1.8'],
+          [['/etc/apt/one.gpg', '/etc/apt/two.asc'], '1.8'],
+          [['/etc/apt/one.gpg', fingerprint], '1.8'],
+        ].each do |signers, minimum|
+          context "with APT #{version} and signed_by #{signers.inspect}" do
+            let(:facts) { super().merge(apt_version: version) }
+            let(:params) { super().merge(signed_by: signers) }
+
+            if minimum && Gem::Version.new(version) < Gem::Version.new(minimum)
+              it { is_expected.to compile.and_raise_error(%r{signed_by .* requires APT >= 1.8}) }
+            else
+              it 'renders compatible selectors' do
+                separator = (format == 'list' || Gem::Version.new(version) < Gem::Version.new('1.8')) ? ',' : ' '
+                prefix = (format == 'list') ? 'signed-by=' : 'Signed-By: '
+                expect(content).to include("#{prefix}#{Array(signers).join(separator)}")
+              end
+            end
+          end
+        end
+
+        context "with APT #{version} and snapshot" do
+          let(:facts) { super().merge(apt_version: version) }
+          let(:params) { super().merge(snapshot: 'no') }
+
+          if Gem::Version.new(version) < Gem::Version.new('2.7.0')
+            it { is_expected.to compile.and_raise_error(%r{snapshot requires APT >= 2.7.0}) }
+          else
+            it { is_expected.to compile }
+          end
+        end
+
+        if format == 'sources'
+          context "with APT #{version} and an inline public key" do
+            let(:facts) { super().merge(apt_version: version) }
+            let(:params) { super().merge(signed_by: public_key) }
+
+            if Gem::Version.new(version) < Gem::Version.new('2.4')
+              it { is_expected.to compile.and_raise_error(%r{inline signed_by public keys require APT >= 2.4}) }
+            else
+              it { is_expected.to compile }
+            end
+          end
+        end
+
+        context "when removing an incompatible source with APT #{version}" do
+          let(:facts) { super().merge(apt_version: version) }
+          let(:params) { super().merge(ensure: 'absent', snapshot: 'yes', signed_by: "#{fingerprint}!") }
+
+          it { is_expected.to compile }
+        end
+      end
+
+      unavailable_versions.each do |version|
+        context "with unavailable apt_version #{version.inspect}, Debian os.family and a single keyring" do
+          let(:facts) { super().merge(apt_version: version) }
+          let(:params) { super().merge(signed_by: '/etc/apt/archive.gpg', check_date: true) }
+
+          it { is_expected.to compile }
+        end
+
+        [{ signed_by: "#{fingerprint}!" }, { snapshot: 'no' }].each do |values|
+          context "with unavailable apt_version #{version.inspect}, Debian os.family and incompatible #{values.inspect}" do
+            let(:facts) { super().merge(apt_version: version) }
+            let(:params) { super().merge(values) }
+
+            it { is_expected.to compile.and_raise_error(%r{os.family Debian fallback; apt_version unavailable}) }
+          end
+        end
+      end
+
+      context 'with APT before 1.6' do
+        let(:facts) { super().merge(apt_version: '1.4.11') }
+        let(:params) { super().merge(check_date: false) }
+
+        it { is_expected.to compile.and_raise_error(%r{check_date and date_max_future require APT >= 1.6}) }
       end
     end
   end

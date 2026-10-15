@@ -262,7 +262,7 @@ APT's security defaults are not changed.
 | `targets`, `targets_add`, `targets_remove` | Nonempty arrays of index target identifiers | `target`, `target+=`, `target-=` / `Targets`, `Targets-Add`, `Targets-Remove` |
 | `languages`, `languages_add`, `languages_remove` | Nonempty arrays of translation languages | `lang`, `lang+=`, `lang-=` / `Languages`, `Languages-Add`, `Languages-Remove` |
 | `snapshot` | `'yes'`, `'no'`, `'enable'`, `'disable'`, or a `YYYYMMDDTHHMMSSZ` timestamp | `snapshot` / `Snapshot` |
-| `allow_weak`, `allow_downgrade_to_insecure` | Boolean; enabling these weakens repository security | `allow-weak`, `allow-downgrade-to-insecure` / `Allow-Weak`, `Allow-Downgrade-To-Insecure` |
+| `allow_weak`, `allow_downgrade_to_insecure` | Boolean, `.list` only; enabling these weakens repository security | `allow-weak`, `allow-downgrade-to-insecure` |
 | `signed_by` | A signer string, nonempty array of signers, or an inline public key (deb822 only) | `signed-by` / `Signed-By` |
 
 Lists are comma-separated in one-line sources and space-separated in deb822.
@@ -276,9 +276,23 @@ also disables APT's validity checks, even if `check_valid_until` is enabled.
 
 Snapshot selection requires APT >= 2.7.0 and snapshot support in the repository.
 The accepted enable/disable spellings vary by APT version: the module passes the
-selector through unchanged, without detecting the installed version or fetching a
-snapshot service. Consult that version's `sources.list(5)` before setting it.
+selector through unchanged, without fetching a snapshot service.
+Consult that version's `sources.list(5)` before setting it.
 Likewise, `by_hash => 'force'` requires repository support.
+
+The `apt_version` fact detects the installed version using `apt-get --version`.
+Incompatible options fail catalogue compilation rather than silently weakening or
+ignoring the requested configuration. If the version is unavailable or invalid,
+`os.family == 'Debian'` selects a conservative APT 1.6 baseline; the OS release is
+not used to guess a newer version. The module does not support other OS families.
+
+APT 1.6 supports a single keyring path or plain fingerprint selectors. Multiple
+keyrings, mixed paths/fingerprints and the `!` suffix require APT >= 1.8.
+Plain fingerprint arrays remain supported on APT 1.6, including deb822 (rendered
+with commas for older APT). Inline keys require APT >= 2.4, snapshots >= 2.7.0,
+and `check_date`/`date_max_future` >= 1.6.
+`allow_weak` and `allow_downgrade_to_insecure` are rejected for deb822 because APT
+ignores those fields. Version checks do not prevent removing an existing source.
 
 ```puppet
 apt::source { 'signed-archive':

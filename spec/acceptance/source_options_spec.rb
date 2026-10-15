@@ -40,9 +40,14 @@ describe 'advanced apt::source options' do
     run_shell("rm -rf #{fixture}")
   end
 
-  ['list', 'sources'].each do |format|
-    it "authenticates a local archive, selects architectures and manages the #{format} lifecycle", :aggregate_failures do
+  ['list', 'sources'].product([false, true]).each do |format, multiple|
+    it "authenticates a local archive with #{multiple ? 'multiple signers' : 'one keyring'} and manages the #{format} lifecycle", :aggregate_failures do
+      if multiple
+        supported = run_shell("if dpkg --compare-versions \"$(dpkg-query -W -f='${Version}' apt)\" ge 1.8; then echo yes; else echo no; fi").stdout.strip
+        skip 'Multiple keyrings and exact fingerprint selectors require APT >= 1.8' unless supported == 'yes'
+      end
       fingerprint = run_shell("cat #{fixture}/fingerprint").stdout.strip
+      signers = multiple ? "['#{fixture}/archive.gpg', '#{fixture}/archive.asc', '#{fingerprint}!']" : "'#{fixture}/archive.gpg'"
       manifest = <<~MANIFEST
         apt::source { 'acceptance-advanced':
           source_format               => '#{format}',
@@ -63,9 +68,7 @@ describe 'advanced apt::source options' do
           languages                   => ['none'],
           languages_add               => ['en'],
           languages_remove            => ['en'],
-          allow_weak                  => false,
-          allow_downgrade_to_insecure  => false,
-          signed_by                   => ['#{fixture}/archive.gpg', '#{fixture}/archive.asc', '#{fingerprint}!'],
+          signed_by                   => #{signers},
           notify_update               => false,
         }
       MANIFEST
@@ -91,6 +94,30 @@ describe 'advanced apt::source options' do
         idempotent_apply(absent)
         run_shell("test ! -e /etc/apt/sources.list.d/acceptance-advanced.#{format}")
         run_shell("find #{fixture}/lists -maxdepth 1 -type f -delete")
+      end
+    end
+  end
+
+  ['list', 'sources'].each do |format|
+    it "rejects incompatible #{format} signers on APT before 1.8" do
+      supported = run_shell("if dpkg --compare-versions \"$(dpkg-query -W -f='${Version}' apt)\" lt 1.8; then echo yes; else echo no; fi").stdout.strip
+      skip 'This check requires APT < 1.8' unless supported == 'yes'
+
+      fingerprint = run_shell("cat #{fixture}/fingerprint").stdout.strip
+      ["['#{fixture}/archive.gpg', '#{fixture}/archive.asc']", "['#{fixture}/archive.gpg', '#{fingerprint}']", "'#{fingerprint}!'"].each do |signers|
+        manifest = <<~MANIFEST
+          apt::source { 'acceptance-incompatible':
+            source_format => '#{format}',
+            location      => 'file:#{fixture}/repo',
+            release       => 'stable',
+            signed_by     => #{signers},
+            notify_update => false,
+          }
+        MANIFEST
+        apply_manifest(manifest, expect_failures: true) do |result|
+          expect(result.stderr).to include('requires APT >= 1.8')
+        end
+        run_shell("test ! -e /etc/apt/sources.list.d/acceptance-incompatible.#{format}")
       end
     end
   end

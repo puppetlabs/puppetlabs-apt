@@ -1495,7 +1495,7 @@ Default value: `undef`
 
 Data type: `Optional[Boolean]`
 
-Whether to permit repositories with weak security information.
+Whether to permit repositories with weak security information (.list only).
 
 Default value: `undef`
 
@@ -1503,7 +1503,7 @@ Default value: `undef`
 
 Data type: `Optional[Boolean]`
 
-Whether to permit a previously authenticated repository to become insecure.
+Whether to permit a previously authenticated repository to become insecure (.list only).
 
 Default value: `undef`
 
@@ -1513,6 +1513,8 @@ Data type: `Optional[Variant[Apt::Source_signer, Array[Apt::Source_signer, 1], A
 
 A keyring path, full fingerprint (optionally ending in !), or a nonempty array of these.
 Alternatively, an armored public key for deb822 (APT >= 2.4). Exclusive with key and keyring.
+Multiple keyrings, mixed paths/fingerprints and ! require APT >= 1.8.
+Uses apt_version; if unavailable, os.family Debian assumes APT 1.6.
 
 Default value: `undef`
 

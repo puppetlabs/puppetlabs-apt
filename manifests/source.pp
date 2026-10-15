@@ -133,12 +133,14 @@
 #   Requires APT >= 2.7.0 and a repository offering snapshots. Values are passed through:
 #   choose the spelling supported by your installed APT version.
 # @param allow_weak
-#   Whether to permit repositories with weak security information.
+#   Whether to permit repositories with weak security information (.list only).
 # @param allow_downgrade_to_insecure
-#   Whether to permit a previously authenticated repository to become insecure.
+#   Whether to permit a previously authenticated repository to become insecure (.list only).
 # @param signed_by
 #   A keyring path, full fingerprint (optionally ending in !), or a nonempty array of these.
 #   Alternatively, an armored public key for deb822 (APT >= 2.4). Exclusive with key and keyring.
+#   Multiple keyrings, mixed paths/fingerprints and ! require APT >= 1.8.
+#   Uses apt_version; if unavailable, os.family Debian assumes APT 1.6.
 #
 define apt::source (
   Enum['list', 'sources'] $source_format = 'list',
@@ -186,6 +188,43 @@ define apt::source (
   }
   if $signed_by =~ Apt::Source_key and $source_format != 'sources' {
     fail('inline signed_by public keys require deb822 source_format sources')
+  }
+  if $facts['apt_version'] =~ Pattern[/\A[0-9]+(?:\.[0-9]+)+(?:[+~\-][0-9A-Za-z.+~\-]+)?\z/] {
+    $_apt_version = $facts['apt_version']
+    $_apt_version_description = "APT ${_apt_version}"
+  } elsif fact('os.family') == 'Debian' {
+    $_apt_version = '1.6'
+    $_apt_version_description = 'APT 1.6 (os.family Debian fallback; apt_version unavailable)'
+  } else {
+    fail('apt::source cannot determine APT compatibility: apt_version unavailable and os.family is not Debian')
+  }
+
+  if $ensure == 'present' {
+    if versioncmp($_apt_version, '1.6') < 0 and ($check_date != undef or $date_max_future != undef) {
+      fail("check_date and date_max_future require APT >= 1.6; detected ${_apt_version_description}")
+    }
+    if $snapshot != undef and versioncmp($_apt_version, '2.7.0') < 0 {
+      fail("snapshot requires APT >= 2.7.0; detected ${_apt_version_description}")
+    }
+    if $signed_by =~ Apt::Source_key {
+      if versioncmp($_apt_version, '2.4') < 0 {
+        fail("inline signed_by public keys require APT >= 2.4; detected ${_apt_version_description}")
+      }
+    } elsif $signed_by != undef and versioncmp($_apt_version, '1.8') < 0 {
+      $_signers = [$signed_by].flatten
+      if ($_signers.length > 1 and $_signers.any |$signer| { $signer =~ /^\// }) or $_signers.any |$signer| { $signer =~ /!$/ } {
+        fail("signed_by with multiple keyrings, mixed keyrings/fingerprints or ! requires APT >= 1.8; detected ${_apt_version_description}")
+      }
+    }
+    if $source_format == 'sources' and ($allow_weak != undef or $allow_downgrade_to_insecure != undef) {
+      fail('allow_weak and allow_downgrade_to_insecure require source_format list; APT ignores these deb822 fields')
+    }
+  }
+  # APT before 1.8 only splits deb822 fingerprint lists on commas.
+  $_deb822_signed_by = if $signed_by =~ Array and versioncmp($_apt_version, '1.8') < 0 {
+    join($signed_by, ',')
+  } else {
+    $signed_by
   }
   [$comment, $location, $release, $repos, $architecture, $keyring].flatten.each |$value| {
     if $value =~ String and $value =~ /[\r\n]/ {
@@ -488,7 +527,7 @@ define apt::source (
                 'allow_insecure'    => $allow_insecure ? { true => 'yes', false => 'no', default => undef },
                 'repo_trusted'      => $allow_unsigned ? { true => 'yes', false => 'no', default => undef },
                 'check_valid_until' => $check_valid_until ? { true => 'yes', false => 'no', default => undef },
-                'signed_by'         => $signed_by ? { undef => $keyring, default => $signed_by },
+                'signed_by'         => $_deb822_signed_by ? { undef => $keyring, default => $_deb822_signed_by },
                 'advanced_options'  => $_advanced_rendered,
               }
             )
