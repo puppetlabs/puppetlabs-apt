@@ -1,23 +1,38 @@
-name: "ci"
+name: "CI"
 
 on:
+  # Untrusted public track: spec/unit tests run without secrets on every PR.
   pull_request:
     branches:
       - "main"
+  # Trusted private track: acceptance runs with secrets, gated by label for
+  # fork PRs. `synchronize` is intentionally omitted to avoid racing with
+  # fork_ci_label_guard.yml; new commits must be re-labelled by a CODEOWNER
+  # to re-trigger acceptance.
+  pull_request_target:
+    types: [labeled, reopened]
+    branches:
+      - "main"
   workflow_dispatch:
-    
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Spec:
+    if: github.event_name != 'pull_request_target'
     uses: "puppetlabs/cat-github-actions/.github/workflows/module_ci.yml@main"
-    with:
-      additional_packages: "libcurl4-openssl-dev"
-      ruby_version: "3.2"
-    secrets: "inherit"
+    # No `secrets: inherit` — public track must not see private secrets.
 
   Acceptance:
-    needs: Spec
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request_target' &&
+       (github.event.pull_request.head.repo.fork == false ||
+        contains(github.event.pull_request.labels.*.name, 'allowed-for-ci')))
     uses: "puppetlabs/cat-github-actions/.github/workflows/module_acceptance.yml@main"
-    with:
-      flags: '--nightly --collection-platform-exclude 9:ubuntu-18.04 --collection-platform-exclude 9:ubuntu-20.04'
-      ruby_version: "3.2"
     secrets: "inherit"
