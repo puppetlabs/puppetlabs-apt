@@ -651,6 +651,35 @@ describe 'apt' do
     }
   end
 
+  context 'with keyserver as a URL' do
+    let :facts do
+      {
+        os: {
+          family: 'Debian',
+          name: 'Ubuntu',
+          release: {
+            major: '18',
+            full: '18.04'
+          },
+          distro: {
+            codename: 'bionic',
+            id: 'Ubuntu'
+          }
+        }
+      }
+    end
+    let(:params) do
+      {
+        keyserver: 'hkps://keys.openpgp.org',
+        keys: { '55BE302B' => {} }
+      }
+    end
+
+    it {
+      expect(subject).to contain_apt__key('55BE302B').with(server: 'hkps://keys.openpgp.org')
+    }
+  end
+
   context 'with ppas defined on valid os.family' do
     let :facts do
       {
