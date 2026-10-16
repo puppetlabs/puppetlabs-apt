@@ -26,6 +26,8 @@ define apt::auth (
   String $login    = undef,
   String $password = undef,
 ) {
+  include apt
+
   $content = epp('apt/auth_conf.d.epp',
     machine  => $machine,
     login    => $login,
