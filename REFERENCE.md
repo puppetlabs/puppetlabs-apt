@@ -1028,9 +1028,9 @@ Default value: `'present'`
 
 Data type: `Optional[Array[String[1]]]`
 
-Supplies options to be passed to the `add-apt-repository` command.
+Supplies options to be passed to the `add-apt-repository` command. Defaults to `apt::ppa_options`.
 
-Default value: `$apt::ppa_options`
+Default value: `undef`
 
 ##### <a name="-apt--ppa--release"></a>`release`
 
@@ -1054,9 +1054,9 @@ Default value: `$facts['os']['name']`
 
 Data type: `Optional[String[1]]`
 
-Names the package that provides the `apt-add-repository` command.
+Names the package that provides the `apt-add-repository` command. Defaults to `apt::ppa_package`.
 
-Default value: `$apt::ppa_package`
+Default value: `undef`
 
 ##### <a name="-apt--ppa--package_manage"></a>`package_manage`
 
