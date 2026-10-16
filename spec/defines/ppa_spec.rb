@@ -43,6 +43,13 @@ describe 'apt::ppa' do
         .that_notifies('Class[Apt::Update]')
         .with(*ppa_exec_params('needs', 'substitution'))
     }
+
+    context 'without apt class declared' do
+      let(:pre_condition) { '' }
+
+      it { is_expected.to contain_class('apt') }
+      it { is_expected.to contain_file('add-apt-repository-script-ppa:needs/substitution').with_content(%r{add-apt-repository -y ppa:needs/substitution}) }
+    end
   end
 
   [
