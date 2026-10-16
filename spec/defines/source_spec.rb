@@ -526,6 +526,26 @@ describe 'apt::source' do
       SOURCE
     end
 
+    context 'deb822 source with default repos' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+          },
+        )
+      end
+
+      let(:logs) { [] }
+
+      before(:each) { Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(logs)) }
+      after(:each) { Puppet::Util::Log.close_all }
+
+      it {
+        expect(subject).to contain_apt__setting("sources-#{title}").with_content(%r{^Components: main$})
+        expect(logs.map(&:message)).not_to include(%r{'repos' must be specified as an array})
+      }
+    end
+
     context 'complex deb822 source' do
       let :params do
         super().merge(
