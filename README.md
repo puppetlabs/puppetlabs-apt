@@ -246,6 +246,97 @@ apt::source { 'debian':
 }
 ```
 
+### Advanced source options and signing keys
+
+The following optional `apt::source` parameters work with both `source_format => 'list'`
+and `source_format => 'sources'`. They default to `undef`: no option is emitted and
+APT's security defaults are not changed.
+
+| Parameter | Type / meaning | One-line / deb822 option |
+| --- | --- | --- |
+| `architecture_add`, `architecture_remove` | Nonempty arrays of architectures | `arch+=`, `arch-=` / `Architectures-Add`, `Architectures-Remove` |
+| `valid_until_min`, `valid_until_max` | Nonnegative integer seconds from the Release file's creation time | `valid-until-min`, `valid-until-max` / `Valid-Until-Min`, `Valid-Until-Max` |
+| `check_date`, `date_max_future` | Boolean / nonnegative integer seconds | `check-date`, `date-max-future` / `Check-Date`, `Date-Max-Future` |
+| `by_hash` | `'yes'`, `'no'`, or `'force'` | `by-hash` / `By-Hash` |
+| `pdiffs` | Boolean | `pdiffs` / `PDiffs` |
+| `targets`, `targets_add`, `targets_remove` | Nonempty arrays of index target identifiers | `target`, `target+=`, `target-=` / `Targets`, `Targets-Add`, `Targets-Remove` |
+| `languages`, `languages_add`, `languages_remove` | Nonempty arrays of translation languages | `lang`, `lang+=`, `lang-=` / `Languages`, `Languages-Add`, `Languages-Remove` |
+| `snapshot` | `'yes'`, `'no'`, `'enable'`, `'disable'`, or a `YYYYMMDDTHHMMSSZ` timestamp | `snapshot` / `Snapshot` |
+| `allow_weak`, `allow_downgrade_to_insecure` | Boolean, `.list` only; enabling these weakens repository security | `allow-weak`, `allow-downgrade-to-insecure` |
+| `signed_by` | A signer string, nonempty array of signers, or an inline public key (deb822 only) | `signed-by` / `Signed-By` |
+
+Lists are comma-separated in one-line sources and space-separated in deb822.
+Use `undef` to omit an option, not `[]`; use `languages => ['none']` to disable
+translations. List elements cannot contain whitespace, delimiters, or newlines.
+`architecture_add` and `architecture_remove` cannot overlap; `aarch64` is normalized
+to `arm64` in these lists. They modify APT's default architecture selection, or
+the selection specified by `architecture`. A nonzero `valid_until_max` must not
+be smaller than `valid_until_min`; zero means no maximum. Disabling `check_date`
+also disables APT's validity checks, even if `check_valid_until` is enabled.
+
+Snapshot selection requires APT >= 2.7.0 and snapshot support in the repository.
+The accepted enable/disable spellings vary by APT version: the module passes the
+selector through unchanged, without fetching a snapshot service.
+Consult that version's `sources.list(5)` before setting it.
+Likewise, `by_hash => 'force'` requires repository support.
+
+The `apt_version` fact detects the installed version using `apt-get --version`.
+Incompatible options fail catalogue compilation rather than silently weakening or
+ignoring the requested configuration. If the version is unavailable or invalid,
+`os.family == 'Debian'` selects a conservative APT 1.6 baseline; the OS release is
+not used to guess a newer version. The module does not support other OS families.
+
+APT 1.6 supports a single keyring path or plain fingerprint selectors. Multiple
+keyrings, mixed paths/fingerprints and the `!` suffix require APT >= 1.8.
+Plain fingerprint arrays remain supported on APT 1.6, including deb822 (rendered
+with commas for older APT). Inline keys require APT >= 2.4, snapshots >= 2.7.0,
+and `check_date`/`date_max_future` >= 1.6.
+`allow_weak` and `allow_downgrade_to_insecure` are rejected for deb822 because APT
+ignores those fields. Version checks do not prevent removing an existing source.
+
+```puppet
+apt::source { 'signed-archive':
+  location            => 'https://archive.example.org/debian',
+  release             => 'stable',
+  architecture_add    => ['arm64'],
+  architecture_remove => ['i386'],
+  by_hash             => 'yes',
+  pdiffs              => false,
+  languages           => ['en', 'de'],
+  signed_by           => [
+    '/etc/apt/keyrings/archive.gpg',
+    '/etc/apt/keyrings/next.asc',
+    '0123456789ABCDEF0123456789ABCDEF01234567!',
+  ],
+}
+```
+
+Each signer is an absolute keyring path or a full 40-hex-digit fingerprint.
+A fingerprint ending in `!` selects exactly that key, excluding its subkeys;
+without `!`, APT may also accept signatures by its subkeys. Fingerprints without
+paths select keys from APT's default trusted keyrings. Referenced keyrings must
+already exist and be readable by `_apt`. The new `signed_by` parameter does not
+manage key files and is mutually exclusive with both `key` and `keyring`.
+Existing `key`/`keyring` handling is unchanged.
+
+With deb822 and APT >= 2.4, `signed_by` can instead contain a complete ASCII-armored
+public key:
+
+```puppet
+apt::source { 'embedded-key':
+  source_format => 'sources',
+  location      => ['https://archive.example.org/debian'],
+  release       => ['stable'],
+  signed_by     => file('profile/archive-public.asc'),
+}
+```
+
+Supply the original `-----BEGIN PGP PUBLIC KEY BLOCK-----` through
+`-----END PGP PUBLIC KEY BLOCK-----` text with LF line endings, not pre-indented
+deb822 text. The module indents every continuation line and encodes blank lines
+as ` .`. Inline keys cannot be mixed with signer arrays or used in `.list` files.
+Newlines in other source values are rejected.
+
 ### Configure Apt from Hiera
 
 Instead of specifying your sources directly as resources, you can instead just include the `apt` class, which will pick up the values automatically from hiera.

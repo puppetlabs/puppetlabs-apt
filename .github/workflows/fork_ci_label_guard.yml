@@ -1,0 +1,19 @@
+name: "Fork CI Label Guard"
+
+# Strips the `allowed-for-ci` label from a fork PR whenever it is updated in
+# a way that could invalidate the prior CODEOWNER review:
+#   - `synchronize`: a new commit is pushed.
+#   - `closed`: closes the lifecycle so a future reopen cannot inherit
+#     authorisation across commits pushed during the closed period.
+# Each event re-requires a fresh CODEOWNER review and re-label before the
+# privileged acceptance workflow can run.
+on:
+  pull_request_target:
+    types: [synchronize, closed]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  strip:
+    uses: "puppetlabs/cat-github-actions/.github/workflows/fork_ci_label_guard.yml@main"

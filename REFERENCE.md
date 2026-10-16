@@ -40,6 +40,10 @@ be manipulated through the `apt-key` command.
 * [`Apt::Auth_conf_entry`](#Apt--Auth_conf_entry): Login configuration settings that are recorded in the file `/etc/apt/auth.conf`.
 * [`Apt::Proxy`](#Apt--Proxy): Configures Apt to connect to a proxy server.
 * [`Apt::Proxy_Per_Host`](#Apt--Proxy_Per_Host): Adds per-host overrides to the system default APT proxy configuration
+* [`Apt::Source_key`](#Apt--Source_key): An ASCII-armored public key, for embedding in a deb822 source.
+* [`Apt::Source_list`](#Apt--Source_list): One or more source option values. Empty arrays are rejected.
+* [`Apt::Source_signer`](#Apt--Source_signer): An absolute keyring path or full fingerprint, optionally excluding subkeys.
+* [`Apt::Source_token`](#Apt--Source_token): A single source option value, without separators or source syntax.
 
 ### Tasks
 
@@ -1191,6 +1195,24 @@ The following parameters are available in the `apt::source` defined type:
 * [`allow_insecure`](#-apt--source--allow_insecure)
 * [`notify_update`](#-apt--source--notify_update)
 * [`check_valid_until`](#-apt--source--check_valid_until)
+* [`architecture_add`](#-apt--source--architecture_add)
+* [`architecture_remove`](#-apt--source--architecture_remove)
+* [`valid_until_min`](#-apt--source--valid_until_min)
+* [`valid_until_max`](#-apt--source--valid_until_max)
+* [`check_date`](#-apt--source--check_date)
+* [`date_max_future`](#-apt--source--date_max_future)
+* [`by_hash`](#-apt--source--by_hash)
+* [`pdiffs`](#-apt--source--pdiffs)
+* [`targets`](#-apt--source--targets)
+* [`targets_add`](#-apt--source--targets_add)
+* [`targets_remove`](#-apt--source--targets_remove)
+* [`languages`](#-apt--source--languages)
+* [`languages_add`](#-apt--source--languages_add)
+* [`languages_remove`](#-apt--source--languages_remove)
+* [`snapshot`](#-apt--source--snapshot)
+* [`allow_weak`](#-apt--source--allow_weak)
+* [`allow_downgrade_to_insecure`](#-apt--source--allow_downgrade_to_insecure)
+* [`signed_by`](#-apt--source--signed_by)
 
 ##### <a name="-apt--source--source_format"></a>`source_format`
 
@@ -1347,6 +1369,155 @@ Specifies whether to check if the package release date is valid.
 
 Default value: `undef`
 
+##### <a name="-apt--source--architecture_add"></a>`architecture_add`
+
+Data type: `Optional[Apt::Source_list]`
+
+Architectures to add to APT's default or explicitly selected architectures.
+
+Default value: `undef`
+
+##### <a name="-apt--source--architecture_remove"></a>`architecture_remove`
+
+Data type: `Optional[Apt::Source_list]`
+
+Architectures to remove. Must not overlap architecture_add (aarch64 is normalized to arm64).
+
+Default value: `undef`
+
+##### <a name="-apt--source--valid_until_min"></a>`valid_until_min`
+
+Data type: `Optional[Integer[0]]`
+
+Minimum validity in seconds from the Release file's creation time (nonnegative).
+
+Default value: `undef`
+
+##### <a name="-apt--source--valid_until_max"></a>`valid_until_max`
+
+Data type: `Optional[Integer[0]]`
+
+Maximum validity in seconds from the Release file's creation time (nonnegative).
+
+Default value: `undef`
+
+##### <a name="-apt--source--check_date"></a>`check_date`
+
+Data type: `Optional[Boolean]`
+
+Whether to check the Release date. Disabling also disables validity checks in APT.
+
+Default value: `undef`
+
+##### <a name="-apt--source--date_max_future"></a>`date_max_future`
+
+Data type: `Optional[Integer[0]]`
+
+Maximum seconds a Release date may be in the future (nonnegative).
+
+Default value: `undef`
+
+##### <a name="-apt--source--by_hash"></a>`by_hash`
+
+Data type: `Optional[Enum['yes', 'no', 'force']]`
+
+Whether to acquire indexes by hash; force requires repository support.
+
+Default value: `undef`
+
+##### <a name="-apt--source--pdiffs"></a>`pdiffs`
+
+Data type: `Optional[Boolean]`
+
+Whether to use incremental index updates.
+
+Default value: `undef`
+
+##### <a name="-apt--source--targets"></a>`targets`
+
+Data type: `Optional[Apt::Source_list]`
+
+Index target identifiers to download.
+
+Default value: `undef`
+
+##### <a name="-apt--source--targets_add"></a>`targets_add`
+
+Data type: `Optional[Apt::Source_list]`
+
+Index target identifiers to add.
+
+Default value: `undef`
+
+##### <a name="-apt--source--targets_remove"></a>`targets_remove`
+
+Data type: `Optional[Apt::Source_list]`
+
+Index target identifiers to remove.
+
+Default value: `undef`
+
+##### <a name="-apt--source--languages"></a>`languages`
+
+Data type: `Optional[Apt::Source_list]`
+
+Translation languages to download; use ['none'] to disable translations.
+
+Default value: `undef`
+
+##### <a name="-apt--source--languages_add"></a>`languages_add`
+
+Data type: `Optional[Apt::Source_list]`
+
+Translation languages to add.
+
+Default value: `undef`
+
+##### <a name="-apt--source--languages_remove"></a>`languages_remove`
+
+Data type: `Optional[Apt::Source_list]`
+
+Translation languages to remove.
+
+Default value: `undef`
+
+##### <a name="-apt--source--snapshot"></a>`snapshot`
+
+Data type: `Optional[Variant[Enum['yes', 'no', 'enable', 'disable'], Pattern[/\A[0-9]{8}T[0-9]{6}Z\z/]]]`
+
+Snapshot selector (APT-version-dependent): yes/no, enable/disable, or a UTC timestamp.
+Requires APT >= 2.7.0 and a repository offering snapshots. Values are passed through:
+choose the spelling supported by your installed APT version.
+
+Default value: `undef`
+
+##### <a name="-apt--source--allow_weak"></a>`allow_weak`
+
+Data type: `Optional[Boolean]`
+
+Whether to permit repositories with weak security information (.list only).
+
+Default value: `undef`
+
+##### <a name="-apt--source--allow_downgrade_to_insecure"></a>`allow_downgrade_to_insecure`
+
+Data type: `Optional[Boolean]`
+
+Whether to permit a previously authenticated repository to become insecure (.list only).
+
+Default value: `undef`
+
+##### <a name="-apt--source--signed_by"></a>`signed_by`
+
+Data type: `Optional[Variant[Apt::Source_signer, Array[Apt::Source_signer, 1], Apt::Source_key]]`
+
+A keyring path, full fingerprint (optionally ending in !), or a nonempty array of these.
+Alternatively, an armored public key for deb822 (APT >= 2.4). Exclusive with key and keyring.
+Multiple keyrings, mixed paths/fingerprints and ! require APT >= 1.8.
+Uses apt_version; if unavailable, os.family Debian assumes APT 1.6.
+
+Default value: `undef`
+
 ## Data types
 
 ### <a name="Apt--Auth_conf_entry"></a>`Apt::Auth_conf_entry`
@@ -1480,6 +1651,30 @@ Specifies whether to enable https for this override.
 ##### <a name="-Apt--Proxy_Per_Host--direct"></a>`direct`
 
 Specifies whether or not to use a `DIRECT` target to bypass the system default proxy.
+
+### <a name="Apt--Source_key"></a>`Apt::Source_key`
+
+An ASCII-armored public key, for embedding in a deb822 source.
+
+Alias of `Pattern[/\A-----BEGIN PGP PUBLIC KEY BLOCK-----\n(?:[A-Za-z0-9-]+:[^\r\n]*\n)*(?:[A-Za-z0-9+\/=]*\n)+-----END PGP PUBLIC KEY BLOCK-----\n?\z/]`
+
+### <a name="Apt--Source_list"></a>`Apt::Source_list`
+
+One or more source option values. Empty arrays are rejected.
+
+Alias of `Array[Apt::Source_token, 1]`
+
+### <a name="Apt--Source_signer"></a>`Apt::Source_signer`
+
+An absolute keyring path or full fingerprint, optionally excluding subkeys.
+
+Alias of `Pattern[/\A\/[^\s,\[\]#!=]+\z/, /\A[0-9A-Fa-f]{40}!?\z/]`
+
+### <a name="Apt--Source_token"></a>`Apt::Source_token`
+
+A single source option value, without separators or source syntax.
+
+Alias of `Pattern[/\A[A-Za-z0-9][A-Za-z0-9_.+-]*\z/]`
 
 ## Tasks
 

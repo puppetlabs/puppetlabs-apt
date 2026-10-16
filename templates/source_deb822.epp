@@ -9,7 +9,8 @@
   Optional[Enum['yes','no']] $allow_insecure = undef,
   Optional[Enum['yes','no']] $repo_trusted = undef,
   Optional[Enum['yes','no']] $check_valid_until = undef,
-  Optional[Variant[Stdlib::AbsolutePath,Array[String[1]]]] $signed_by = undef,
+  Optional[Variant[String[1],Array[String[1]]]] $signed_by = undef,
+  Hash[String, String] $advanced_options = {},
 | -%>
 # <%= $comment %>
 Enabled: <%= $enabled %>
@@ -32,5 +33,13 @@ Trusted: <%= $repo_trusted %>
 Check-Valid-Until: <%= $check_valid_until %>
 <% } -%>
 <% if $signed_by { -%>
+<% if $signed_by =~ Apt::Source_key { -%>
+Signed-By:
+<%= regsubst(regsubst(regsubst($signed_by, '\n\z', ''), '^$', '.', 'G'), '^', ' ', 'G') %>
+<% } else { -%>
 Signed-By: <%= [$signed_by].flatten.join(' ') %>
+<% } -%>
+<% } -%>
+<% $advanced_options.each |$field, $value| { -%>
+<%= $field %>: <%= $value %>
 <% } -%>
