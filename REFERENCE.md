@@ -105,10 +105,10 @@ Default value: `'/usr/bin/apt-get'`
 
 ##### <a name="-apt--keyserver"></a>`keyserver`
 
-Data type: `Stdlib::Host`
+Data type: `Pattern[/\A((hkp|hkps|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?(\/[a-zA-Z\d\-_.]+)*\/?$/]`
 
-Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
-hkp://).
+Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://,
+hkp:// or hkps://).
 
 Default value: `'keyserver.ubuntu.com'`
 
