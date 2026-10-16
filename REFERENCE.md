@@ -1257,7 +1257,7 @@ Data type: `Variant[String[1], Array[String[1]]]`
 Specifies a component of the Apt repository.
 DEB822: Supports an array of values
 
-Default value: `'main'`
+Default value: `['main']`
 
 ##### <a name="-apt--source--include"></a>`include`
 
