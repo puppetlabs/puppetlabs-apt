@@ -786,6 +786,15 @@ apt::source { 'puppet8-release':
 }
 ```
 
+##### Download a keyring and verify its fingerprint
+
+```puppet
+apt::keyring { 'puppetlabs-keyring.gpg':
+  source      => 'https://apt.puppetlabs.com/keyring.gpg',
+  fingerprint => 'D6811ED3ADEEB8441AF5AA8F4528B6CD9E61EF26',
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `apt::keyring` defined type:
@@ -796,6 +805,7 @@ The following parameters are available in the `apt::keyring` defined type:
 * [`source`](#-apt--keyring--source)
 * [`content`](#-apt--keyring--content)
 * [`ensure`](#-apt--keyring--ensure)
+* [`fingerprint`](#-apt--keyring--fingerprint)
 
 ##### <a name="-apt--keyring--dir"></a>`dir`
 
@@ -844,6 +854,15 @@ Data type: `Enum['present','absent']`
 Ensure presence or absence of the resource.
 
 Default value: `'present'`
+
+##### <a name="-apt--keyring--fingerprint"></a>`fingerprint`
+
+Data type: `Optional[Pattern[/\A[0-9a-fA-F]{40}\z/]]`
+
+Full 40 character fingerprint of a key that must be in the keyring. The file is only written if `gpg` finds this fingerprint in the
+new content. Installs `gnupg`.
+
+Default value: `undef`
 
 ### <a name="apt--mark"></a>`apt::mark`
 
@@ -1277,7 +1296,8 @@ Default value: `{}`
 Data type: `Optional[Variant[String[1], Hash]]`
 
 Creates an `apt::keyring` in `/etc/apt/keyrings` (or anywhere on disk given `filename`) Valid options:
-  * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`
+  * a hash of `parameter => value` pairs to be passed to `apt::keyring`: `name` (title), `content`, `source`, `filename`, `dir`, `mode`,
+    `fingerprint`
 
 The following inputs are valid for the (deprecated) `apt::key` defined type. Valid options:
   * a string to be passed to the `id` parameter of the `apt::key` defined type
