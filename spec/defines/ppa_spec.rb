@@ -85,6 +85,7 @@ describe 'apt::ppa' do
     'ppa:foo/bar/foobar',
     '|| ls -la ||',
     '|| touch /tmp/foo.txt ||',
+    'ppa:foo/bar`reboot`',
   ].each do |value|
     describe 'invalid resource names' do
       let :facts do
