@@ -73,6 +73,38 @@ describe 'apt::keyring' do
         }
       end
 
+      context 'with fingerprint' do
+        let(:params) do
+          {
+            source: 'http://apt.puppetlabs.com/pubkey.gpg',
+            fingerprint: 'd6811ed3adeeb8441af5aa8f4528b6cd9e61ef26',
+          }
+        end
+
+        it { is_expected.to contain_package('gnupg') }
+
+        it {
+          is_expected.to contain_file('/etc/apt/keyrings/puppetlabs-keyring.gpg').with(
+            validate_cmd: "/usr/bin/gpg --batch --no-tty --with-colons --with-fingerprint % 2>/dev/null | /bin/grep -q '^fpr:*D6811ED3ADEEB8441AF5AA8F4528B6CD9E61EF26:'",
+          ).that_requires(['File[keyrings]', 'Package[gnupg]'])
+        }
+      end
+
+      context 'with invalid fingerprint' do
+        let(:params) do
+          {
+            source: 'http://apt.puppetlabs.com/pubkey.gpg',
+            fingerprint: '4528B6CD9E61EF26',
+          }
+        end
+
+        it { is_expected.to raise_error(%r{fingerprint}) }
+      end
+
+      context 'without fingerprint' do
+        it { is_expected.to contain_file('/etc/apt/keyrings/puppetlabs-keyring.gpg').without_validate_cmd }
+      end
+
       context 'with custom filename' do
         let(:params) do
           {
