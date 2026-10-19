@@ -7,7 +7,7 @@
 #   Specifies whether the PPA should exist.
 #
 # @param options
-#   Supplies options to be passed to the `add-apt-repository` command.
+#   Supplies options to be passed to the `add-apt-repository` command. Defaults to `apt::ppa_options`.
 #
 # @param release
 #   Specifies the operating system of your node. Valid options: a string containing a valid LSB distribution codename.
@@ -18,19 +18,24 @@
 #   Optional if `puppet facts show os.name` returns your correct distribution name.
 #
 # @param package_name
-#   Names the package that provides the `apt-add-repository` command.
+#   Names the package that provides the `apt-add-repository` command. Defaults to `apt::ppa_package`.
 #
 # @param package_manage
 #   Specifies whether Puppet should manage the package that provides `apt-add-repository`.
 #
 define apt::ppa (
   Enum['present', 'absent'] $ensure     = 'present',
-  Optional[Array[String[1]]] $options   = $apt::ppa_options,
+  Optional[Array[String[1]]] $options   = undef,
   Optional[String[1]] $release          = fact('os.distro.codename'),
   Optional[String[1]] $dist             = $facts['os']['name'],
-  Optional[String[1]] $package_name     = $apt::ppa_package,
+  Optional[String[1]] $package_name     = undef,
   Boolean $package_manage               = false,
 ) {
+  include apt
+
+  $_options = $options ? { undef => $apt::ppa_options, default => $options }
+  $_package_name = $package_name ? { undef => $apt::ppa_package, default => $package_name }
+
   unless $release {
     fail('os.distro.codename fact not available: release parameter required')
   }
@@ -71,8 +76,8 @@ define apt::ppa (
 
   if $ensure == 'present' {
     if $package_manage {
-      stdlib::ensure_packages($package_name)
-      $_require = [File['sources.list.d'], Package[$package_name]]
+      stdlib::ensure_packages($_package_name)
+      $_require = [File['sources.list.d'], Package[$_package_name]]
     } else {
       $_require = File['sources.list.d']
     }
@@ -90,7 +95,7 @@ define apt::ppa (
 
     unless $sources_list_d_filename in $facts['apt_sources'] {
       $script_content = epp('apt/add-apt-repository.sh.epp', {
-          command                 => ['/usr/bin/add-apt-repository', shell_join($options), $name],
+          command                 => ['/usr/bin/add-apt-repository', shell_join($_options), $name],
           sources_list_d_path     => $apt::sources_list_d,
           sources_list_d_filename => $sources_list_d_filename,
         }
