@@ -40,7 +40,7 @@ define apt::ppa (
   }
 
   # Validate the resource name
-  if $name !~ /^ppa:([a-zA-Z0-9\-_.+]+)\/([a-zA-z0-9\-_.+]+)$/ {
+  if $name !~ /^ppa:([a-zA-Z0-9\-_.+]+)\/([a-zA-Z0-9\-_.+]+)$/ {
     fail("Invalid PPA name: ${name}")
   }
 
@@ -90,7 +90,7 @@ define apt::ppa (
 
     unless $sources_list_d_filename in $facts['apt_sources'] {
       $script_content = epp('apt/add-apt-repository.sh.epp', {
-          command                 => ['/usr/bin/add-apt-repository', shell_join($options), $name],
+          command                 => ['/usr/bin/add-apt-repository', shell_join($options), stdlib::shell_escape($name)],
           sources_list_d_path     => $apt::sources_list_d,
           sources_list_d_filename => $sources_list_d_filename,
         }
