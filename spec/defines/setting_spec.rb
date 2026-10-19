@@ -157,4 +157,12 @@ describe 'apt::setting' do
       expect(subject).to contain_file('/etc/apt/apt.conf.d/50teddybear').that_notifies('Class[Apt::Update]').with(ensure: 'absent')
     }
   end
+
+  describe 'without apt class declared' do
+    let(:pre_condition) { '' }
+    let(:params) { default_params }
+
+    it { is_expected.to contain_class('apt') }
+    it { is_expected.to contain_file('/etc/apt/apt.conf.d/50teddybear').that_notifies('Class[Apt::Update]') }
+  end
 end
