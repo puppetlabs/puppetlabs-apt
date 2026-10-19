@@ -616,7 +616,7 @@ Default value: `undef`
 
 ##### <a name="-apt--auth--password"></a>`password`
 
-Data type: `String`
+Data type: `Variant[String, Sensitive[String]]`
 
 
 
@@ -1363,7 +1363,7 @@ Alias of
 Struct[{
     machine => String[1],
     login => String,
-    password => String
+    password => Variant[String, Sensitive[String]]
   }]
 ```
 
@@ -1385,7 +1385,7 @@ Specifies the username to connect with.
 
 ##### <a name="-Apt--Auth_conf_entry--password"></a>`password`
 
-Specifies the password to connect with.
+Specifies the password to connect with. May be `Sensitive`.
 
 ### <a name="Apt--Proxy"></a>`Apt::Proxy`
 

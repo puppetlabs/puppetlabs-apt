@@ -1,6 +1,6 @@
 // This file is managed by Puppet. DO NOT EDIT.
 <% if $auth_conf_entries != [] { -%>
 <% $auth_conf_entries.each | $auth_conf_entry | { -%>
-machine <%= $auth_conf_entry['machine'] %> login <%= $auth_conf_entry['login'] %> password <%= $auth_conf_entry['password'] %>
+machine <%= $auth_conf_entry['machine'] %> login <%= $auth_conf_entry['login'] %> password <%= if $auth_conf_entry['password'] =~ Sensitive { $auth_conf_entry['password'].unwrap } else { $auth_conf_entry['password'] } %>
 <% } -%>
 <% } -%>
