@@ -38,6 +38,7 @@ be manipulated through the `apt-key` command.
 ### Data types
 
 * [`Apt::Auth_conf_entry`](#Apt--Auth_conf_entry): Login configuration settings that are recorded in the file `/etc/apt/auth.conf`.
+* [`Apt::Keyserver`](#Apt--Keyserver): A keyserver host, or a URL to one using the hkp, hkps, http or https scheme
 * [`Apt::Proxy`](#Apt--Proxy): Configures Apt to connect to a proxy server.
 * [`Apt::Proxy_Per_Host`](#Apt--Proxy_Per_Host): Adds per-host overrides to the system default APT proxy configuration
 
@@ -105,10 +106,10 @@ Default value: `'/usr/bin/apt-get'`
 
 ##### <a name="-apt--keyserver"></a>`keyserver`
 
-Data type: `Stdlib::Host`
+Data type: `Apt::Keyserver`
 
-Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
-hkp://).
+Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://,
+hkp:// or hkps://).
 
 Default value: `'keyserver.ubuntu.com'`
 
@@ -736,7 +737,7 @@ Default value: `undef`
 
 ##### <a name="-apt--key--server"></a>`server`
 
-Data type: `Pattern[/\A((hkp|hkps|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?(\/[a-zA-Z\d\-_.]+)*\/?$/]`
+Data type: `Apt::Keyserver`
 
 Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://,
 hkp:// or hkps://). The hkps:// protocol is currently only supported on Ubuntu 18.04.
@@ -1386,6 +1387,12 @@ Specifies the username to connect with.
 ##### <a name="-Apt--Auth_conf_entry--password"></a>`password`
 
 Specifies the password to connect with.
+
+### <a name="Apt--Keyserver"></a>`Apt::Keyserver`
+
+A keyserver host, or a URL to one using the hkp, hkps, http or https scheme
+
+Alias of `Variant[Stdlib::Host, Pattern[/\A((hkp|hkps|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?(\/[a-zA-Z\d\-_.]+)*\/?$/]]`
 
 ### <a name="Apt--Proxy"></a>`Apt::Proxy`
 
