@@ -60,13 +60,10 @@ and keep changes focused on the requested work.
   CI. Run acceptance tests only through the configured GitHub Actions
   acceptance workflow when relevant and when its required infrastructure and
   credentials are available. Do not run them against production systems.
-- Identify the acceptance workflow in `.github/workflows/` and follow its
-  documented triggers, inputs, and prerequisites. If it supports
-  `workflow_dispatch`, start it with
-  `gh workflow run <workflow-file> --ref <branch>`, supplying any required
-  inputs. Find the corresponding run with
-  `gh run list --workflow <workflow-file> --branch <branch>` and inspect it
-  with `gh run watch <run-id> --exit-status`. The workflow requires the
+- Identify the acceptance workflow in `.github/workflows/` and follow its documented triggers, inputs, and prerequisites. Run it only when the workflow explicitly permits the current ref and a maintainer has confirmed that the code is trusted; never dispatch an acceptance workflow with secrets for untrusted PR or fork code.
+- If it supports `workflow_dispatch`, use `gh workflow run <workflow-file> --ref <branch>` only after that trust check, supplying any required inputs. Find the corresponding run with
+  `gh run list --workflow <workflow-file> --branch <branch>` and inspect it with
+  `gh run watch <run-id> --exit-status`.
   appropriate GitHub permissions and secrets.
 - Report the exact checks run and their results. Clearly state when a check
   could not be run; do not imply that unrun checks passed.
