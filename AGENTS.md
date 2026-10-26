@@ -64,7 +64,7 @@ and keep changes focused on the requested work.
 - If it supports `workflow_dispatch`, use `gh workflow run <workflow-file> --ref <branch>` only after that trust check, supplying any required inputs. Find the corresponding run with
   `gh run list --workflow <workflow-file> --branch <branch>` and inspect it with
   `gh run watch <run-id> --exit-status`.
-  appropriate GitHub permissions and secrets.
+  Run these commands only with the appropriate GitHub permissions, and never expose credentials to untrusted code.
 - Report the exact checks run and their results. Clearly state when a check
   could not be run; do not imply that unrun checks passed.
 
