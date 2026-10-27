@@ -41,7 +41,7 @@ define apt::key (
   Enum['present', 'absent', 'refreshed'] $ensure                                                                        = present,
   Optional[String[1]] $content                                                                                          = undef,
   Optional[Pattern[/\Ahttps?:\/\//, /\Aftp:\/\//, /\A\/\w+/]] $source                                                   = undef,
-  Pattern[/\A((hkp|hkps|http|https):\/\/)?([a-z\d])([a-z\d-]{0,61}\.)+[a-z\d]+(:\d{2,5})?(\/[a-zA-Z\d\-_.]+)*\/?$/] $server = $apt::keyserver,
+  Apt::Keyserver $server                                                                                                = $apt::keyserver,
   Boolean $weak_ssl                                                                                                     = false,
   Optional[String[1]] $options                                                                                          = $apt::key_options,
 ) {
