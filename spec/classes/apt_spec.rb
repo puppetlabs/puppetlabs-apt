@@ -467,7 +467,7 @@ describe 'apt' do
               {
                 machine: 'apt.example.com',
                 login: 'aptlogin',
-                password: 'supersecret'
+                password: sensitive('supersecret')
               },
             ]
           }
