@@ -25,7 +25,8 @@ concurrency:
 jobs:
   Spec:
     if: github.event_name != 'pull_request_target'
-    uses: "puppetlabs/cat-github-actions/.github/workflows/module_ci.yml@main"
+    # FIXME: debuging # uses: "puppetlabs/cat-github-actions/.github/workflows/module_ci.yml@main"
+    uses: "Phil-Friderici/cat-github-actions/.github/workflows/module_ci.yml@main"
     # No `secrets: inherit` — public track must not see private secrets.
 
   Acceptance:
@@ -34,5 +35,6 @@ jobs:
       (github.event_name == 'pull_request_target' &&
        (github.event.pull_request.head.repo.fork == false ||
         contains(github.event.pull_request.labels.*.name, 'allowed-for-ci')))
-    uses: "puppetlabs/cat-github-actions/.github/workflows/module_acceptance.yml@main"
+    # FIXME: debuging # uses: "puppetlabs/cat-github-actions/.github/workflows/module_acceptance.yml@main"
+    uses: "Phil-Friderici/cat-github-actions/.github/workflows/module_ci.yml@main"
     secrets: "inherit"
