@@ -1211,11 +1211,11 @@ Default value: `undef`
 
 ##### <a name="-apt--source--types"></a>`types`
 
-Data type: `Array[Enum['deb','deb-src'], 1, 2]`
+Data type: `Optional[Array[Enum['deb','deb-src'], 1, 2]]`
 
-DEB822: The package types this source manages.
+DEB822: The package types this source manages. Defaults to the types enabled by `include`.
 
-Default value: `['deb']`
+Default value: `undef`
 
 ##### <a name="-apt--source--enabled"></a>`enabled`
 
@@ -1269,6 +1269,8 @@ Options:
 
 * **:deb** `Boolean`: Specifies whether to request the distribution's compiled binaries.
 * **:src** `Boolean`: Specifies whether to request the distribution's uncompiled source code.
+
+DEB822: Used to set `types` when `types` is not given.
 
 Default value: `{}`
 
