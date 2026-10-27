@@ -67,7 +67,8 @@
 #
 # @param key
 #   Creates an `apt::keyring` in `/etc/apt/keyrings` (or anywhere on disk given `filename`) Valid options:
-#     * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`
+#     * a hash of `parameter => value` pairs to be passed to `apt::keyring`: `name` (title), `content`, `source`, `filename`, `dir`, `mode`,
+#       `fingerprint`
 #
 #   The following inputs are valid for the (deprecated) `apt::key` defined type. Valid options:
 #     * a string to be passed to the `id` parameter of the `apt::key` defined type
@@ -207,13 +208,14 @@ define apt::source (
         # Modern apt keyrings
         elsif $_key =~ Hash and $_key['name'] {
           apt::keyring { $_key['name']:
-            ensure   => $_key_ensure,
-            content  => $_key['content'],
-            source   => $_key['source'],
-            dir      => $_key['dir'],
-            filename => $_key['filename'],
-            mode     => $_key['mode'],
-            before   => $_before,
+            ensure      => $_key_ensure,
+            content     => $_key['content'],
+            source      => $_key['source'],
+            dir         => $_key['dir'],
+            filename    => $_key['filename'],
+            mode        => $_key['mode'],
+            fingerprint => $_key['fingerprint'],
+            before      => $_before,
           }
 
           $_list_keyring = if $_key['dir'] and $_key['filename'] {
