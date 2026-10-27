@@ -9,6 +9,12 @@ Before making changes, read the relevant parts of `README.md`, `metadata.json`,
 and existing code and tests. Follow the patterns already used in this module
 and keep changes focused on the requested work.
 
+If [AGENTS_MODULE.md](AGENTS_MODULE.md) exists in the repository
+root, read and follow it before making changes. It contains module-specific
+instructions that supplement these general rules, not replace them. Keep
+module-specific guidance in that file so this file remains reusable across
+Puppet modules.
+
 ## Compatibility
 
 - This module uses Semantic Versioning (SemVer). Backward compatibility is
