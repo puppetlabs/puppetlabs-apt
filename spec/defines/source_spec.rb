@@ -233,7 +233,7 @@ describe 'apt::source' do
     context 'when apt-key is not available' do
       let(:facts) { super().merge(apt_key_available: false) }
 
-      it { is_expected.to contain_apt__key("Add key: 0x6f6b15509cf8e59e6e469f327f438280ef8d349f from Apt::Source my_source") }
+      it { is_expected.to contain_apt__key('Add key: 0x6f6b15509cf8e59e6e469f327f438280ef8d349f from Apt::Source my_source') }
 
       it {
         is_expected.to contain_apt__setting('list-my_source')

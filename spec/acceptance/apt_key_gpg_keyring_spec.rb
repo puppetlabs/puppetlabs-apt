@@ -129,7 +129,7 @@ describe 'apt_key without apt-key' do
       gpg_keyring_apply_twice(source_pp)
       run_shell(GPG_KEYRING_CHECK)
       run_shell('cat /etc/apt/sources.list.d/gpg_keyring_test.list') do |r|
-        expect(r.stdout).to match(%r{signed-by=#{GPG_KEYRING_FILE}})
+        expect(r.stdout).to match(%r{signed-by=#{GPG_KEYRING_FILE}}o)
       end
     end
 
