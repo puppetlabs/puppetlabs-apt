@@ -645,6 +645,8 @@ MANIFEST
 
 describe 'apt_key' do
   before(:each) do
+    skip 'apt-key is not available on this platform' unless apt_key_available?
+
     # Delete twice to make sure everything is cleaned
     # up after the short key collision
     run_shell("apt-key del #{PUPPETLABS_GPG_KEY_SHORT_ID}", expect_failures: true)

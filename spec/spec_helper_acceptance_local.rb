@@ -45,3 +45,11 @@ def retry_on_error_matching(max_retry_count = MAX_RETRY_COUNT, retry_wait_interv
     retry
   end
 end
+
+# apt-key was removed in apt 3 (e.g. Ubuntu 26.04, Debian 13), so the apt_key
+# type has no suitable provider there. See MODULES issue #1306.
+def apt_key_available?
+  return @apt_key_available unless @apt_key_available.nil?
+
+  @apt_key_available = run_shell('command -v apt-key', expect_failures: true).exit_code.zero?
+end

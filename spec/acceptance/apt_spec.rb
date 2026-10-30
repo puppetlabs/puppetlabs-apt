@@ -40,6 +40,8 @@ describe 'apt class' do
 
   context 'with all the things' do
     it 'works with no errors' do
+      skip 'apt-key is not available on this platform' unless apt_key_available?
+
       # Apply the manifest (Retry if timeout error is received from key pool)
       retry_on_error_matching do
         apply_manifest(everything_everything_pp, catch_failures: true)
