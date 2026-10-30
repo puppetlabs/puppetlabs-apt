@@ -17,11 +17,17 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
   commands   gpg: '/usr/bin/gpg'
 
   def self.instances
-    key_array = []
-
     cli_args = ['adv', '--no-tty', '--list-keys', '--with-colons', '--fingerprint', '--fixed-list-mode']
 
     key_output = apt_key(cli_args).encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+
+    parse_instances(key_output)
+  end
+
+  # Builds provider instances from `gpg --with-colons` listing output.
+  # `extra` is merged into the property hash of every instance found.
+  def self.parse_instances(key_output, extra = {})
+    key_array = []
 
     pub_line = nil
     fpr_lines = []
@@ -59,6 +65,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
         size: line_hash[:key_size],
         type: line_hash[:key_type],
         created: line_hash[:key_created].strftime('%Y-%m-%d'),
+        **extra,
       )
     end
     key_array
