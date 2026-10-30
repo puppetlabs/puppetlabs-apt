@@ -202,7 +202,11 @@ define apt::source (
               before   => $_before,
             }
           }
-          $_list_keyring = undef
+          # Without apt-key (apt 3) the apt_key type stores keys as keyring files
+          $_list_keyring = $facts['apt_key_available'] ? {
+            false   => "/etc/apt/keyrings/${regsubst($_key['id'], '^0x', '').upcase}.gpg",
+            default => undef,
+          }
         }
         # Modern apt keyrings
         elsif $_key =~ Hash and $_key['name'] {

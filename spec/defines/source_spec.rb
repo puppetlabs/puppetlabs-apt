@@ -223,6 +223,25 @@ describe 'apt::source' do
     }
   end
 
+  context 'with a key id' do
+    let(:params) { { location: 'hello.there', key: { 'id' => '0x6f6b15509cf8e59e6e469f327f438280ef8d349f' } } }
+
+    context 'when apt-key is available' do
+      it { is_expected.to contain_apt__setting('list-my_source').with_content(%r{# my_source\ndeb hello.there stretch main\n}) }
+    end
+
+    context 'when apt-key is not available' do
+      let(:facts) { super().merge(apt_key_available: false) }
+
+      it { is_expected.to contain_apt__key('Add key: 0x6f6b15509cf8e59e6e469f327f438280ef8d349f from Apt::Source my_source') }
+
+      it {
+        is_expected.to contain_apt__setting('list-my_source')
+          .with_content(%r{# my_source\ndeb \[signed-by=/etc/apt/keyrings/6F6B15509CF8E59E6E469F327F438280EF8D349F.gpg\] hello.there stretch main\n})
+      }
+    end
+  end
+
   context 'with keyring, architecture and allow_unsigned set' do
     let :params do
       {

@@ -20,6 +20,7 @@ docker_ub_6:
   - litmusimage/ubuntu:20.04
   - litmusimage/ubuntu:22.04
   - litmusimage/ubuntu:24.04
+  - litmusimage/ubuntu:26.04
 docker_el7:
   provisioner: docker
   images: []
@@ -32,6 +33,7 @@ release_checks_6:
   - ubuntu-2004-x86_64
   - ubuntu-2204-x86_64
   - ubuntu-2404-x86_64
+  - ubuntu-2604-x86_64
 release_checks_7:
   provisioner: abs
   images:
@@ -41,3 +43,4 @@ release_checks_7:
   - ubuntu-2004-x86_64
   - ubuntu-2204-x86_64
   - ubuntu-2404-x86_64
+  - ubuntu-2604-x86_64
