@@ -421,6 +421,20 @@ describe 'apt' do
           }
         }
       },
+      'Ubuntu 26.04' => {
+        os: {
+          family: 'Debian',
+          name: 'Ubuntu',
+          release: {
+            major: '26.04',
+            full: '26.04',
+          },
+          distro: {
+            codename: 'resolute',
+            id: 'Ubuntu',
+          },
+        },
+      },
       'Debian 9.0' => {
         os: {
           family: 'Debian',
