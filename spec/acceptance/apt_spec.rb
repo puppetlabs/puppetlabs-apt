@@ -40,9 +40,16 @@ describe 'apt class' do
 
   context 'with all the things' do
     it 'works with no errors' do
-      # Apply the manifest (Retry if timeout error is received from key pool)
-      retry_on_error_matching do
-        apply_manifest(everything_everything_pp, catch_failures: true)
+      if apt_key_available?
+        # Apply the manifest (Retry if timeout error is received from key pool)
+        retry_on_error_matching do
+          apply_manifest(everything_everything_pp, catch_failures: true)
+        end
+      else
+        # apt-key was removed in apt 3; the key id in this manifest needs it
+        apply_manifest(everything_everything_pp, expect_failures: true) do |r|
+          expect(r.stderr).to match(%r{apt-key command is not available.*apt::keyring})
+        end
       end
     end
 
