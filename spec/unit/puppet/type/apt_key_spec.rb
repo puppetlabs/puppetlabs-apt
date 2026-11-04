@@ -153,6 +153,13 @@ describe Puppet::Type.type(:apt_key) do
     end
   end
 
+  context 'with deprecation' do
+    it 'emits a deprecation warning pointing to apt::keyring' do
+      expect(Puppet).to receive(:deprecation_warning).with(%r{apt_key type and apt::key are deprecated.*apt::keyring}, 'puppetlabs-apt-apt_key')
+      Puppet::Type.type(:apt_key).new(id: '6F6B15509CF8E59E6E469F327F438280EF8D349F')
+    end
+  end
+
   context 'with validation' do
     it 'raises an error if content and source are set' do
       expect {

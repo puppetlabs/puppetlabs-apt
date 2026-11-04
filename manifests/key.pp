@@ -1,5 +1,8 @@
 # @summary Manages the GPG keys that Apt uses to authenticate packages.
 #
+# @deprecated `apt-key` is deprecated and not available in apt 3 (Debian 13, Ubuntu 26.04). Use `apt::keyring`, or the `key` parameter
+#   of `apt::source` with a `name`, instead. This defined type will be removed in the next major release.
+#
 # @note
 #   The apt::key defined type makes use of the apt_key type, but includes extra functionality to help prevent duplicate keys.
 #

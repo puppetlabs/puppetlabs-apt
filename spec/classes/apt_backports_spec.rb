@@ -233,9 +233,11 @@ describe 'apt::backports', type: :class do
     # Include shared examples for Ubuntu versions
     include_examples 'ubuntu backports', '22.04', '22.04', 'jammy'
     include_examples 'ubuntu backports', '24.04', '24.04', 'noble'
+    include_examples 'ubuntu backports', '26.04', '26.04', 'resolute'
   end
 
   # Include shared validation examples for Ubuntu versions
   include_examples 'validation tests', '22.04', '22.04', 'jammy'
   include_examples 'validation tests', '24.04', '24.04', 'noble'
+  include_examples 'validation tests', '26.04', '26.04', 'resolute'
 end

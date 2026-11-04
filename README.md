@@ -87,7 +87,7 @@ apt::keyring { 'puppetlabs-keyring.gpg':
 
 Alternatively `apt::key` can be used.
 
-**Warning** `apt::key` is deprecated in the latest Debian and Ubuntu releases. Please use apt::keyring instead.
+**Warning** `apt::key` and the `apt_key` type are deprecated and emit a deprecation warning. `apt-key` was removed in apt 3, so on systems that ship it (Debian 13, Ubuntu 26.04) they fail with an error that points to `apt::keyring`. Please use `apt::keyring` (or the `key` parameter of `apt::source` with a `name`) instead.
 
 **Warning:** Using short key IDs presents a serious security issue, potentially leaving you open to collision attacks. We recommend you always use full fingerprints to identify your GPG keys. This module allows short keys, but issues a security warning if you use them.
 

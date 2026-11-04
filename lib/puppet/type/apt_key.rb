@@ -19,6 +19,8 @@ Puppet::Type.newtype(:apt_key) do
     If Puppet is given the location of a key file which looks like an absolute
     path this type will autorequire that file.
 
+    @deprecated apt-key is deprecated and not available in apt 3 (Debian 13, Ubuntu 26.04). Use `apt::keyring` instead.
+
     @api private
   MANIFEST
 
@@ -27,6 +29,12 @@ Puppet::Type.newtype(:apt_key) do
   validate do
     raise(_('ensure => absent and refresh => true are mutually exclusive')) if self[:refresh] == true && self[:ensure] == :absent
     raise(_('The properties content and source are mutually exclusive.')) if self[:content] && self[:source]
+
+    Puppet.deprecation_warning(
+      'The apt_key type and apt::key are deprecated and will be removed in the next major release of puppetlabs-apt. ' \
+      'apt-key is no longer available in apt 3 (Debian 13, Ubuntu 26.04). Use apt::keyring, or apt::source with key => { name => ..., source => ... }, instead.',
+      'puppetlabs-apt-apt_key',
+    )
 
     warning(_('The id should be a full fingerprint (40 characters), see README.')) if self[:id].length < 40
   end
