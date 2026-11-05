@@ -154,6 +154,24 @@ describe 'apt::source' do
                                                                                                                                                 weak_ssl: true)
       }
     end
+
+    context 'with keyring key and fingerprint' do
+      let :params do
+        {
+          location: 'http://apt.puppetlabs.com',
+          key: {
+            'name' => 'puppetlabs-keyring.gpg',
+            'source' => 'https://apt.puppetlabs.com/keyring.gpg',
+            'fingerprint' => 'D6811ED3ADEEB8441AF5AA8F4528B6CD9E61EF26'
+          }
+        }
+      end
+
+      it {
+        expect(subject).to contain_apt__keyring('puppetlabs-keyring.gpg').with(source: 'https://apt.puppetlabs.com/keyring.gpg',
+                                                                               fingerprint: 'D6811ED3ADEEB8441AF5AA8F4528B6CD9E61EF26')
+      }
+    end
   end
 
   context 'with allow_insecure true' do
