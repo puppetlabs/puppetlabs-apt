@@ -230,6 +230,45 @@ describe 'apt::backports', type: :class do
       }
     end
 
+    context 'with source_format sources on debian' do
+      let(:facts) do
+        {
+          os: {
+            family: 'Debian',
+            name: 'Debian',
+            release: {
+              full: '12.5',
+              major: '12',
+              minor: '5'
+            },
+            distro: {
+              codename: 'bookworm',
+              id: 'Debian'
+            }
+          }
+        }
+      end
+      let(:params) do
+        {
+          source_format: 'sources',
+          include: { 'src' => true }
+        }
+      end
+
+      it {
+        expect(subject).to contain_apt__source('backports').with(
+          source_format: 'sources',
+          location: ['http://deb.debian.org/debian'],
+          repos: ['main', 'contrib', 'non-free', 'non-free-firmware'],
+          release: ['bookworm-backports'],
+          types: ['deb', 'deb-src'],
+          keyring: '/usr/share/keyrings/debian-archive-keyring.gpg',
+        )
+      }
+
+      it { is_expected.to contain_apt__setting('sources-backports').with_content(%r{^Suites: bookworm-backports$}) }
+    end
+
     # Include shared examples for Ubuntu versions
     include_examples 'ubuntu backports', '22.04', '22.04', 'jammy'
     include_examples 'ubuntu backports', '24.04', '24.04', 'noble'
