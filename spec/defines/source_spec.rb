@@ -580,6 +580,77 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
     end
 
+    context 'with include' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main'],
+            include: { 'src' => true },
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{^Types: deb deb-src$}) }
+    end
+
+    context 'with include and types' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main'],
+            include: { 'src' => true },
+            types: ['deb'],
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{^Types: deb$}) }
+    end
+
+    context 'with apt::include_defaults' do
+      let(:pre_condition) { 'class { "apt": include_defaults => { "deb" => false, "src" => true } }' }
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main'],
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{^Types: deb-src$}) }
+    end
+
+    context 'with aarch64 architecture' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main'],
+            architecture: ['amd64', 'aarch64'],
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{^Architectures: amd64 arm64$}) }
+    end
+
+    context 'with aarch64 architecture as a string' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main'],
+            architecture: 'aarch64,i386',
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{^Architectures: arm64 i386$}) }
+    end
+
     context '.list backwards compatibility' do
       let :params do
         super().merge(
