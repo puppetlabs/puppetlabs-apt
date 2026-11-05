@@ -346,7 +346,7 @@ define apt::source (
                 'enabled'           => $enabled ? { true => 'yes', false => 'no' },
                 'architectures'     => $_architecture,
                 'allow_insecure'    => $allow_insecure ? { true => 'yes', false => 'no', default => undef },
-                'repo_trusted'      => $allow_unsigned ? { true => 'yes', false => 'no', default => undef },
+                'repo_trusted'      => $allow_unsigned ? { true => 'yes', false => undef, default => undef },
                 'check_valid_until' => $check_valid_until ? { true => 'yes', false => 'no', default => undef },
                 'signed_by'         => $keyring,
               }

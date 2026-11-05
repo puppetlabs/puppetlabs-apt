@@ -580,6 +580,20 @@ describe 'apt::source' do
       it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{Trusted: yes}) }
     end
 
+    context 'deb822 source with allow_unsigned false' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://debian.mirror.iweb.ca/debian/'],
+            repos: ['main'],
+            allow_unsigned: false,
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").without_content(%r{Trusted:}) }
+    end
+
     context '.list backwards compatibility' do
       let :params do
         super().merge(
