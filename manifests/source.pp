@@ -65,6 +65,11 @@
 # @option include [Boolean] :src
 #   Specifies whether to request the distribution's uncompiled source code.
 #
+# @param auth
+#   Creates an `apt::auth` resource using the `location` as machine scope.
+#   Valid hash keys include `login` and `password`. See `Apt::Auth_conf_entry`
+#   for more information.
+#
 # @param key
 #   Creates an `apt::keyring` in `/etc/apt/keyrings` (or anywhere on disk given `filename`) Valid options:
 #     * a hash of `parameter => value` pairs to be passed to `file`: `name` (title), `content`, `source`, `filename`
@@ -110,6 +115,7 @@ define apt::source (
   Optional[Variant[String[0], Array[String[0]]]] $release = undef,
   Variant[String[1], Array[String[1]]] $repos = 'main',
   Hash $include = {},
+  Optional[Variant[String[1], Hash]] $auth = undef,
   Optional[Variant[String[1], Hash]] $key = undef,
   Optional[Stdlib::AbsolutePath] $keyring = undef,
   Optional[Variant[Hash, Integer, String[1]]] $pin = undef,
@@ -160,6 +166,28 @@ define apt::source (
       }
 
       $includes = $apt::include_defaults + $include
+
+      if $auth {
+        $_auth_ensure = pick($auth['ensure'], $ensure)
+        $_auth_login = pick_default($auth['login'])
+        $_auth_password = pick_default($auth['password'])
+
+        if $_auth_ensure == 'present' and empty($_auth_login) {
+          fail('auth must provide a valid username')
+        }
+
+        if $_auth_ensure == 'present' and empty($_auth_password) {
+          fail('auth must provide a valid password')
+        }
+
+        apt::auth { "Add auth: ${_location} from Apt::Source ${title}":
+          ensure   => $_auth_ensure,
+          name     => $name,
+          machine  => $_location,
+          login    => $_auth_login,
+          password => $_auth_password,
+        }
+      }
 
       if $keyring {
         if $key {
