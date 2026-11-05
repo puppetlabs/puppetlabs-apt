@@ -174,7 +174,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -186,7 +186,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -198,7 +198,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -210,7 +210,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -222,7 +222,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -234,7 +234,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -246,7 +246,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -258,7 +258,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -270,7 +270,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
@@ -316,7 +316,7 @@ describe 'apt::key', type: :define do
       end
 
       it 'fails' do
-        expect(subject).to raise_error(%r{expects a match})
+        expect(subject).to raise_error(%r{expects an Apt::Keyserver})
       end
     end
 
