@@ -149,8 +149,9 @@ define apt::source (
         if ! $location {
           fail('cannot create a source entry without specifying a location')
         }
-        elsif ($apt::proxy['https_acng']) and ($location =~ /(?i:^https:\/\/)/) {
-          $_location = regsubst($location, 'https://','http://HTTPS///')
+        # allow leading [options] before the URI
+        elsif ($apt::proxy['https_acng']) and ($location =~ /(?i:^(\[[^\]]*\]\s*)?https:\/\/)/) {
+          $_location = regsubst($location, '^(\[[^\]]*\]\s*)?https://', '\1http://HTTPS///', 'I')
         }
         else {
           $_location = $location
