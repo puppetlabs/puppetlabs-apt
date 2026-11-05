@@ -36,6 +36,51 @@ describe 'apt::mark', type: :define do
     }
   end
 
+  context 'guard idempotency' do
+    ['auto', 'manual'].each do |setting|
+      context "with setting => #{setting}" do
+        let :params do
+          {
+            'setting' => setting
+          }
+        end
+
+        it 'only runs against a genuinely installed package' do
+          expect(subject).to contain_exec("apt-mark #{setting} mysource")
+            .with_onlyif(["/usr/bin/dpkg-query --show --showformat '${db:Status-Status}' mysource | grep -qx installed"])
+            .with_unless(["/usr/bin/apt-mark show#{setting} mysource | grep mysource -q"])
+        end
+      end
+    end
+
+    context 'with setting => hold' do
+      let :params do
+        {
+          'setting' => 'hold'
+        }
+      end
+
+      it 'runs for any package dpkg knows of (pre-holding an uninstalled package is legitimate)' do
+        expect(subject).to contain_exec('apt-mark hold mysource')
+          .with_onlyif([['/usr/bin/dpkg', '-l', 'mysource']])
+          .with_unless(['/usr/bin/apt-mark showhold mysource | grep mysource -q'])
+      end
+    end
+
+    context 'with setting => unhold' do
+      let :params do
+        {
+          'setting' => 'unhold'
+        }
+      end
+
+      it 'only runs when the package is actually held' do
+        expect(subject).to contain_exec('apt-mark unhold mysource')
+          .with_onlyif(['/usr/bin/apt-mark showhold mysource | grep -q .'])
+      end
+    end
+  end
+
   describe 'with wrong setting' do
     let :params do
       {
