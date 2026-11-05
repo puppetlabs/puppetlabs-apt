@@ -17,19 +17,21 @@
 #   The username to be used.
 #
 # @param password
-#   The password to be used.
+#   The password to be used. May be `Sensitive`.
 #
 
 define apt::auth (
-  String $ensure   = 'present',
-  String $machine  = $name,
-  String $login    = undef,
-  String $password = undef,
+  String $ensure                               = 'present',
+  String $machine                              = $name,
+  String $login                                = undef,
+  Variant[String, Sensitive[String]] $password = undef,
 ) {
+  $_password = if $password =~ Sensitive { $password.unwrap } else { $password }
+
   $content = epp('apt/auth_conf.d.epp',
     machine  => $machine,
     login    => $login,
-    password => $password
+    password => $_password
   )
 
   file { "${apt::auth_conf_d}/${name}.conf":

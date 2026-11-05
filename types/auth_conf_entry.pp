@@ -9,12 +9,12 @@
 #   Specifies the username to connect with.
 #
 # @param password
-#   Specifies the password to connect with.
+#   Specifies the password to connect with. May be `Sensitive`.
 #
 type Apt::Auth_conf_entry = Struct[
   {
     machine => String[1],
     login => String,
-    password => String
+    password => Variant[String, Sensitive[String]]
   }
 ]
