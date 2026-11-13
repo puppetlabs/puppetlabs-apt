@@ -57,6 +57,44 @@ describe 'apt::source' do
     end
   end
 
+  describe 'source format defaults' do
+    let(:params) { { location: 'http://example.test/debian' } }
+
+    context 'when the apt class defaults to deb822' do
+      let(:pre_condition) { 'class { "apt": source_format => "sources" }' }
+
+      it { expect(subject).to contain_apt__setting('sources-my_source').with_ensure('present') }
+    end
+
+    context 'when the class defaults to list and the source selects deb822' do
+      let(:params) { super().merge(source_format: 'sources') }
+
+      it { expect(subject).to contain_apt__setting('sources-my_source').with_ensure('present') }
+    end
+
+    context 'when the source explicitly selects list format' do
+      let(:pre_condition) { 'class { "apt": source_format => "sources" }' }
+      let(:params) { super().merge(source_format: 'list') }
+
+      it { expect(subject).to contain_apt__setting('list-my_source').with_ensure('present') }
+    end
+
+    context 'when the source uses legacy list-only options' do
+      let(:pre_condition) { 'class { "apt": source_format => "sources" }' }
+      let(:params) do
+        super().merge(
+          key: id,
+          pin: '10',
+          include: { 'src' => true },
+        )
+      end
+
+      it { expect(subject).to contain_apt__setting('list-my_source').with_content(%r{deb-src}) }
+      it { expect(subject).to contain_apt__pin('my_source') }
+      it { expect(subject).to contain_apt__key("Add key: #{id} from Apt::Source my_source") }
+    end
+  end
+
   describe 'no defaults' do
     context 'with complex pin' do
       let :params do
