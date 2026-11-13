@@ -230,6 +230,14 @@ apt::source { 'puppetlabs':
 You  can also generate a DEB822 format .sources file. This example covers most of the available options.
 
 Use the `source_format` parameter to choose between 'list' and 'sources' (DEB822) formats.
+Set the `apt` class parameter to use DEB822 as the default for all sources; an individual `apt::source` can still override it.
+
+```puppet
+class { 'apt':
+  source_format => 'sources',
+}
+```
+
 ```puppet
 apt::source { 'debian':
   source_format => 'sources'
