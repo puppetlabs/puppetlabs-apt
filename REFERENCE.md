@@ -94,6 +94,7 @@ The following parameters are available in the `apt` class:
 * [`apt_conf_d`](#-apt--apt_conf_d)
 * [`auth_conf_d`](#-apt--auth_conf_d)
 * [`source_key_defaults`](#-apt--source_key_defaults)
+* [`source_format`](#-apt--source_format)
 
 ##### <a name="-apt--provider"></a>`provider`
 
@@ -485,6 +486,14 @@ Default value:
     'source'  => undef,
   }
 ```
+
+##### <a name="-apt--source_format"></a>`source_format`
+
+Data type: `Enum['list', 'sources']`
+
+Default format for `apt::source` resources. Individual resources can override this. Sources using `key`, `pin`, or non-empty `include` values retain the `list` format when inheriting this default for backward compatibility.
+
+Default value: `'list'`
 
 ### <a name="apt--backports"></a>`apt::backports`
 
@@ -1201,11 +1210,11 @@ The following parameters are available in the `apt::source` defined type:
 
 ##### <a name="-apt--source--source_format"></a>`source_format`
 
-Data type: `Enum['list', 'sources']`
+Data type: `Optional[Enum['list', 'sources']]`
 
-The file format to use for the apt source. See https://wiki.debian.org/SourcesList
+The file format to use for the apt source. Defaults to the `apt::source_format` class parameter when omitted. `key`, `pin`, or non-empty `include` values retain the `list` format when inheriting the class default for backward compatibility. See https://wiki.debian.org/SourcesList
 
-Default value: `'list'`
+Default value: `undef`
 
 ##### <a name="-apt--source--location"></a>`location`
 
