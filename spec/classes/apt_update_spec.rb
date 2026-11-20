@@ -7,7 +7,7 @@ describe 'apt::update', type: :class do
     {
       'a recent run' => Time.now.to_i,
       'we are due for a run' => 1_406_660_561,
-      'the update-success-stamp file does not exist' => -1
+      'the update-success-stamp file does not exist' => -1,
     }.each_pair do |desc, factval|
       context "when $apt_update_last_success indicates #{desc}" do
         let(:facts) do
@@ -17,14 +17,14 @@ describe 'apt::update', type: :class do
               name: 'Debian',
               release: {
                 major: '9',
-                full: '9.0'
+                full: '9.0',
               },
               distro: {
                 codename: 'stretch',
-                id: 'Debian'
-              }
+                id: 'Debian',
+              },
             },
-            apt_update_last_success: factval
+            apt_update_last_success: factval,
           }
         end
         let(:pre_condition) do
@@ -45,13 +45,13 @@ describe 'apt::update', type: :class do
             name: 'Debian',
             release: {
               major: '9',
-              full: '9.0'
+              full: '9.0',
             },
             distro: {
               codename: 'stretch',
-              id: 'Debian'
-            }
-          }
+              id: 'Debian',
+            },
+          },
         }
       end
       let(:pre_condition) { "class{ '::apt': update => {'frequency' => 'always' },}" }
@@ -70,14 +70,14 @@ describe 'apt::update', type: :class do
             name: 'Debian',
             release: {
               major: '9',
-              full: '9.0'
+              full: '9.0',
             },
             distro: {
               codename: 'stretch',
-              id: 'Debian'
-            }
+              id: 'Debian',
+            },
           },
-          apt_update_last_success: Time.now.to_i
+          apt_update_last_success: Time.now.to_i,
         }
       end
       let(:pre_condition) do
@@ -98,7 +98,7 @@ describe 'apt::update', type: :class do
     {
       'a recent run' => Time.now.to_i,
       'we are due for a run' => 1_406_660_561,
-      'the update-success-stamp file does not exist' => -1
+      'the update-success-stamp file does not exist' => -1,
     }.each_pair do |desc, factval|
       context "when $apt_update_last_success indicates #{desc}" do
         let(:facts) do
@@ -108,14 +108,14 @@ describe 'apt::update', type: :class do
               name: 'Debian',
               release: {
                 major: '9',
-                full: '9.0'
+                full: '9.0',
               },
               distro: {
                 codename: 'stretch',
-                id: 'Debian'
-              }
+                id: 'Debian',
+              },
             },
-            apt_update_last_success: factval
+            apt_update_last_success: factval,
           }
         end
         let(:pre_condition) { "class{ '::apt': update => {'frequency' => 'reluctantly' },}" }
@@ -134,13 +134,13 @@ describe 'apt::update', type: :class do
             name: 'Debian',
             release: {
               major: '9',
-              full: '9.0'
+              full: '9.0',
             },
             distro: {
               codename: 'stretch',
-              id: 'Debian'
-            }
-          }
+              id: 'Debian',
+            },
+          },
         }
       end
       let(:pre_condition) { "class{ '::apt': update => {'frequency' => 'reluctantly' },}" }
@@ -164,14 +164,14 @@ describe 'apt::update', type: :class do
                 name: 'Debian',
                 release: {
                   major: '9',
-                  full: '9.0'
+                  full: '9.0',
                 },
                 distro: {
                   codename: 'stretch',
-                  id: 'Debian'
-                }
+                  id: 'Debian',
+                },
               },
-              apt_update_last_success: factval
+              apt_update_last_success: factval,
             }
           end
           let(:pre_condition) { "class{ '::apt': update => {'frequency' => #{update_frequency.inspect},} }" }
@@ -190,14 +190,14 @@ describe 'apt::update', type: :class do
               name: 'Debian',
               release: {
                 major: '9',
-                full: '9.0'
+                full: '9.0',
               },
               distro: {
                 codename: 'stretch',
-                id: 'Debian'
-              }
+                id: 'Debian',
+              },
             },
-            apt_update_last_success: Time.now.to_i
+            apt_update_last_success: Time.now.to_i,
           }
         end
         let(:pre_condition) { "class{ '::apt': update => {'frequency' => #{update_frequency.inspect},} }" }
@@ -216,14 +216,14 @@ describe 'apt::update', type: :class do
               name: 'Debian',
               release: {
                 major: '9',
-                full: '9.0'
+                full: '9.0',
               },
               distro: {
                 codename: 'stretch',
-                id: 'Debian'
-              }
+                id: 'Debian',
+              },
             },
-            apt_update_last_success: nil
+            apt_update_last_success: nil,
           }
         end
         let(:pre_condition) { "class{ '::apt': update => {'frequency' => #{update_frequency.inspect},} }" }

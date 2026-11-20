@@ -11,13 +11,13 @@ describe 'apt::setting' do
         name: 'Debian',
         release: {
           major: '9',
-          full: '9.0'
+          full: '9.0',
         },
         distro: {
           codename: 'stretch',
-          id: 'Debian'
-        }
-      }
+          id: 'Debian',
+        },
+      },
     }
   end
   let(:title) { 'conf-teddybear' }
@@ -87,13 +87,13 @@ describe 'apt::setting' do
           name: 'Debian',
           release: {
             major: '9',
-            full: '9.0'
+            full: '9.0',
           },
           distro: {
             codename: 'stretch',
-            id: 'Debian'
-          }
-        }
+            id: 'Debian',
+          },
+        },
       }
     end
     let(:title) { 'conf-teddybear' }

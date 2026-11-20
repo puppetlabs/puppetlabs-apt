@@ -169,7 +169,7 @@ describe Puppet::Type.type(:apt_key).provider(:apt_key) do
         '160bit key fingerprint lowercase' => '6F6B15509CF8E59E6E469F327F438280EF8D349F'.downcase,
         '32bit key id 0x formatted' => '0xEF8D349F',
         '64bit key id 0x formatted' => '0x7F438280EF8D349F',
-        '160bit key fingerprint 0x formatted' => '0x6F6B15509CF8E59E6E469F327F438280EF8D349F'
+        '160bit key fingerprint 0x formatted' => '0x6F6B15509CF8E59E6E469F327F438280EF8D349F',
       }
       hash_of_keys.each do |key_type, value|
         it "#{key_type} #{value} is valid" do

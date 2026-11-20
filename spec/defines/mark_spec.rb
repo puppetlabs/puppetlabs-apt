@@ -14,20 +14,20 @@ describe 'apt::mark', type: :define do
         name: 'Debian',
         release: {
           major: '9',
-          full: '9.0'
+          full: '9.0',
         },
         distro: {
           codename: 'stretch',
-          id: 'Debian'
-        }
-      }
+          id: 'Debian',
+        },
+      },
     }
   end
 
   context 'with correct seting' do
     let :params do
       {
-        'setting' => 'manual'
+        'setting' => 'manual',
       }
     end
 
@@ -39,7 +39,7 @@ describe 'apt::mark', type: :define do
   describe 'with wrong setting' do
     let :params do
       {
-        'setting' => 'foobar'
+        'setting' => 'foobar',
       }
     end
 
@@ -65,7 +65,7 @@ describe 'apt::mark', type: :define do
 
       let :params do
         {
-          'setting' => 'manual'
+          'setting' => 'manual',
         }
       end
 
@@ -94,7 +94,7 @@ describe 'apt::mark', type: :define do
 
       let :params do
         {
-          'setting' => 'manual'
+          'setting' => 'manual',
         }
       end
 
