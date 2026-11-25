@@ -6,8 +6,8 @@
 #   Specifies the provider that should be used by apt::update.
 #
 # @param keyserver
-#   Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://, or
-#   hkp://).
+#   Specifies a keyserver to provide the GPG key. Valid options: a string containing a domain name or a full URL (http://, https://,
+#   hkp:// or hkps://).
 #
 # @param key_options
 #   Specifies the default options for apt::key resources.
@@ -186,7 +186,7 @@ class apt (
     'src' => false,
   },
   Stdlib::Absolutepath $provider = '/usr/bin/apt-get',
-  Stdlib::Host $keyserver = 'keyserver.ubuntu.com',
+  Apt::Keyserver $keyserver = 'keyserver.ubuntu.com',
   Optional[String[1]] $key_options = undef,
   Optional[Array[String[1]]] $ppa_options = undef,
   Optional[String[1]] $ppa_package = undef,
