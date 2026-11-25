@@ -509,6 +509,7 @@ The following parameters are available in the `apt::backports` class:
 * [`keyring`](#-apt--backports--keyring)
 * [`pin`](#-apt--backports--pin)
 * [`include`](#-apt--backports--include)
+* [`source_format`](#-apt--backports--source_format)
 
 ##### <a name="-apt--backports--location"></a>`location`
 
@@ -581,6 +582,14 @@ Data type: `Hash`
 Specifies whether to include 'deb' or 'src', or both.
 
 Default value: `{}`
+
+##### <a name="-apt--backports--source_format"></a>`source_format`
+
+Data type: `Enum['list', 'sources']`
+
+The file format to use for the backports source. See https://wiki.debian.org/SourcesList
+
+Default value: `'list'`
 
 ## Defined types
 

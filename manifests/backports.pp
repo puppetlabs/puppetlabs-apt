@@ -40,6 +40,9 @@
 # @param include
 #   Specifies whether to include 'deb' or 'src', or both.
 #
+# @param source_format
+#   The file format to use for the backports source. See https://wiki.debian.org/SourcesList
+#
 class apt::backports (
   Optional[Stdlib::HTTPUrl] $location = undef,
   Optional[String[1]] $release = undef,
@@ -48,6 +51,7 @@ class apt::backports (
   Stdlib::AbsolutePath $keyring = "/usr/share/keyrings/${facts['os']['name'].downcase}-archive-keyring.gpg",
   Variant[Integer, String[1], Hash] $pin = 200,
   Hash $include = {},
+  Enum['list', 'sources'] $source_format = 'list',
 ) {
   include apt
 
@@ -107,13 +111,31 @@ class apt::backports (
     fail('pin must be either a string, number or hash')
   }
 
+  if $source_format == 'sources' {
+    $_includes = $apt::include_defaults + $include
+    $_source = {
+      'location' => [$_location],
+      'release'  => [$_release],
+      'repos'    => split($_repos, /\s+/),
+      'types'    => delete_undef_values([
+        $_includes['deb'] ? { true => 'deb', default => undef },
+        $_includes['src'] ? { true => 'deb-src', default => undef },
+      ]),
+    }
+  } else {
+    $_source = {
+      'location' => $_location,
+      'release'  => $_release,
+      'repos'    => $_repos,
+      'include'  => $include,
+    }
+  }
+
   apt::source { 'backports':
-    location => $_location,
-    release  => $_release,
-    repos    => $_repos,
-    include  => $include,
-    key      => $key,
-    keyring  => $_keyring,
-    pin      => $_pin,
+    source_format => $source_format,
+    key           => $key,
+    keyring       => $_keyring,
+    pin           => $_pin,
+    *             => $_source,
   }
 }
