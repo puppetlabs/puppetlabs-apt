@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v11.5.0](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.5.0) - 2026-11-25
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.4.1...v11.5.0)
+
+### Added
+
+- (MODULES-12068) Ubuntu 26.04 support: deprecate apt_key and fail clearly without apt-key [#1337](https://github.com/puppetlabs/puppetlabs-apt/pull/1337) ([SugatD](https://github.com/SugatD))
+- Add support for Debian 13 "trixie" [#1272](https://github.com/puppetlabs/puppetlabs-apt/pull/1272) ([kenyon](https://github.com/kenyon))
+
 ## [v11.4.1](https://github.com/puppetlabs/puppetlabs-apt/tree/v11.4.1) - 2026-10-27
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-apt/compare/v11.4.0...v11.4.1)
