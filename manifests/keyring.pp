@@ -13,6 +13,11 @@
 #       source => 'https://apt.puppetlabs.com/keyring.gpg'
 #     }
 #   }
+# @example Download a keyring and verify its fingerprint
+#   apt::keyring { 'puppetlabs-keyring.gpg':
+#     source      => 'https://apt.puppetlabs.com/keyring.gpg',
+#     fingerprint => 'D6811ED3ADEEB8441AF5AA8F4528B6CD9E61EF26',
+#   }
 #
 # @param dir
 #   Path to the directory where the keyring will be stored.
@@ -32,6 +37,10 @@
 # @param ensure
 #   Ensure presence or absence of the resource.
 #
+# @param fingerprint
+#   Full 40 character fingerprint of a key that must be in the keyring. The file is only written if `gpg` finds this fingerprint in the
+#   new content. Installs `gnupg`.
+#
 define apt::keyring (
   Optional[Stdlib::Absolutepath] $dir = undef,
   String[1] $filename = $name,
@@ -39,6 +48,7 @@ define apt::keyring (
   Optional[Stdlib::Filesource] $source = undef,
   Optional[String[1]] $content = undef,
   Enum['present','absent'] $ensure = 'present',
+  Optional[Pattern[/\A[0-9a-fA-F]{40}\z/]] $fingerprint = undef,
 ) {
   include apt
 
@@ -62,14 +72,24 @@ define apt::keyring (
 
   case $ensure {
     'present': {
+      if $fingerprint {
+        stdlib::ensure_packages(['gnupg'])
+        $_validate_cmd = "/usr/bin/gpg --batch --no-tty --with-colons --with-fingerprint % 2>/dev/null | /bin/grep -q '^fpr:*${upcase($fingerprint)}:'"
+        $_require = [$require_dir, Package['gnupg']]
+      } else {
+        $_validate_cmd = undef
+        $_require = $require_dir
+      }
+
       file { $file:
-        ensure  => 'file',
-        mode    => $mode,
-        owner   => 'root',
-        group   => 'root',
-        source  => $source,
-        content => $content,
-        require => $require_dir,
+        ensure       => 'file',
+        mode         => $mode,
+        owner        => 'root',
+        group        => 'root',
+        source       => $source,
+        content      => $content,
+        validate_cmd => $_validate_cmd,
+        require      => $_require,
       }
     }
     'absent': {
