@@ -435,6 +435,87 @@ describe 'apt::source' do
     end
   end
 
+  describe 'auth parameter' do
+    context 'with auth set' do
+      let :params do
+        {
+          location: 'https://apt.spec.test/debian',
+          auth: {
+            login: 'spec',
+            password: 'test'
+          }
+        }
+      end
+
+      it {
+        expect(subject).to contain_apt__auth("Add auth: #{params[:location]} from Apt::Source #{title}")
+          .with(
+            ensure: 'present',
+            name: title,
+            machine: params[:location],
+            login: 'spec',
+            password: 'test',
+          )
+      }
+
+      it {
+        expect(subject).to contain_file("/etc/apt/auth.conf.d/#{title}.conf")
+      }
+    end
+
+    context 'with ensure set' do
+      let :params do
+        {
+          location: 'https://apt.spec.test/debian',
+          auth: {
+            ensure: 'absent',
+          }
+        }
+      end
+
+      it {
+        expect(subject).to contain_apt__auth("Add auth: #{params[:location]} from Apt::Source #{title}")
+          .with(
+            ensure: 'absent',
+            name: title,
+            machine: params[:location],
+            login: '',
+            password: '',
+          )
+      }
+    end
+
+    context 'with missing username' do
+      let :params do
+        {
+          location: 'https://apt.spec.test/debian',
+          auth: {
+            password: 'test',
+          }
+        }
+      end
+
+      it {
+        expect(subject).to compile.and_raise_error(%r{auth must provide a valid username})
+      }
+    end
+
+    context 'with missing password' do
+      let :params do
+        {
+          location: 'https://apt.spec.test/debian',
+          auth: {
+            login: 'spec',
+          }
+        }
+      end
+
+      it {
+        expect(subject).to compile.and_raise_error(%r{auth must provide a valid password})
+      }
+    end
+  end
+
   describe 'deb822 sources' do
     context 'suite contains a slash but does not end with slash (should require Components)' do
       let :params do
