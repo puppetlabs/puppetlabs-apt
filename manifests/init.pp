@@ -90,6 +90,9 @@
 # @param sources
 #   Hash of `apt::source` resources.
 #
+# @param source_format
+#   Default format for `apt::source` resources. Individual resources can override this. Defaults to `list`.
+#
 # @param auths
 #   Creates new `apt::auth` resources. Valid options: a hash to be passed to the create_resources function linked above.
 #
@@ -241,6 +244,7 @@ class apt (
     'content' => undef,
     'source'  => undef,
   },
+  Enum['list', 'sources'] $source_format = 'list',
 ) {
   if $facts['os']['family'] != 'Debian' {
     fail('This module only works on Debian or derivatives like Ubuntu')
