@@ -12,13 +12,13 @@ describe 'apt::conf', type: :define do
         name: 'Debian',
         release: {
           major: '9',
-          full: '9.0'
+          full: '9.0',
         },
         distro: {
           codename: 'stretch',
-          id: 'Debian'
-        }
-      }
+          id: 'Debian',
+        },
+      },
     }
   end
   let :title do
@@ -29,7 +29,7 @@ describe 'apt::conf', type: :define do
     let :default_params do
       {
         priority: '00',
-        content: "Apt::Install-Recommends 0;\nApt::AutoRemove::InstallRecommends 1;\n"
+        content: "Apt::Install-Recommends 0;\nApt::AutoRemove::InstallRecommends 1;\n",
       }
     end
     let :params do
@@ -67,7 +67,7 @@ describe 'apt::conf', type: :define do
   describe 'when creating a preference without content' do
     let :params do
       {
-        priority: '00'
+        priority: '00',
       }
     end
 
@@ -80,7 +80,7 @@ describe 'apt::conf', type: :define do
     let :params do
       {
         ensure: 'absent',
-        priority: '00'
+        priority: '00',
       }
     end
 

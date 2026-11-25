@@ -103,7 +103,7 @@ Puppet::Type.type(:apt_key).provide(:apt_key) do
       key_type: nil,
       key_created: Time.at(pub_split[5].to_i),
       key_expired: pub_split[1] == 'e',
-      key_expiry: pub_split[6].empty? ? nil : Time.at(pub_split[6].to_i)
+      key_expiry: pub_split[6].empty? ? nil : Time.at(pub_split[6].to_i),
     }
 
     # set key type based on types defined in /usr/share/doc/gnupg/DETAILS.gz

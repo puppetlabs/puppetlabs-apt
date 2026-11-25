@@ -6,13 +6,13 @@ describe 'apt tasks' do
   # Prevent sshd from being upgraded during 'upgrade' task
   before(:all) do
     run_shell('apt-mark hold openssh-server')
-  rescue
+  rescue StandardError
     nil
   end
 
   after(:all) do
     run_shell('apt-mark unhold openssh-server')
-  rescue
+  rescue StandardError
     nil
   end
 

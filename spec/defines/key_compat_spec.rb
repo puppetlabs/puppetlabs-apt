@@ -29,13 +29,13 @@ describe 'apt::key', type: :define do
         name: 'Debian',
         release: {
           major: '9',
-          full: '9.0'
+          full: '9.0',
         },
         distro: {
           codename: 'stretch',
-          id: 'Debian'
-        }
-      }
+          id: 'Debian',
+        },
+      },
     }
   end
 
@@ -69,7 +69,7 @@ describe 'apt::key', type: :define do
 
       let :params do
         {
-          id: key_id
+          id: key_id,
         }
       end
 
@@ -89,7 +89,7 @@ describe 'apt::key', type: :define do
     describe 'ensure => absent' do
       let :params do
         {
-          ensure: 'absent'
+          ensure: 'absent',
         }
       end
 
@@ -112,7 +112,7 @@ describe 'apt::key', type: :define do
           content: 'GPG key content',
           source: 'http://apt.puppetlabs.com/pubkey.gpg',
           server: 'pgp.mit.edu',
-          options: 'debug'
+          options: 'debug',
         }
       end
 
@@ -128,7 +128,7 @@ describe 'apt::key', type: :define do
     context 'when domain has dash' do
       let(:params) do
         {
-          server: 'p-gp.m-it.edu'
+          server: 'p-gp.m-it.edu',
         }
       end
 
@@ -141,7 +141,7 @@ describe 'apt::key', type: :define do
     context 'with url' do
       let :params do
         {
-          server: 'hkp://pgp.mit.edu'
+          server: 'hkp://pgp.mit.edu',
         }
       end
 
@@ -154,7 +154,7 @@ describe 'apt::key', type: :define do
     context 'with url and port number' do
       let :params do
         {
-          server: 'hkp://pgp.mit.edu:80'
+          server: 'hkp://pgp.mit.edu:80',
         }
       end
 
@@ -169,7 +169,7 @@ describe 'apt::key', type: :define do
     context 'when domain begins with a dash' do
       let(:params) do
         {
-          server: '-pgp.mit.edu'
+          server: '-pgp.mit.edu',
         }
       end
 
@@ -181,7 +181,7 @@ describe 'apt::key', type: :define do
     context 'when domain begins with dot' do
       let(:params) do
         {
-          server: '.pgp.mit.edu'
+          server: '.pgp.mit.edu',
         }
       end
 
@@ -193,7 +193,7 @@ describe 'apt::key', type: :define do
     context 'when domain ends with dot' do
       let(:params) do
         {
-          server: 'pgp.mit.edu.'
+          server: 'pgp.mit.edu.',
         }
       end
 
@@ -205,7 +205,7 @@ describe 'apt::key', type: :define do
     context 'when url character limit is exceeded' do
       let :params do
         {
-          server: 'hkp://pgpiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.mit.edu'
+          server: 'hkp://pgpiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.mit.edu',
         }
       end
 
@@ -217,7 +217,7 @@ describe 'apt::key', type: :define do
     context 'with incorrect port number url' do
       let :params do
         {
-          server: 'hkp://pgp.mit.edu:8008080'
+          server: 'hkp://pgp.mit.edu:8008080',
         }
       end
 
@@ -229,7 +229,7 @@ describe 'apt::key', type: :define do
     context 'with incorrect protocol for url' do
       let :params do
         {
-          server: 'abc://pgp.mit.edu:80'
+          server: 'abc://pgp.mit.edu:80',
         }
       end
 
@@ -241,7 +241,7 @@ describe 'apt::key', type: :define do
     context 'with missing port number url' do
       let :params do
         {
-          server: 'hkp://pgp.mit.edu:'
+          server: 'hkp://pgp.mit.edu:',
         }
       end
 
@@ -253,7 +253,7 @@ describe 'apt::key', type: :define do
     context 'with url ending with a dot' do
       let :params do
         {
-          server: 'hkp://pgp.mit.edu.'
+          server: 'hkp://pgp.mit.edu.',
         }
       end
 
@@ -265,7 +265,7 @@ describe 'apt::key', type: :define do
     context 'with url begin with a dash' do
       let(:params) do
         {
-          server: 'hkp://-pgp.mit.edu'
+          server: 'hkp://-pgp.mit.edu',
         }
       end
 
@@ -287,7 +287,7 @@ describe 'apt::key', type: :define do
     context 'with invalid source' do
       let :params do
         {
-          source: 'afp://puppetlabs.com/key.gpg'
+          source: 'afp://puppetlabs.com/key.gpg',
         }
       end
 
@@ -299,7 +299,7 @@ describe 'apt::key', type: :define do
     context 'with invalid content' do
       let :params do
         {
-          content: []
+          content: [],
         }
       end
 
@@ -311,7 +311,7 @@ describe 'apt::key', type: :define do
     context 'with invalid server' do
       let :params do
         {
-          server: 'two bottles of rum'
+          server: 'two bottles of rum',
         }
       end
 
@@ -323,7 +323,7 @@ describe 'apt::key', type: :define do
     context 'with invalid keyserver_options' do
       let :params do
         {
-          options: {}
+          options: {},
         }
       end
 
@@ -335,7 +335,7 @@ describe 'apt::key', type: :define do
     context 'with invalid ensure' do
       let :params do
         {
-          ensure: 'foo'
+          ensure: 'foo',
         }
       end
 

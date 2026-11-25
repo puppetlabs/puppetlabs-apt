@@ -12,13 +12,13 @@ describe 'apt::pin', type: :define do
         name: 'Debian',
         release: {
           major: '9',
-          full: '9.0'
+          full: '9.0',
         },
         distro: {
           codename: 'stretch',
-          id: 'Debian'
-        }
-      }
+          id: 'Debian',
+        },
+      },
     }
   end
   let(:title) { 'my_pin' }
@@ -31,7 +31,7 @@ describe 'apt::pin', type: :define do
     let :params do
       {
         'packages' => 'vim',
-        'version' => '1'
+        'version' => '1',
       }
     end
 
@@ -42,7 +42,7 @@ describe 'apt::pin', type: :define do
     let :params do
       {
         'packages' => 'vim',
-        'origin' => 'test'
+        'origin' => 'test',
       }
     end
 
@@ -60,7 +60,7 @@ describe 'apt::pin', type: :define do
         'component' => 'baz',
         'originator' => 'foobar',
         'label' => 'foobaz',
-        'priority' => 10
+        'priority' => 10,
       }
     end
 
@@ -74,7 +74,7 @@ describe 'apt::pin', type: :define do
   context 'with ensure absent' do
     let :params do
       {
-        'ensure' => 'absent'
+        'ensure' => 'absent',
       }
     end
 
@@ -93,7 +93,7 @@ describe 'apt::pin', type: :define do
     context 'with invalid order' do
       let :params do
         {
-          'order' => 'foo'
+          'order' => 'foo',
         }
       end
 
@@ -105,7 +105,7 @@ describe 'apt::pin', type: :define do
     context 'with packages == * and version' do
       let :params do
         {
-          'version' => '1'
+          'version' => '1',
         }
       end
 
@@ -118,7 +118,7 @@ describe 'apt::pin', type: :define do
       let :params do
         {
           'origin' => 'test',
-          'release' => 'foo'
+          'release' => 'foo',
         }
       end
 
@@ -132,7 +132,7 @@ describe 'apt::pin', type: :define do
         {
           'release' => 'foo',
           'origin' => 'test',
-          'packages' => 'vim'
+          'packages' => 'vim',
         }
       end
 
@@ -146,7 +146,7 @@ describe 'apt::pin', type: :define do
         {
           'version' => '1',
           'origin' => 'test',
-          'packages' => 'vim'
+          'packages' => 'vim',
         }
       end
 
