@@ -29,6 +29,18 @@
 #     keyring       => '/etc/apt/keyrings/puppetlabs.gpg',
 #   }
 #
+# @example Install the puppetlabs apt source (deb822 format) with a managed keyring and pin
+#   apt::source { 'puppetlabs':
+#     source_format => 'sources',
+#     location      => ['http://apt.puppetlabs.com'],
+#     repos         => ['puppet8'],
+#     key           => {
+#       'name'   => 'puppetlabs.gpg',
+#       'source' => 'https://apt.puppetlabs.com/keyring.gpg',
+#     },
+#     pin           => 600,
+#   }
+#
 # @param source_format
 #   The file format to use for the apt source. See https://wiki.debian.org/SourcesList
 #
@@ -81,6 +93,7 @@
 # @param pin
 #   Creates a declaration of the apt::pin defined type. Valid options: a number or string to be passed to the `priority` parameter of the
 #   `apt::pin` defined type, or a hash of `parameter => value` pairs to be passed to `apt::pin`'s corresponding parameters.
+#   DEB822: When given a number or string, the pin origin is set to the hostname of the first `location` entry.
 #
 # @param architecture
 #   Tells Apt to only download information for specified architectures. Valid options: a string containing one or more architecture names,
@@ -121,12 +134,81 @@ define apt::source (
 ) {
   include apt
 
-  $_before = Apt::Setting["list-${title}"]
+  $_file_suffix = $source_format
+  $_before = Apt::Setting["${_file_suffix}-${title}"]
+
+  if $keyring {
+    if $key {
+      fail('parameters key and keyring are mutually exclusive')
+    } else {
+      $_keyring = $keyring
+    }
+  } elsif $key {
+    if $key =~ Hash {
+      unless $key['name'] or $key['id'] {
+        fail('key hash must contain a key name (for apt::keyring) or an id (for apt::key)')
+      }
+      if $key['id'] {
+        # defaults like keyserver are only relevant to apt::key
+        $_key = $apt::source_key_defaults + $key
+      } else {
+        $_key = $key
+      }
+    } else {
+      $_key = { 'id' => assert_type(String[1], $key) }
+    }
+    if $_key['ensure'] {
+      $_key_ensure = $_key['ensure']
+    } else {
+      $_key_ensure = $ensure
+    }
+
+    # Old keyserver keys handled by apt-key
+    if $_key =~ Hash and $_key['id'] {
+      # We do not want to remove keys when the source is absent.
+      if $ensure == 'present' {
+        apt::key { "Add key: ${$_key['id']} from Apt::Source ${title}":
+          ensure   => $_key_ensure,
+          id       => $_key['id'],
+          server   => $_key['server'],
+          content  => $_key['content'],
+          source   => $_key['source'],
+          options  => $_key['options'],
+          weak_ssl => $_key['weak_ssl'],
+          before   => $_before,
+        }
+      }
+      $_keyring = undef
+    }
+    # Modern apt keyrings
+    elsif $_key =~ Hash and $_key['name'] {
+      apt::keyring { $_key['name']:
+        ensure   => $_key_ensure,
+        content  => $_key['content'],
+        source   => $_key['source'],
+        dir      => $_key['dir'],
+        filename => $_key['filename'],
+        mode     => $_key['mode'],
+        before   => $_before,
+      }
+
+      $_keyring = if $_key['dir'] and $_key['filename'] {
+        "${_key['dir']}/${_key['filename']}"
+      } elsif $_key['filename'] {
+        "/etc/apt/keyrings/${_key['filename']}"
+      } elsif $_key['dir'] {
+        "${_key['dir']}/${_key['name']}"
+      } else {
+        "/etc/apt/keyrings/${_key['name']}"
+      }
+    }
+  } else {
+    # No `key` nor `keyring` provided
+    $_keyring = undef
+  }
 
   case $source_format {
     'list': {
-      $_file_suffix = $source_format
-
       if !$release {
         if fact('os.distro.codename') {
           $_release = fact('os.distro.codename')
@@ -161,76 +243,6 @@ define apt::source (
 
       $includes = $apt::include_defaults + $include
 
-      if $keyring {
-        if $key {
-          fail('parameters key and keyring are mutually exclusive')
-        } else {
-          $_list_keyring = $keyring
-        }
-      } elsif $key {
-        if $key =~ Hash {
-          unless $key['name'] or $key['id'] {
-            fail('key hash must contain a key name (for apt::keyring) or an id (for apt::key)')
-          }
-          if $key['id'] {
-            # defaults like keyserver are only relevant to apt::key
-            $_key = $apt::source_key_defaults + $key
-          } else {
-            $_key = $key
-          }
-        } else {
-          $_key = { 'id' => assert_type(String[1], $key) }
-        }
-        if $_key['ensure'] {
-          $_key_ensure = $_key['ensure']
-        } else {
-          $_key_ensure = $ensure
-        }
-
-        # Old keyserver keys handled by apt-key
-        if $_key =~ Hash and $_key['id'] {
-          # We do not want to remove keys when the source is absent.
-          if $ensure == 'present' {
-            apt::key { "Add key: ${$_key['id']} from Apt::Source ${title}":
-              ensure   => $_key_ensure,
-              id       => $_key['id'],
-              server   => $_key['server'],
-              content  => $_key['content'],
-              source   => $_key['source'],
-              options  => $_key['options'],
-              weak_ssl => $_key['weak_ssl'],
-              before   => $_before,
-            }
-          }
-          $_list_keyring = undef
-        }
-        # Modern apt keyrings
-        elsif $_key =~ Hash and $_key['name'] {
-          apt::keyring { $_key['name']:
-            ensure   => $_key_ensure,
-            content  => $_key['content'],
-            source   => $_key['source'],
-            dir      => $_key['dir'],
-            filename => $_key['filename'],
-            mode     => $_key['mode'],
-            before   => $_before,
-          }
-
-          $_list_keyring = if $_key['dir'] and $_key['filename'] {
-            "${_key['dir']}/${_key['filename']}"
-          } elsif $_key['filename'] {
-            "/etc/apt/keyrings/${_key['filename']}"
-          } elsif $_key['dir'] {
-            "${_key['dir']}/${_key['name']}"
-          } else {
-            "/etc/apt/keyrings/${_key['name']}"
-          }
-        }
-      } else {
-        # No `key` nor `keyring` provided
-        $_list_keyring = undef
-      }
-
       $header = epp('apt/_header.epp')
 
       if $architecture {
@@ -246,7 +258,7 @@ define apt::source (
               'arch'              => $_architecture,
               'trusted'           => $allow_unsigned ? { true => 'yes', false => undef, default => undef },
               'allow-insecure'    => $allow_insecure ? { true => 'yes', false => undef, default => undef },
-              'signed-by'         => $_list_keyring,
+              'signed-by'         => $_keyring,
               'check-valid-until' => $check_valid_until? { true => undef, false => 'false', default => undef },
             },
           ),
@@ -255,37 +267,8 @@ define apt::source (
         }
       )
       $_content = "${header}${source_content}"
-
-      if $pin {
-        if $pin =~ Hash {
-          $_pin = $pin + { 'ensure' => $ensure, 'before' => $_before }
-        } elsif ($pin =~ Numeric or $pin =~ String) {
-          $url_split = split($location, '[:\/]+')
-          $host      = $url_split[1]
-          $_pin = {
-            'ensure'   => $ensure,
-            'priority' => $pin,
-            'before'   => $_before,
-            'origin'   => $host,
-          }
-        } else {
-          fail('Received invalid value for pin parameter')
-        }
-
-        apt::pin { $name:
-          * => $_pin,
-        }
-      }
     }
     'sources': {
-      $_file_suffix = $source_format
-
-      if $pin {
-        warning("'pin' parameter is not supported with deb822 format.")
-      }
-      if $key {
-        warning("'key' parameter is not supported with deb822 format.")
-      }
       if $ensure == 'present' {
         if ! $location {
           fail('cannot create a source entry without specifying a location')
@@ -348,7 +331,7 @@ define apt::source (
                 'allow_insecure'    => $allow_insecure ? { true => 'yes', false => 'no', default => undef },
                 'repo_trusted'      => $allow_unsigned ? { true => 'yes', false => 'no', default => undef },
                 'check_valid_until' => $check_valid_until ? { true => 'yes', false => 'no', default => undef },
-                'signed_by'         => $keyring,
+                'signed_by'         => $_keyring,
               }
             )
           )
@@ -366,6 +349,29 @@ define apt::source (
       fail("Unexpected APT source format: ${source_format}")
     }
   }
+
+  if $pin {
+    if $pin =~ Hash {
+      $_pin = $pin + { 'ensure' => $ensure, 'before' => $_before }
+    } elsif ($pin =~ Numeric or $pin =~ String) {
+      # deb822 may have several URIs, use the first
+      $url_split = split([$location].flatten[0], '[:\/]+')
+      $host      = $url_split[1]
+      $_pin = {
+        'ensure'   => $ensure,
+        'priority' => $pin,
+        'before'   => $_before,
+        'origin'   => $host,
+      }
+    } else {
+      fail('Received invalid value for pin parameter')
+    }
+
+    apt::pin { $name:
+      * => $_pin,
+    }
+  }
+
   apt::setting { "${_file_suffix}-${name}":
     ensure        => $ensure,
     content       => $_content,

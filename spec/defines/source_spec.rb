@@ -597,6 +597,144 @@ describe 'apt::source' do
       end
 
       it { is_expected.to contain_apt__setting("sources-#{title}").with_notify_update(true) }
+
+      it {
+        expect(subject).to contain_apt__key("Add key: A1BD8E9D78F7FE5C3E65D8AF8B48AD6246925553 from Apt::Source #{title}")
+          .that_comes_before("Apt::Setting[sources-#{title}]")
+      }
+
+      it { is_expected.to contain_apt__pin(title).with(priority: '-10', origin: 'debian.mirror.iweb.ca') }
+    end
+
+    context 'with a keyring key' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://apt.puppetlabs.com'],
+            repos: ['puppet8'],
+            key: {
+              'name' => 'puppetlabs.gpg',
+              'source' => 'https://apt.puppetlabs.com/keyring.gpg',
+            },
+          },
+        )
+      end
+
+      it {
+        expect(subject).to contain_apt__keyring('puppetlabs.gpg')
+          .that_comes_before("Apt::Setting[sources-#{title}]")
+          .with(ensure: 'present', source: 'https://apt.puppetlabs.com/keyring.gpg')
+      }
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{^Signed-By: /etc/apt/keyrings/puppetlabs.gpg$}) }
+      it { is_expected.not_to contain_apt__key("Add key: from Apt::Source #{title}") }
+    end
+
+    context 'with a keyring key in a custom location' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://apt.puppetlabs.com'],
+            repos: ['puppet8'],
+            key: {
+              'name' => 'puppetlabs',
+              'dir' => '/usr/share/keyrings',
+              'filename' => 'puppetlabs-keyring.gpg',
+              'content' => 'GPG key content',
+            },
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__keyring('puppetlabs').with(dir: '/usr/share/keyrings', filename: 'puppetlabs-keyring.gpg') }
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_content(%r{^Signed-By: /usr/share/keyrings/puppetlabs-keyring.gpg$}) }
+    end
+
+    context 'with an apt::key id' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://apt.puppetlabs.com'],
+            repos: ['puppet8'],
+            key: id,
+          },
+        )
+      end
+
+      it {
+        expect(subject).to contain_apt__key("Add key: #{id} from Apt::Source #{title}")
+          .that_comes_before("Apt::Setting[sources-#{title}]")
+          .with(ensure: 'present', id: id)
+      }
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").without_content(%r{Signed-By:}) }
+    end
+
+    context 'with both key and keyring' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://apt.puppetlabs.com'],
+            key: { 'name' => 'puppetlabs.gpg', 'source' => 'https://apt.puppetlabs.com/keyring.gpg' },
+            keyring: '/etc/apt/keyrings/puppetlabs.gpg',
+          },
+        )
+      end
+
+      it { is_expected.to raise_error(Puppet::Error, %r{parameters key and keyring are mutually exclusive}) }
+    end
+
+    context 'with a simple pin' do
+      let :params do
+        super().merge(
+          {
+            location: ['https://apt.puppetlabs.com/', 'http://mirror.example.com/puppet'],
+            repos: ['puppet8'],
+            pin: 600,
+          },
+        )
+      end
+
+      it {
+        expect(subject).to contain_apt__pin(title)
+          .that_comes_before("Apt::Setting[sources-#{title}]")
+          .with(ensure: 'present', priority: 600, origin: 'apt.puppetlabs.com')
+      }
+    end
+
+    context 'with a complex pin' do
+      let :params do
+        super().merge(
+          {
+            location: ['http://apt.puppetlabs.com'],
+            repos: ['puppet8'],
+            pin: { 'release' => 'jammy', 'priority' => 1001 },
+          },
+        )
+      end
+
+      it {
+        expect(subject).to contain_apt__pin(title)
+          .that_comes_before("Apt::Setting[sources-#{title}]")
+          .with(ensure: 'present', release: 'jammy', priority: 1001)
+      }
+    end
+
+    context 'absent deb822 source with key and pin' do
+      let :params do
+        super().merge(
+          {
+            ensure: 'absent',
+            location: ['http://apt.puppetlabs.com'],
+            key: { 'name' => 'puppetlabs.gpg', 'source' => 'https://apt.puppetlabs.com/keyring.gpg' },
+            pin: 600,
+          },
+        )
+      end
+
+      it { is_expected.to contain_apt__setting("sources-#{title}").with_ensure('absent') }
+      it { is_expected.to contain_apt__keyring('puppetlabs.gpg').with_ensure('absent') }
+      it { is_expected.to contain_apt__pin(title).with_ensure('absent') }
     end
 
     context 'absent deb822 source' do
