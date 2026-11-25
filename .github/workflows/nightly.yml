@@ -7,6 +7,8 @@ on:
 
 jobs:
   Spec:
+    # Forks lack the secrets needed to pass
+    if: github.event_name != 'schedule' || github.repository_owner == 'puppetlabs'
     uses: "puppetlabs/cat-github-actions/.github/workflows/module_ci.yml@main"
     with:
       additional_packages: "libcurl4-openssl-dev"
