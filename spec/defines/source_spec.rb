@@ -341,6 +341,26 @@ describe 'apt::source' do
     }
   end
 
+  context 'with proxy https_acng' do
+    let(:pre_condition) { 'class { "apt": proxy => { host => "localhost", https_acng => true } }' }
+
+    context 'with https location' do
+      let(:params) { { location: 'https://example.com/debian' } }
+
+      it {
+        expect(subject).to contain_apt__setting('list-my_source').with_content(%r{deb http://HTTPS///example.com/debian stretch main})
+      }
+    end
+
+    context 'with options before https location' do
+      let(:params) { { location: '[check-date=yes] https://example.com/debian' } }
+
+      it {
+        expect(subject).to contain_apt__setting('list-my_source').with_content(%r{deb \[check-date=yes\] http://HTTPS///example.com/debian stretch main})
+      }
+    end
+  end
+
   describe 'validation' do
     context 'with no release' do
       let :facts do
